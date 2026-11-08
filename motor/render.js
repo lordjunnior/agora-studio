@@ -345,6 +345,21 @@ function exportarManifestAgóra(audios, tl) {
   fs.writeFileSync(path.join(dir, 'narration-manifest.json'), JSON.stringify(manifest, null, 2));
   console.log('manifesto ÁGORA: ' + path.join(dir, 'narration-manifest.json') + ' (' + audioSegments.length + ' segmentos de voz)');
 }
+function exportNarrationManifestAgora(audios, tl) {
+  const dir = path.join(pasta, 'agora-import');
+  const assetsDir = path.join(dir, 'assets');
+  fs.mkdirSync(assetsDir, { recursive: true });
+  const audioSegments = audios.map((audio, i) => {
+    const id = 'narration-' + String(i + 1).padStart(3, '0');
+    const filename = id + '.wav';
+    fs.copyFileSync(audio.wav, path.join(assetsDir, filename));
+    return { id, assetId: 'asset-' + id, src: 'assets/' + filename, startSeconds: +tl.frases[i].inicio.toFixed(4), durationSeconds: +audio.dur.toFixed(4), volume: 1 };
+  });
+  const phrases = tl.frases.map((phrase) => ({ texto: phrase.texto, inicio: phrase.inicio, fim: phrase.fim, palavras: (phrase.palavras || []).map((word) => ({ texto: word.texto, inicio: word.inicio, fim: word.fim, chave: Boolean(word.chave) })) }));
+  const manifest = { manifestVersion: 1, product: 'AGORA', generatedAt: new Date().toISOString(), fps: FPS, durationSeconds: tl.total, phrases, audioSegments };
+  fs.writeFileSync(path.join(dir, 'narration-manifest.json'), JSON.stringify(manifest, null, 2));
+  console.log('AGORA narration manifest exported: ' + path.join(dir, 'narration-manifest.json'));
+}
 function montarTimeline(audios) {
   let t = 0.15;
   const frases = roteiro.frases.map((f, i) => {
@@ -674,6 +689,7 @@ function avisoDaOpiniao() {
   const tl = montarTimeline(audios);
   tl.roteiro = roteiro;
   fs.writeFileSync(path.join(pasta, 'timeline.json'), JSON.stringify(tl, null, 2));
+  exportNarrationManifestAgora(audios, tl);
   exportarManifestAgóra(audios, tl);
   const nPal = tl.frases.reduce((n, f) => n + f.palavras.length, 0);
   console.log(`duração: ${tl.total.toFixed(1)}s, ${nPal} palavras, ${(nPal / (tl.total / 60)).toFixed(0)} palavras/min`);

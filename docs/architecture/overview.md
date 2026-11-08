@@ -76,3 +76,9 @@ Estado: adaptador implementado e verificado pelo TypeScript. A ligação automá
 O render agora preserva cada segmento WAV gerado em `agora-import/assets/` e escreve `agora-import/narration-manifest.json`. O manifesto contém FPS, duração, frases, alinhamento por palavra em segundos absolutos e referências aos segmentos de áudio. Isso transforma a saída efêmera do render em um pacote transferível para a pipeline do ÁGORA. A importação desse manifesto para dentro do projeto e a cópia dos ativos para a área pública do Remotion ainda são etapas separadas.
 
 `buildNarrationTracksFromManifest()` também aceita diretamente o formato `narration-manifest.json` (versão 1), calcula a duração em frames e devolve os ativos e as trilhas prontos para serem incorporados ao documento do projeto. Os caminhos `assets/...` permanecem relativos ao pacote exportado e precisam ser copiados para a pasta pública do renderizador antes da renderização Remotion.
+
+### Importacao operacional da narracao
+
+O comando `npm --prefix projeto run narration:import -- <manifest.json> <projeto.agora.json> [saida.agora.json]` importa um manifesto v1, copia os arquivos de audio para `projeto/public/agora-assets/` e grava um documento de projeto com trilhas de voz e legendas sincronizadas. O importador valida a versao, FPS, duracao, caminhos, IDs e intervalos. Por seguranca, interrompe a importacao se a narracao exceder a duracao atual das cenas; nao altera cenas automaticamente.
+
+Teste de integracao executado com um WAV real de exemplo: importacao de ativo, item de voz, frase e tres palavras temporizadas confirmada. TypeScript aprovado. O teste temporario foi removido depois da verificacao. Ainda falta registrar dinamicamente o projeto importado como composicao renderizavel e executar o render final com a narracao importada.
