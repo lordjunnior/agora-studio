@@ -96,7 +96,7 @@ function pecasProntas() {
 }
 
 (async () => {
-  log('Máquina Preguiça 3D: instalação\n');
+  log('ÁGORA: instalação\n');
 
   // 1. Node.js (o Playwright, que abre o navegador, pede o 20 ou mais novo)
   const [maior] = process.versions.node.split('.').map(Number);

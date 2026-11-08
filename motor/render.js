@@ -1,4 +1,4 @@
-// Preguiça 3D: transforma uma pasta de vídeo (roteiro.json + cena) num vídeo 9:16 com narração, legenda, som e capa.
+// ÁGORA: transforma uma pasta de vídeo (roteiro.json + cena) num vídeo 9:16 com narração, legenda, som e capa.
 //
 //   node motor/render.js videos/<tema>                     vídeo completo (video.mp4 + capa.png)
 //   node motor/render.js videos/<tema> --previa 1,5.5      só os quadros desses segundos (testes/previa-*.jpg), pra conferir rápido
@@ -89,7 +89,7 @@ if (!previa && !trecho && !capa && !revisar && path.basename(pasta) !== 'exemplo
   }
 }
 const FPS = roteiro.fps || 30;
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'preguica3d-'));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'agora-'));
 // Os quadros temporários somem mesmo se o render der erro ou for interrompido (Ctrl+C): nada fica esquecido no computador
 process.on('exit', () => fs.rmSync(tmp, { recursive: true, force: true }));
 process.on('SIGINT', () => process.exit(130));

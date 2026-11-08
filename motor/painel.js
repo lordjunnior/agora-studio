@@ -71,11 +71,11 @@ const dataHora = (d) => new Date(d).toLocaleString('pt-BR', { day: '2-digit', mo
 
 // A porta do painel desta pasta, guardada na pasta temporária: com duas Máquinas no computador, a segunda fica noutra
 // porta, e rodar de novo reaproveita o painel dela em vez de ligar outro
-const PORTA_SALVA = path.join(os.tmpdir(), `preguica3d-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.porta`);
+const PORTA_SALVA = path.join(os.tmpdir(), `agora-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.porta`);
 // O código da página fica guardado na pasta temporária do computador: o endereço continua valendo quando o painel é
 // aberto de novo
 function codigo() {
-  const f = path.join(os.tmpdir(), `preguica3d-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.txt`);
+  const f = path.join(os.tmpdir(), `agora-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.txt`);
   try { const t = fs.readFileSync(f, 'utf8').trim(); if (/^[a-f0-9]{18}$/.test(t)) return t; } catch { /* primeira vez */ }
   const t = crypto.randomBytes(9).toString('hex');
   try { fs.writeFileSync(f, t); } catch { /* sem pasta temporária: o código vale só desta vez */ }
@@ -343,7 +343,7 @@ const DO_PACOTE = [
   { pasta: 'referencias/cenarios/', tipos: /\.(jpe?g|png|webp|md)$/i }
 ];
 const REGISTRO = ['motor', 'modelos', 'pacotes.json'];
-const PREPARO = path.join(os.tmpdir(), `preguica3d-pacote-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}`);
+const PREPARO = path.join(os.tmpdir(), `agora-pacote-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}`);
 const versaoDaMaquina = () => (lerJson('package.json') || {}).version || '';
 const maisNova = (a, b) => { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); return false; };
 
@@ -400,7 +400,7 @@ function listarPacotes() {
 // As fotos e o catálogo vêm do npm run modelos (motor/ver-modelos.js), em referencias/modelos/. Os cenários e as peças
 // dos pacotes (motor/modelos/*.js) são lidos do motor na hora: um pacote recém-vinculado aparece antes mesmo da foto
 const CATEGORIAS = [['cenarios', 'Cenários'], ['personagens', 'Personagens'], ['bichos', 'Bichos'], ['objetos', 'Objetos'], ['modelos', 'Modelos prontos']];
-const TRAVA_FOTOS = path.join(os.tmpdir(), `preguica3d-fotos-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.txt`);
+const TRAVA_FOTOS = path.join(os.tmpdir(), `agora-fotos-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.txt`);
 // As peças de cada motor/modelos/*.js (lidas uma vez por versão do arquivo: o da cidade tem 300 KB)
 const pecasLidas = new Map();
 function pecasDosModelos() {
@@ -591,7 +591,7 @@ function servir(porta, token, { esperando = false, aoAcabar = () => {} } = {}) {
     if (!['127.0.0.1', 'localhost'].includes(host)) { res.writeHead(403); return res.end(); }
     const url = new URL(req.url, `http://127.0.0.1:${porta}`);
     const json = (status, obj) => { res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' }); res.end(JSON.stringify(obj)); };
-    if (url.pathname === '/ping') return json(200, { app: 'preguica3d-painel', pasta: RAIZ, token, esperando, naTela: abaNaTela(), ir: pedidoIr && { n: pedidoIr.n, entregue: pedidoIr.entregue } });
+    if (url.pathname === '/ping') return json(200, { app: 'agora-painel', pasta: RAIZ, token, esperando, naTela: abaNaTela(), ir: pedidoIr && { n: pedidoIr.n, entregue: pedidoIr.entregue } });
     if (url.searchParams.get('t') !== token) {
       if (url.pathname === '/') { res.writeHead(403, { 'Content-Type': 'text/html; charset=utf-8' }); return res.end('<p style="font:18px system-ui;margin:40px">Abra o painel pelo endereço que a IA mostrou (ou peça pra ela: "abre o painel").</p>'); }
       return json(403, { ok: false, mensagem: 'Abra o painel de novo pelo endereço que a IA mostrou.' });
@@ -687,7 +687,7 @@ const ping = (porta) => new Promise((ok) => {
   const req = http.get({ host: '127.0.0.1', port: porta, path: '/ping', timeout: 1500 }, (res) => {
     let d = '';
     res.on('data', (x) => { d += x; });
-    res.on('end', () => { try { const j = JSON.parse(d); ok(j.app === 'preguica3d-painel' ? j : null); } catch { ok(null); } });
+    res.on('end', () => { try { const j = JSON.parse(d); ok(j.app === 'agora-painel' ? j : null); } catch { ok(null); } });
   });
   req.on('error', () => ok(null));
   req.on('timeout', () => { req.destroy(); ok(null); });

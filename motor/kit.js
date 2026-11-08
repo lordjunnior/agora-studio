@@ -1,4 +1,4 @@
-// Preguiça 3D: kit visual dos vídeos (mundo low-poly, personagem, rótulos, legenda, efeitos e som).
+// ÁGORA: kit visual dos vídeos (mundo low-poly, personagem, rótulos, legenda, efeitos e som).
 // Roda dentro da página do render (THREE global). Cada vídeo usa uma cena-modelo (motor/cenas-modelo/) ou um cena.js próprio.
 //
 // v2: linguagem de videogame (falha em P&B, ⏪ ⏸ ▶ ⏩), etiquetas com ponto colorido, destaque

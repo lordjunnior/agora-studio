@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<title>Painel · Máquina Preguiça 3D</title>
+<title>Painel · ÁGORA</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='44' fill='%23A8794F' stroke='%23221B14' stroke-width='5'/%3E%3Cpath d='M50 30C74 30 84 46 83 60C82 78 66 88 50 88C34 88 18 78 17 60C16 46 26 30 50 30Z' fill='%23EBD8B5' stroke='%23221B14' stroke-width='3'/%3E%3Cellipse cx='33' cy='58' rx='12' ry='6.5' transform='rotate(-18 33 58)' fill='%235C3A22'/%3E%3Cellipse cx='67' cy='58' rx='12' ry='6.5' transform='rotate(18 67 58)' fill='%235C3A22'/%3E%3Cellipse cx='50' cy='68' rx='6.5' ry='4.5' fill='%233A2416'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -676,7 +676,7 @@ textarea { resize: vertical; min-height: 50px; }
 <div class="fundo" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
 <aside class="lado vidro" aria-label="Menu do painel">
-  <a class="marca" href="#/inicio"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rosto"/></svg><span>Máquina Preguiça 3D<small>o painel</small></span></a>
+  <a class="marca" href="#/inicio"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rosto"/></svg><span>ÁGORA<small>o painel</small></span></a>
   <a class="canal-mini" href="#/canal" id="canal-mini"><span class="bolinha" id="lado-logo">M</span><div><b id="lado-nome">Seu canal</b><span id="lado-arroba">configure em Meu canal</span></div></a>
   <nav class="menu">
     <a href="#/inicio" data-pag="inicio"><svg aria-hidden="true"><use href="#i-inicio"/></svg>Comece aqui</a>
@@ -693,7 +693,7 @@ textarea { resize: vertical; min-height: 50px; }
 </aside>
 
 <div class="conteudo">
-  <div class="topo-celular"><a class="marca" href="#/inicio"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rosto"/></svg><span>Máquina Preguiça 3D<small>o painel</small></span></a><a href="#/canal" aria-label="Meu canal"><span class="bolinha" id="topo-logo">M</span></a></div>
+  <div class="topo-celular"><a class="marca" href="#/inicio"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rosto"/></svg><span>ÁGORA<small>o painel</small></span></a><a href="#/canal" aria-label="Meu canal"><span class="bolinha" id="topo-logo">M</span></a></div>
   <div id="avisos"></div>
   <main id="app"><p class="carregando">Abrindo o painel...</p></main>
 </div>
@@ -819,7 +819,7 @@ function lado() {
   $('#lado-arroba').textContent = c.arroba || (c.nome ? '' : 'configure em Meu canal');
   bolinha(c, $('#lado-logo'));
   bolinha(c, $('#topo-logo'));
-  document.title = `${c.nome ? c.nome + ' · ' : ''}Painel da Máquina Preguiça 3D`;
+  document.title = `${c.nome ? c.nome + ' · ' : ''}Painel da ÁGORA`;
   const reais = estado.videos.filter((v) => !v.exemplo).length;
   $('#num-videos').textContent = reais || '';
   $('#num-videos').hidden = !reais;
@@ -977,7 +977,7 @@ function paginaInicio(secao) {
   <header class="cabeca">
     <p class="chamada">Oi! Essa é a sua Máquina.</p>
     <h1>Comece <span class="circula">aqui${rabisco('circulo', 4)}</span></h1>
-    <p class="sub">A Máquina Preguiça 3D transforma um pedido seu num vídeo curto animado em 3D: roteiro, cenas, narração, legenda, capa e o texto pra postar.</p>
+    <p class="sub">A ÁGORA transforma um pedido seu num vídeo curto animado em 3D: roteiro, cenas, narração, legenda, capa e o texto pra postar.</p>
   </header>
   <ol class="passos">
     <li class="vidro" style="--r:-1deg"><h3>Você pede no chat</h3><p>Numa conversa nova com a IA, diga: <code>faz um vídeo sobre ...</code></p></li>
@@ -1065,7 +1065,7 @@ function htmlImportado(r) {
 function htmlPastas(r) {
   if (!r.pastas || !r.pastas.length) {
     return `<p class="caixa espera">Não achei nenhuma pasta antiga da Máquina neste computador (procurei na Mesa, em Documentos, em Downloads e no OneDrive). Sabe onde ela está? Cole o caminho aqui, ou peça pra IA: <b>traz o canal da minha pasta antiga</b> (dá pra arrastar a pasta pra conversa).</p>
-      <div class="acoes"><input type="text" id="caminho-antiga" placeholder="Ex.: C:\\Users\\voce\\Desktop\\maquina-preguica-3d" style="flex:1;min-width:240px;margin:0"><button class="botao mini" id="ver-caminho">Ver o que tem</button></div>`;
+      <div class="acoes"><input type="text" id="caminho-antiga" placeholder="Ex.: C:\\Users\\voce\\Desktop\\agora" style="flex:1;min-width:240px;margin:0"><button class="botao mini" id="ver-caminho">Ver o que tem</button></div>`;
   }
   return `<div class="escolhas largas" style="margin-top:16px">${r.pastas.map((x, i) => `
     <div class="opcao" style="cursor:default"><div class="texto-opcao">
@@ -2515,7 +2515,7 @@ document.addEventListener('click', (e) => {
   e.preventDefault();
   location.replace(a.getAttribute('href'));
 });
-const outrasAbas = 'BroadcastChannel' in window ? new BroadcastChannel('preguica3d-painel') : null;
+const outrasAbas = 'BroadcastChannel' in window ? new BroadcastChannel('agora-painel') : null;
 if (outrasAbas) {
   outrasAbas.onmessage = ({ data: m }) => {
     if (!m || aposentada === 'velha') return;
