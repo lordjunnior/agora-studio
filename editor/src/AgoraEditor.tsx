@@ -68,26 +68,22 @@ export const AgoraEditor: React.FC = () => {
   }, []);
 
   const undo = useCallback(() => {
-    setPast((history) => {
-      if (!history.length) return history;
-      const previous = history[history.length - 1];
-      setFuture((redoHistory) => [project, ...redoHistory].slice(0, 50));
-      setProject(previous);
-      setNotice("Alteração desfeita");
-      return history.slice(0, -1);
-    });
-  }, [project]);
+    if (!past.length) return;
+    const previous = past[past.length - 1];
+    setPast(past.slice(0, -1));
+    setFuture([project, ...future].slice(0, 50));
+    setProject(previous);
+    setNotice("Alteração desfeita");
+  }, [past, future, project]);
 
   const redo = useCallback(() => {
-    setFuture((history) => {
-      if (!history.length) return history;
-      const next = history[0];
-      setPast((undoHistory) => [...undoHistory, project].slice(-50));
-      setProject(next);
-      setNotice("Alteração refeita");
-      return history.slice(1);
-    });
-  }, [project]);
+    if (!future.length) return;
+    const next = future[0];
+    setFuture(future.slice(1));
+    setPast([...past, project].slice(-50));
+    setProject(next);
+    setNotice("Alteração refeita");
+  }, [past, future, project]);
 
   useEffect(() => {
     try { localStorage.setItem("agora.editor.project.v1", JSON.stringify(project)); }
