@@ -4,7 +4,7 @@
 
 O que é: toda versão nova da Máquina chega pra pessoa, sem pagar de novo. A versão nova aparece na área de membros da
 Cakto, na seção "Atualizações Para Sempre" (ou em "Já tinha a Máquina? Atualize"), como um arquivo com o número no nome
-(ex.: `maquina-preguica-3d-v2.3.zip`). A versão desta pasta está no `package.json` (`"version"`) e no `npm run extras`.
+(ex.: `agora-v2.3.zip`). A versão desta pasta está no `package.json` (`"version"`) e no `npm run extras`.
 
 ## Quando a pessoa disser "saiu versão nova" ou "baixei a versão nova"
 

@@ -20,9 +20,9 @@ Diga pra pessoa, com estas palavras (troque o nome da pasta pelo nome desta past
 
 > Agora você vai fazer uma cópia da Máquina pro outro idioma. É assim:
 > 1. Feche esta conversa.
-> 2. Abra a pasta onde está a sua Máquina. Você vai ver a pasta **maquina-preguica-3d**.
+> 2. Abra a pasta onde está a sua Máquina. Você vai ver a pasta **agora**.
 > 3. Copie essa pasta e cole ali do lado (no Mac: clique com o botão direito e escolha "Duplicar").
-> 4. Mude o nome da cópia pra **maquina-preguica-3d-en** (inglês) ou **maquina-preguica-3d-es** (espanhol).
+> 4. Mude o nome da cópia pra **agora-en** (inglês) ou **agora-es** (espanhol).
 > 5. Abra a cópia aqui na IA e me mande: "Esta é a cópia em inglês. Me ajuda a configurar."
 
 Não copie a pasta você mesmo.
@@ -62,7 +62,7 @@ a tradução de cada frase do lado.
 O cartão de seguir do fim do vídeo já sai no idioma do canal ("+ Follow" no inglês).
 
 **Aproveitar um vídeo em português:** copie o `roteiro.json` e o `cena.js` da pasta do vídeo na Máquina em português
-(`../maquina-preguica-3d/videos/<tema>`) pra `videos/<tema>-en` aqui e:
+(`../agora/videos/<tema>`) pra `videos/<tema>-en` aqui e:
 1. reescreva cada frase no outro idioma, de um jeito natural, sem traduzir palavra por palavra, com o mesmo número de
    frases e os mesmos planos;
 2. traduza a capa, os termos, as etiquetas e qualquer texto escrito dentro do `cena.js`;

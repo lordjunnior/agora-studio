@@ -47,7 +47,7 @@ Trazer de novo o mesmo arquivo não estraga nada: o que já está na Máquina fi
 | `atualizacoes-como-funciona.pdf` | Atualizações (é só o guia: guardar é opcional) |
 | `30-roteiros-e-100-temas.pdf`, `canal-gringo-ingles-e-espanhol.pdf` | o guia de cada um (guardar é opcional) |
 | Os do Google Drive (quem comprou no começo): "Comece Aqui - ....pdf", `30-roteiros.zip`, `canal-gringo.zip` | o mesmo de cima: funcionam igual |
-| `maquina-preguica-3d-v2.3.zip` (com número) | **não é extra**: é uma versão nova da Máquina. Siga `comandos/extras-atualizacoes.md` |
+| `agora-v2.3.zip` (com número) | **não é extra**: é uma versão nova da Máquina. Siga `comandos/extras-atualizacoes.md` |
 
 ## Como falar com a pessoa
 
