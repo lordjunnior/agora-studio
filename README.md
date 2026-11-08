@@ -1,59 +1,59 @@
-# Máquina Preguiça 3D
+# ÁGORA
 
-Vídeos curtos animados em 3D, feitos por IA a partir de um tema: roteiro, animação, narração, legenda, som e capa.
-Você escolhe o assunto, a IA faz o resto. Funciona com qualquer IA, até gratuita (com uma IA de código, como o
-Claude Code, fica bem melhor).
+**Da ideia ao vídeo.**
 
-**Comece por aqui:** [COMECE-AQUI.md](COMECE-AQUI.md)
+ÁGORA é uma plataforma inteligente de criação audiovisual. Este repositório reúne a base funcional da Máquina Preguiça 3D e o motor de composição do Kit Animação 3D, sob uma arquitetura e identidade inteiramente novas.
 
-Comandos que você (ou a IA) roda no terminal, dentro da pasta:
+> O produto está em fase de integração. Nem todos os módulos listados nos projetos de origem estão conectados à experiência unificada ainda.
 
+## Princípios
+
+- Preservar recursos existentes que forem validados.
+- Usar Remotion como orquestrador temporal de composições, timeline e renderização.
+- Usar Three.js e React Three Fiber para cenas e elementos 3D.
+- Manter FFmpeg para processamento final de áudio e vídeo quando necessário.
+- Unificar projetos, cenas, mídia, áudio, versões e exportações em um modelo de dados comum.
+- Reconstruir a interface e a identidade visual do zero. Não reutilizar mascote, paleta ou interface antiga.
+- Não remover motores legados antes de validar a substituição por testes de ponta a ponta.
+
+## Estrutura atual
+
+- `motor/`: motor procedural e ferramentas herdadas da Máquina Preguiça 3D.
+- `projeto/`: projeto Remotion + React + Three.js + React Three Fiber herdado do Kit Animação 3D.
+- `docs/`: arquitetura, contratos e plano de integração.
+- `packages/project-schema/`: contrato inicial do projeto audiovisual unificado.
+
+## Requisitos
+
+- Node.js 20 ou superior.
+- Dependências do motor legado instaladas conforme os scripts existentes.
+- Dependências Remotion instaladas separadamente em `projeto/`.
+
+## Comandos
+
+Na raiz:
+
+```bash
+npm run instalar
+npm run conferir
+npm run video -- videos/<tema>
+npm run painel
+npm run remotion:studio
+npm run remotion:render:example
+npm run remotion:typecheck
 ```
-npm run instalar                          instala tudo (peças do motor e navegador) e testa com o vídeo de exemplo
-npm run conferir                          confere se está tudo instalado e configurado (o canal e a voz)
-npm run chave                             abre uma janelinha pra colar a chave da voz da ElevenLabs (salva e testa)
-npm run vozes                             lista as vozes que dá pra usar (ElevenLabs e VoiceStudio)
-npm run testar-voz -- <id>                faz uma amostra de uma voz (canal/testes-de-voz/)
-npm run voicestudio                       confere o VoiceStudio (voz grátis): instalado, aberto, voz salva (-- --abrir abre)
-npm run video -- videos/<tema> --voz-teste --revisar    confere as cenas e faz a folha (uma imagem por frase)
-npm run video -- videos/<tema>            faz o vídeo
-npm run colar -- <tema>                   jeito por chat: faz o vídeo do roteiro copiado da IA
-npm run quadros -- <vídeo>                tira 12 quadros de um vídeo de referência pra IA olhar (canal/referencias/)
-npm run cenarios                          fotografa os 17 cenários prontos (referencias/cenarios/; -- cidade --hora noite)
-npm run modelos                           fotos de tudo que a Máquina desenha, pro painel (referencias/modelos/; --todos refaz)
-npm run canal                             salva o CONFIGURAR-MEU-CANAL.txt respondido (lê da área de transferência)
-npm run custos -- <tema>                  quanto o vídeo gastou: tokens da IA e créditos da ElevenLabs (custos.json)
-npm run importar                          acha a pasta da versão antiga e mostra o que traz (-- --confirmar traz)
-npm run painel                            abre o painel no navegador: o canal, os vídeos e os modelos 3D
-npm run painel -- --link                  liga o painel sem abrir aba nova e mostra o link (pro fim da resposta da IA)
-ABRIR-PAINEL.command / ABRIR-PAINEL.bat   dois cliques abrem o painel, sem IA e sem terminal (Mac / Windows)
-npm run painel -- <tema>                  abre o painel nas cenas do vídeo, pra dar a opinião de cada uma
-npm run painel -- <tema> --opiniao        mostra a opinião que a pessoa deu no painel
-npm run painel -- --pacote <zip>          instala um pacote extra de modelos 3D e cenários
+
+Para instalar as dependências do Remotion:
+
+```bash
+cd projeto
+npm install
 ```
 
-No Windows, se o PowerShell disser que "a execução de scripts foi desabilitada", troque `npm` por `npm.cmd`
-(`npm.cmd run instalar`).
+## Direção arquitetural
 
-**Dúvidas:** pergunte pra sua IA ("Me ajuda a fazer isso") ou veja o menu Ajuda do painel. Só se não resolver:
-desconstruindouniverso@gmail.com
+Remotion é o orquestrador de tempo e composição. O adaptador 3D usa Three.js / React Three Fiber. O motor legado permanece isolado até que suas capacidades sejam migradas e verificadas. Consulte [a arquitetura](docs/architecture/overview.md) e [o plano de migração](docs/migration/plan.md).
 
-**Licença:** uso pessoal. Os vídeos que você criar são seus; revender ou redistribuir a Máquina Preguiça 3D é proibido.
-Detalhes em [LICENCA.md](LICENCA.md).
+## Estado
 
-```
-COMECE-AQUI.md     o passo a passo: instalar e configurar (uma conversa), os vídeos (uma conversa nova pra cada), postar
-LICENCA.md         o que você pode e o que não pode fazer com a Máquina Preguiça 3D
-NOVIDADES.md       o que mudou em cada versão
-AGENTS.md          como a IA trabalha nesta pasta (CLAUDE.md e GEMINI.md apontam pra ele)
-comandos/          boas-vindas, instalar, VoiceStudio, novo vídeo, publicar e o jeito por chat (qualquer IA)
-canal/             o SEU canal: nome, tema, jeito de falar, personagem, pauta, perfil nas redes e o que a IA aprendeu
-metodo/            a fórmula do roteiro e o ritmo dos vídeos
-motor/             o motor de animação e o painel (não precisa mexer)
-referencias/       o método de cada vídeo (COMO-FAZER-O-VIDEO.md), os 17 cenários prontos com as fotos (cenarios.md e
-                   cenarios/), os modelos pra copiar (modelo-construcao/, modelo-natureza/ e modelo-de-cena/), o
-                   cardápio de cenas e o índice do que o motor sabe fazer
-videos/            uma pasta por vídeo (o vídeo, a capa e o texto de postar; os testes em testes/);
-                   videos/exemplo/ é a lanterna, um vídeo pronto
-.claude/skills/    os atalhos /instalar, /novo-video, /publicar e /ajuda do Claude Code
-```
+Esta branch estabelece a primeira etapa de integração: comandos de acesso ao Remotion, documentação arquitetural e contrato inicial de projeto. A interface unificada e o fluxo completo de produção serão implementados em etapas verificáveis.

@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agora.local/schemas/project-v1.json",
+  "title": "AGORA Project",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "name",
+    "profile",
+    "scenes",
+    "tracks",
+    "assets"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "width",
+        "height",
+        "fps"
+      ],
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "fps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        },
+        "pixelFormat": {
+          "type": "string"
+        },
+        "codec": {
+          "type": "string"
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": [
+          "id",
+          "durationInFrames"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "durationInFrames": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "renderer": {
+            "type": "string",
+            "enum": [
+              "remotion-react",
+              "remotion-three",
+              "legacy-adapter"
+            ]
+          },
+          "environment": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "characters": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "objects": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "camera": {
+            "type": "object"
+          },
+          "audio": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "captions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "tracks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "scene",
+              "voice",
+              "music",
+              "sfx",
+              "caption",
+              "overlay"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "src"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "model",
+              "texture",
+              "image",
+              "video",
+              "audio",
+              "font",
+              "environment",
+              "character"
+            ]
+          },
+          "src": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "audio": {
+      "type": "object"
+    },
+    "export": {
+      "type": "object"
+    }
+  }
+}
