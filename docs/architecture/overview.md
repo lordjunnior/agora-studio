@@ -2,33 +2,33 @@
 
 ## Objetivo
 
-Unificar a produção audiovisual da Máquina Preguiça 3D e do Kit Animação 3D sem manter duas plataformas concorrentes. A integração é por capacidades, não por cópia de interfaces.
+Oferecer um único ambiente de produção audiovisual. A arquitetura é organizada por capacidades, com contratos claros entre interface, projeto, mídia, áudio e renderização.
 
-## Responsabilidades dos motores
+## Responsabilidades
 
 ### Remotion
 
 Responsável pelo relógio global da composição, sequência de cenas, duração em frames, sincronização temporal de elementos, composição final e renderização determinística.
 
-O projeto existente em `projeto/` é a primeira implementação do adaptador Remotion. A versão atual identificada no manifesto é Remotion 4.0.540.
+O módulo em `projeto/` é a implementação inicial do motor temporal. A versão identificada no manifesto é Remotion 4.0.540.
 
 ### Three.js e React Three Fiber
 
 Responsáveis pela construção e apresentação dos mundos 3D, personagens, objetos, câmeras, materiais e animações. As cenas React/Three são compostas pelo Remotion.
 
-O Kit já contém uma implementação de tela 3D em `projeto/src/kit/Cena3D.tsx`; ela deve ser tratada como implementação existente a validar, não reescrita sem necessidade.
+A implementação 3D existente deve ser validada antes de qualquer reescrita.
 
-### Motor procedural legado
+### Serviços de produção
 
-O código de `motor/` contém geração procedural de cenários e personagens, ferramentas de revisão, narração, custos, importação e processamento. Ele permanece como fonte de capacidades e ativos durante a migração.
+Os módulos de geração procedural, revisão, narração, custos, importação e processamento permanecem organizados como serviços do ÁGORA. Eles devem ser encapsulados por contratos estáveis e conectados progressivamente ao fluxo principal.
 
-Não executar os dois motores como renderizadores independentes do mesmo projeto final. O legado deverá ser encapsulado por adaptadores ou convertido em ativos/dados consumidos pelo fluxo Remotion.
+Não manter renderizadores independentes concorrendo pela composição final do mesmo projeto.
 
 ### FFmpeg
 
-Continua disponível para muxing, normalização, mixagem e operações de pós-processamento que não sejam melhor resolvidas pela composição Remotion.
+Disponível para muxing, normalização, mixagem e operações de pós-processamento que não sejam melhor resolvidas pela composição Remotion.
 
-## Fluxo de produção pretendido
+## Fluxo de produção
 
 1. O usuário cria ou abre um projeto ÁGORA.
 2. O projeto guarda roteiro, perfil de saída, cenas, ativos e trilhas.
@@ -49,13 +49,13 @@ Continua disponível para muxing, normalização, mixagem e operações de pós-
 - Adaptadores não devem alterar o documento original do projeto durante o render.
 - Toda operação de render deve ser reproduzível a partir de uma versão salva do projeto.
 
-## Decisões de compatibilidade
+## Compatibilidade
 
-O projeto Remotion declara React 18.3.1, Remotion 4.0.540, Three.js 0.171.0 e React Three Fiber 8.18.0. O motor legado declara Three.js 0.160.0. Essas versões não devem ser forçadas para uma única instalação sem testes: manter isolamento de dependências até validar a compatibilidade.
+O projeto de composição declara React 18.3.1, Remotion 4.0.540, Three.js 0.171.0 e React Three Fiber 8.18.0. Os serviços 3D existentes também utilizam Three.js 0.160.0. Essas versões não devem ser forçadas para uma única instalação sem testes: manter isolamento de dependências até validar a compatibilidade.
 
 ## Não objetivos desta etapa
 
-- Apagar o motor legado.
+- Apagar módulos funcionais antes de validar sua substituição.
 - Recriar imediatamente todos os personagens e ambientes.
 - Substituir a biblioteca 3D antes de inventariar e testar seus recursos.
 - Declarar integração completa antes de renderizar um projeto real de ponta a ponta.

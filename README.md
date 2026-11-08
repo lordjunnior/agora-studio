@@ -2,32 +2,33 @@
 
 **Da ideia ao vídeo.**
 
-ÁGORA é uma plataforma inteligente de criação audiovisual. Este repositório reúne a base funcional da Máquina Preguiça 3D e o motor de composição do Kit Animação 3D, sob uma arquitetura e identidade inteiramente novas.
+ÁGORA é uma plataforma inteligente de criação audiovisual. Seu ambiente reúne criação de projetos, roteiro, cenas 2D e 3D, personagens, cenários, câmera, áudio, legendas, revisão e renderização em um fluxo único.
 
-> O produto está em fase de integração. Nem todos os módulos listados nos projetos de origem estão conectados à experiência unificada ainda.
+> A plataforma está em integração progressiva. Cada recurso será considerado disponível somente depois de validado.
 
 ## Princípios
 
-- Preservar recursos existentes que forem validados.
+- Uma identidade, uma experiência e uma arquitetura: ÁGORA.
+- Preservar capacidades funcionais e validá-las antes de qualquer substituição.
 - Usar Remotion como orquestrador temporal de composições, timeline e renderização.
 - Usar Three.js e React Three Fiber para cenas e elementos 3D.
 - Manter FFmpeg para processamento final de áudio e vídeo quando necessário.
 - Unificar projetos, cenas, mídia, áudio, versões e exportações em um modelo de dados comum.
-- Reconstruir a interface e a identidade visual do zero. Não reutilizar mascote, paleta ou interface antiga.
-- Não remover motores legados antes de validar a substituição por testes de ponta a ponta.
+- Não expor nomes, marcas ou identidades de ferramentas anteriores na interface, documentação ou experiência do produto.
+- Não remover módulos antes de validar a substituição por testes de ponta a ponta.
 
-## Estrutura atual
+## Estrutura
 
-- `motor/`: motor procedural e ferramentas herdadas da Máquina Preguiça 3D.
-- `projeto/`: projeto Remotion + React + Three.js + React Three Fiber herdado do Kit Animação 3D.
-- `docs/`: arquitetura, contratos e plano de integração.
-- `packages/project-schema/`: contrato inicial do projeto audiovisual unificado.
+- `motor/`: serviços de produção, geração procedural, áudio, revisão e processamento.
+- `projeto/`: composição, timeline e renderização com Remotion.
+- `docs/`: arquitetura, contratos e plano de evolução.
+- `packages/project-schema/`: contrato inicial do projeto audiovisual.
 
 ## Requisitos
 
 - Node.js 20 ou superior.
-- Dependências do motor legado instaladas conforme os scripts existentes.
-- Dependências Remotion instaladas separadamente em `projeto/`.
+- Dependências dos módulos instaladas conforme os comandos disponíveis.
+- Dependências Remotion instaladas em `projeto/`.
 
 ## Comandos
 
@@ -43,17 +44,17 @@ npm run remotion:render:example
 npm run remotion:typecheck
 ```
 
-Para instalar as dependências do Remotion:
+Para instalar as dependências de composição:
 
 ```bash
 cd projeto
 npm install
 ```
 
-## Direção arquitetural
+## Arquitetura
 
-Remotion é o orquestrador de tempo e composição. O adaptador 3D usa Three.js / React Three Fiber. O motor legado permanece isolado até que suas capacidades sejam migradas e verificadas. Consulte [a arquitetura](docs/architecture/overview.md) e [o plano de migração](docs/migration/plan.md).
+Remotion é o orquestrador de tempo e composição. O adaptador 3D usa Three.js / React Three Fiber. Os serviços de produção permanecem organizados em módulos até que suas capacidades sejam integradas e verificadas. Consulte [a arquitetura](docs/architecture/overview.md) e [o plano de evolução](docs/migration/plan.md).
 
 ## Estado
 
-Esta branch estabelece a primeira etapa de integração: comandos de acesso ao Remotion, documentação arquitetural e contrato inicial de projeto. A interface unificada e o fluxo completo de produção serão implementados em etapas verificáveis.
+A base atual estabelece comandos de acesso ao Remotion, documentação arquitetural e contrato inicial de projeto. A interface unificada e o fluxo completo de produção serão implementados e validados por etapas.
