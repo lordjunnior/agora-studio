@@ -4,9 +4,7 @@
   "private": true,
   "license": "SEE LICENSE IN LICENCA.md",
   "description": "ÁGORA — plataforma inteligente de criação audiovisual",
-  "engines": {
-    "node": ">=20"
-  },
+  "engines": { "node": ">=20" },
   "scripts": {
     "instalar": "node motor/instalar.js",
     "conferir": "node motor/conferir.js",
@@ -30,7 +28,9 @@
     "remotion:studio": "npm --prefix projeto run studio",
     "remotion:render:example": "npm --prefix projeto run exemplo",
     "remotion:typecheck": "npm --prefix projeto run typecheck",
-    "agora:render": "npm --prefix projeto run projeto:render"
+    "agora:render": "npm --prefix projeto run projeto:render",
+    "editor": "npm --prefix editor run dev",
+    "editor:build": "npm --prefix editor run build"
   },
   "dependencies": {
     "ffmpeg-static": "5.2.0",
@@ -38,7 +38,5 @@
     "playwright": "1.64.1",
     "three": "0.160.0"
   },
-  "allowScripts": {
-    "ffmpeg-static@5.2.0": true
-  }
+  "allowScripts": { "ffmpeg-static@5.2.0": true }
 }
