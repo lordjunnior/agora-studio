@@ -90,7 +90,7 @@ async function salvarETestar(bruta) {
 // ---------- A janelinha ----------
 
 const PAGINA = (token, jaTem) => `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><title>Chave da voz · Máquina Preguiça 3D</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Chave da voz · ÁGORA</title>
 <style>
 :root{--fundo:#f4f1ea;--cartao:#fff;--texto:#1d1f24;--suave:#5b6170;--borda:#e3ded3;--destaque:#f5c518;--ok:#1f8a4c;--okf:#e7f6ed;--erro:#c62828;--errof:#fdecea;--esperaf:#fff8db}
 *{box-sizing:border-box}body{margin:0;background:var(--fundo);color:var(--texto);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
@@ -120,7 +120,7 @@ ${jaTem ? '<p class="ja">Já tem uma chave salva aqui. Se você colar outra, ela
 <a class="botao" href="https://elevenlabs.io/app/sign-up" target="_blank" rel="noopener">Abrir a ElevenLabs</a></div></li>
 <li><span class="n">2</span><div><h2>Crie a chave</h2>
 <p>Na página das chaves (no menu da esquerda: <b>Developers</b> e depois <b>API Keys</b>), clique em <b>Create API Key</b> e
-dê o nome <b>Preguiça 3D</b>. Se aparecer a lista do que a chave pode fazer, libere tudo (ou pelo menos <b>Text to
+dê o nome <b>ÁGORA</b>. Se aparecer a lista do que a chave pode fazer, libere tudo (ou pelo menos <b>Text to
 Speech</b>, <b>Voices</b> e <b>User</b>). Confirme e copie o código que aparece: ele começa com <code>sk_</code> e só
 aparece uma vez.</p>
 <a class="botao" href="${PAGINA_CHAVES}" target="_blank" rel="noopener">Abrir a página das chaves</a></div></li>
@@ -131,7 +131,7 @@ aparece uma vez.</p>
 <button class="principal" id="salvar" type="submit">Salvar a chave</button></form>
 <div id="aviso" role="status"></div></div></li>
 </ol>
-<p class="pe">Máquina Preguiça 3D · esta janela funciona só no seu computador. Travou? Pergunte pra sua IA: "Me ajuda a pôr a chave da voz".</p>
+<p class="pe">ÁGORA · esta janela funciona só no seu computador. Travou? Pergunte pra sua IA: "Me ajuda a pôr a chave da voz".</p>
 </div></main>
 <script>
 const T = ${JSON.stringify(token)};
@@ -166,7 +166,7 @@ function servir(porta, token, aoSalvar) {
     if (!['127.0.0.1', 'localhost'].includes(host)) { res.writeHead(403); return res.end(); }
     const url = new URL(req.url, `http://127.0.0.1:${porta}`);
     const responder = (status, tipo, corpo) => { res.writeHead(status, { 'Content-Type': tipo, 'Cache-Control': 'no-store' }); res.end(corpo); };
-    if (req.method === 'GET' && url.pathname === '/ping') return responder(200, 'application/json', JSON.stringify({ app: 'preguica3d-chave', pasta: RAIZ, token, visto }));
+    if (req.method === 'GET' && url.pathname === '/ping') return responder(200, 'application/json', JSON.stringify({ app: 'agora-chave', pasta: RAIZ, token, visto }));
     if (req.method === 'GET' && url.pathname === '/') {
       if (url.searchParams.get('t') !== token) return responder(403, 'text/html; charset=utf-8', '<p>Abra a janela pelo endereço que a IA mostrou.</p>');
       visto = true;
@@ -206,7 +206,7 @@ const ping = (porta) => new Promise((ok) => {
   const req = http.get({ host: '127.0.0.1', port: porta, path: '/ping', timeout: 1500 }, (res) => {
     let d = '';
     res.on('data', (x) => { d += x; });
-    res.on('end', () => { try { const j = JSON.parse(d); ok(j.app === 'preguica3d-chave' ? j : null); } catch { ok(null); } });
+    res.on('end', () => { try { const j = JSON.parse(d); ok(j.app === 'agora-chave' ? j : null); } catch { ok(null); } });
   });
   req.on('error', () => ok(null));
   req.on('timeout', () => { req.destroy(); ok(null); });

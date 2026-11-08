@@ -107,7 +107,7 @@ function quebrar(t, recuo = '   ') {
 }
 function modelo() {
   const L = [
-    '#'.repeat(LARGURA), `  ${CABECA} · Máquina Preguiça 3D`, '#'.repeat(LARGURA), '',
+    '#'.repeat(LARGURA), `  ${CABECA} · ÁGORA`, '#'.repeat(LARGURA), '',
     'PRA IA (faça só isto, nesta ordem):',
     '1. Rode este comando no terminal, dentro da pasta da Máquina:',
     '      npm run canal',
@@ -367,7 +367,7 @@ function areaDeTransferencia() {
   try {
     if (process.platform === 'darwin') return execSync('pbpaste', { encoding: 'utf8' });
     if (process.platform === 'win32') {
-      const arq = path.join(os.tmpdir(), `preguica3d-canal-${process.pid}.txt`);
+      const arq = path.join(os.tmpdir(), `agora-canal-${process.pid}.txt`);
       execFileSync('powershell', ['-NoProfile', '-Command',
         `[IO.File]::WriteAllText('${arq.replace(/'/g, "''")}', (Get-Clipboard -Raw), (New-Object Text.UTF8Encoding $false))`]);
       try { return fs.readFileSync(arq, 'utf8'); } finally { fs.rmSync(arq, { force: true }); }

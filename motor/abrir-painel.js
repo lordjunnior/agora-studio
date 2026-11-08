@@ -12,7 +12,7 @@ const { spawnSync } = require('child_process');
 
 const RAIZ = path.resolve(__dirname, '..');
 const PORTA = 47392; // a do painel (motor/painel.js); com duas Máquinas no computador, a outra fica na porta guardada
-const PORTA_SALVA = path.join(os.tmpdir(), `preguica3d-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.porta`);
+const PORTA_SALVA = path.join(os.tmpdir(), `agora-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.porta`);
 
 function abrir(args = []) {
   try {
@@ -28,7 +28,7 @@ const ping = (porta) => new Promise((ok) => {
     let d = '';
     res.on('data', (x) => { d += x; });
     res.on('end', () => {
-      try { const j = JSON.parse(d); ok(j.app === 'preguica3d-painel' && j.pasta === RAIZ ? { url: `http://127.0.0.1:${porta}/?t=${j.token}` } : null); } catch { ok(null); }
+      try { const j = JSON.parse(d); ok(j.app === 'agora-painel' && j.pasta === RAIZ ? { url: `http://127.0.0.1:${porta}/?t=${j.token}` } : null); } catch { ok(null); }
     });
   });
   req.on('error', () => ok(null));

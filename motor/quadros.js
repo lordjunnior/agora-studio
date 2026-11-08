@@ -33,7 +33,7 @@ for (let k = 2; fs.existsSync(folha); k++) folha = path.join(pasta, `${nome}-${k
 const cols = n <= 6 ? 3 : n <= 12 ? 4 : 6;
 const passo = dur / n;
 // Um quadro no meio de cada pedaço do vídeo; depois, todos lado a lado na ordem (da esquerda pra direita, de cima pra baixo)
-const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'preguica3d-quadros-'));
+const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'agora-quadros-'));
 try {
   let feitos = 0;
   for (let i = 0; i < n; i++) {
