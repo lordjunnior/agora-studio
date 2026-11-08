@@ -51,10 +51,14 @@ function copiar(de, para) {
   fs.copyFileSync(de, para, fs.constants.COPYFILE_EXCL);
 }
 
-// ---------- Achar a pasta antiga ----------
+// ---------- Localizar outro projeto ÁGORA ----------
 
-// Uma pasta é da Máquina se tem o motor, o canal e o package.json dela
-const ehMaquina = (d) => existe(path.join(d, 'motor', 'kit.js')) && ehPasta(path.join(d, 'canal')) && /"name"\s*:\s*"preguica3d"/.test(ler(path.join(d, 'package.json')) || '');
+// Um projeto válido precisa conter os diretórios de trabalho e o manifesto oficial do ÁGORA.
+const ehProjeto = (d) => {
+  if (!existe(path.join(d, 'motor', 'kit.js')) || !ehPasta(path.join(d, 'canal'))) return false;
+  try { return JSON.parse(ler(path.join(d, 'package.json')) || '{}').name === 'agora-studio'; }
+  catch { return false; }
+};
 const PULAR = /^(node_modules|Library|AppData|Applications|Application Data|Music|Movies|Pictures|Videos|Imagens|Músicas|\$Recycle\.Bin|Windows|Program Files.*|ProgramData|snap|go|venv|\.\w.*)$/i;
 // Procura a partir da pasta da pessoa, até 4 níveis (Mesa, Documentos, Downloads, OneDrive...), por no máximo uns
 // segundos. Fica de fora esta pasta e o que estiver dentro dela
@@ -66,7 +70,7 @@ function procurar() {
     const { d, n } = fila.shift();
     vistas++;
     if (path.resolve(d) === RAIZ || path.resolve(d).startsWith(RAIZ + path.sep)) continue;
-    if (ehMaquina(d)) { achadas.push(path.resolve(d)); continue; }
+    if (ehProjeto(d)) { achadas.push(path.resolve(d)); continue; }
     if (n >= 4) continue;
     for (const x of listar(d)) if (x.isDirectory() && !PULAR.test(x.name)) fila.push({ d: path.join(d, x.name), n: n + 1 });
   }
