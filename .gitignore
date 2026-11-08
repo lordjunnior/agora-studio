@@ -1,4 +1,6 @@
 node_modules/
+editor/dist/
+*.tsbuildinfo
 .env
 .env.local
 .env.txt
