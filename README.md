@@ -57,4 +57,4 @@ Remotion é o orquestrador de tempo e composição. O adaptador 3D usa Three.js 
 
 ## Estado
 
-A base atual estabelece comandos de acesso ao Remotion, documentação arquitetural e contrato inicial de projeto. A interface unificada e o fluxo completo de produção serão implementados e validados por etapas.
+A base atual inclui composição Remotion, trilhas de áudio e mídia visual, importação e renderização de modelos GLB, validação de MP4 e a primeira versão do editor visual. O editor já permite pré-visualizar, selecionar e reposicionar clipes, editar propriedades e importar/exportar documentos de projeto. Persistência automática, upload de mídia pela interface, undo/redo, trim por alças, keyframes, waveform e fila de renderização integrada continuam em desenvolvimento.
