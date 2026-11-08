@@ -1,4 +1,4 @@
-// Bichos prontos da Máquina Preguiça 3D, feitos e testados em vídeos de verdade: a mosquita (a fêmea do
+// Bichos prontos da Máquina ÁGORA, feitos e testados em vídeos de verdade: a mosquita (a fêmea do
 // mosquito, com as agulhas), o gato (as duas metades que giram separadas, pra mostrar como ele cai em pé), o
 // ornitorrinco (com o filhote e o macho de esporão), o cachorro (vira-lata caramelo, com raio-X dos órgãos), o camaleão
 // (olhos que giram cada um pro seu lado, língua elástica e a cor que muda) e a mosca, mais os efeitos estrelinhas da

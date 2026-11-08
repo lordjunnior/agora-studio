@@ -297,7 +297,7 @@ const PROXIMO = {
 // Os arquivos dos extras no computador: pelo nome (os de hoje e os do Drive), nas pastas de sempre
 function qualProduto(nome) {
   const n = semAcento(nome);
-  if (/maquina-preguica|^comece aqui - maquina/.test(n)) return null;
+  if (/agora|^comece aqui - agora/.test(n)) return null;
   if (/^30-roteiros$|30-roteiros.*\.zip$|roteiros.*temas.*\.pdf$|^100-temas\.md$/.test(n)) return 'roteiros';
   if (/^canal-gringo$|gringo.*\.(zip|pdf)$|ingles.*espanhol.*\.pdf$/.test(n)) return 'gringo';
   if (/checklist.viral.*\.(pdf|md)$/.test(n)) return 'checklist';

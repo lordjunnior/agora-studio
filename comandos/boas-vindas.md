@@ -102,7 +102,7 @@ Uma vez só por conversa. Se a pessoa já fez um pedido, numa conversa de volta,
 
 ### Apresentação (primeira vez)
 
-> **O que é isto:** a Máquina Preguiça 3D transforma um tema (tipo "como funciona um guarda-chuva") num vídeo curto
+> **O que é isto:** a Máquina ÁGORA transforma um tema (tipo "como funciona um guarda-chuva") num vídeo curto
 > animado em 3D, pronto pra postar: roteiro, animação, narração, legenda, som e capa.
 >
 > **Como a gente vai trabalhar:**
