@@ -36,7 +36,7 @@ No Windows, se o PowerShell disser que "a execução de scripts foi desabilitada
 (`npm.cmd run instalar`).
 
 **Dúvidas:** pergunte pra sua IA ("Me ajuda a fazer isso") ou veja o menu Ajuda do painel. Só se não resolver:
-desconstruindouniverso@gmail.com
+lordjunnior@gmail.com
 
 **Licença:** uso pessoal. Os vídeos que você criar são seus; revender ou redistribuir a Máquina Preguiça 3D é proibido.
 Detalhes em [LICENCA.md](LICENCA.md).
