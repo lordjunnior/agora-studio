@@ -9,10 +9,11 @@ export type AgoraTrackItem = {
   id: string; assetId?: string; fromInFrames: number; durationInFrames: number;
   volume?: number; text?: string; words?: AgoraWord[];
   media?: { fit?: "cover" | "contain" | "fill"; position?: string; opacity?: number; scale?: number };
+  model?: { position?: [number, number, number]; rotation?: [number, number, number]; scale?: number; spinPerSecond?: number; cameraPosition?: [number, number, number]; cameraFov?: number; ambientIntensity?: number };
   style?: { color?: string; highlightColor?: string; fontSize?: number; bottom?: number; align?: "left" | "center" | "right"; uppercase?: boolean; background?: string };
 };
 export type AgoraTrack = {
-  id: string; type: "scene" | "voice" | "music" | "sfx" | "caption" | "overlay" | "image" | "video";
+  id: string; type: "scene" | "voice" | "music" | "sfx" | "caption" | "overlay" | "image" | "video" | "model";
   name?: string; items?: AgoraTrackItem[];
 };
 export type AgoraProject = {
@@ -55,12 +56,13 @@ export function validateAgoraProject(value: unknown): asserts value is AgoraProj
       itemIds.add(item.id);
       if (!Number.isInteger(item.fromInFrames) || item.fromInFrames < 0 || !Number.isInteger(item.durationInFrames) ||
           item.durationInFrames < 1 || item.fromInFrames + item.durationInFrames > totalFrames) throw new Error(`Intervalo inválido no item "${item.id}".`);
-      if (["voice", "music", "sfx", "image", "video"].includes(track.type)) {
+      if (["voice", "music", "sfx", "image", "video", "model"].includes(track.type)) {
         if (!item.assetId || !assetIds.has(item.assetId)) throw new Error(`Ativo não encontrado no item "${item.id}".`);
         if (item.volume !== undefined && (item.volume < 0 || item.volume > 1)) throw new Error(`Volume inválido no item "${item.id}".`);
         const asset = project.assets.find((candidate) => candidate.id === item.assetId);
         if (track.type === "image" && asset?.type !== "image") throw new Error(`O item "${item.id}" precisa de um ativo de imagem.`);
         if (track.type === "video" && asset?.type !== "video") throw new Error(`O item "${item.id}" precisa de um ativo de vídeo.`);
+        if (track.type === "model" && asset?.type !== "model") throw new Error(`O item "${item.id}" precisa de um modelo 3D.`);
       }
       if (["caption", "overlay"].includes(track.type) && !item.text && !item.words?.length) throw new Error(`Texto ausente no item "${item.id}".`);
       for (const word of item.words ?? []) {

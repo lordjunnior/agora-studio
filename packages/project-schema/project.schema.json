@@ -162,7 +162,8 @@
               "caption",
               "overlay",
               "image",
-              "video"
+              "video",
+              "model"
             ]
           },
           "name": {
@@ -193,6 +194,18 @@
                   "type": "number",
                   "minimum": 0,
                   "maximum": 1
+                },
+                "model": {
+                  "type": "object",
+                  "properties": {
+                    "position": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+                    "rotation": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+                    "scale": { "type": "number", "exclusiveMinimum": 0 },
+                    "spinPerSecond": { "type": "number" },
+                    "cameraPosition": { "type": "array", "items": { "type": "number" }, "minItems": 3, "maxItems": 3 },
+                    "cameraFov": { "type": "number", "minimum": 1, "maximum": 179 },
+                    "ambientIntensity": { "type": "number", "minimum": 0 }
+                  }
                 },
                 "media": {
                   "type": "object",
@@ -278,7 +291,8 @@
                     "music",
                     "sfx",
                     "image",
-                    "video"
+                    "video",
+                    "model"
                   ]
                 }
               },

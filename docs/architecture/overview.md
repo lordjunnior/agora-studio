@@ -94,3 +94,9 @@ Teste ponta a ponta realizado: manifesto com um segmento WAV e quatro palavras t
 O contrato de projeto agora aceita trilhas `image` e `video`. O importador `npm --prefix projeto run media:import -- <media-manifest.json>` copia os arquivos para `projeto/public/agora-assets/`, registra os ativos e cria itens posicionados por segundos convertidos em frames. Imagens usam `Img`; vídeos usam `Video` do Remotion. Os itens aceitam `fit` (`cover`, `contain`, `fill`), `position`, `opacity` e `scale`; vídeos também aceitam `volume`.
 
 Teste executado com uma imagem real da biblioteca de exemplo: manifesto importado, ativo copiado, trilha de 360 frames validada e MP4 renderizado com sucesso. O projeto ativo foi restaurado e o arquivo de teste removido. O suporte de vídeo foi implementado no renderer, mas ainda precisa de um teste ponta a ponta com um arquivo de vídeo real. Modelos 3D externos ainda não são importados como ativos de timeline; permanecem dependentes de cenas/composições 3D registradas.
+
+### Modelos 3D externos (GLB)
+
+O importador de mídia também aceita `type: "model"` para arquivos `.glb` autocontidos. Cada item entra em uma trilha própria de modelos 3D e é renderizado com Three.js/GLTFLoader dentro do Remotion, com transparência para compor sobre as cenas. O manifesto pode fornecer `model.position`, `model.rotation` (radianos), `model.scale`, `model.spinPerSecond`, `model.cameraPosition`, `model.cameraFov` e `model.ambientIntensity`.
+
+A importação foi validada com um GLB mínimo gerado localmente e a renderização completa de 360 frames terminou com sucesso. A saída foi validada como MP4 H.264, 1080×1920, com áudio AAC. Nesta etapa, o importador limita modelos a GLB autocontido; arquivos `.gltf` com texturas/arquivos externos e animações esqueléticas ainda não estão cobertos pelo fluxo de importação/testes.

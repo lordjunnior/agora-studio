@@ -5,6 +5,7 @@ import { projectDurationInFrames, validateAgoraProject } from "./types";
 import { Cidade, Espaco } from "../exemplo/Exemplo";
 import { TimelineText } from "./TimelineText";
 import { TimelineMedia } from "./TimelineMedia";
+import { TimelineModel } from "./TimelineModel";
 
 const sceneRegistry: Record<string, React.ComponentType> = { cidade: Cidade, espaco: Espaco };
 type Props = { project: AgoraProject };
@@ -37,6 +38,11 @@ export const ProjetoComposition: React.FC<Props> = ({ project }) => {
           return <Sequence key={item.id} from={item.fromInFrames} durationInFrames={item.durationInFrames} name={track.name ?? track.type}>
             <Audio src={staticFile(asset.src)} volume={item.volume ?? 1} />
           </Sequence>;
+        }
+        if (track.type === "model") {
+          const asset = assets.get(item.assetId!);
+          if (!asset) throw new Error(`Modelo 3D não encontrado: ${item.assetId}`);
+          return <Sequence key={item.id} from={item.fromInFrames} durationInFrames={item.durationInFrames} name={track.name ?? "Modelos 3D"}><TimelineModel item={item} src={asset.src} /></Sequence>;
         }
         if (track.type === "image" || track.type === "video") {
           const asset = assets.get(item.assetId!);
