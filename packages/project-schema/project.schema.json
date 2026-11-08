@@ -169,10 +169,65 @@
           "items": {
             "type": "array",
             "items": {
-              "type": "object"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "assetId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "fromInFrames": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "durationInFrames": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "volume": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
             }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "voice",
+                    "music",
+                    "sfx"
+                  ]
+                }
+              },
+              "required": [
+                "type"
+              ]
+            },
+            "then": {
+              "properties": {
+                "items": {
+                  "items": {
+                    "required": [
+                      "id",
+                      "assetId",
+                      "fromInFrames",
+                      "durationInFrames"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "assets": {

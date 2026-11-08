@@ -33,9 +33,60 @@
       "id": "track-scenes",
       "type": "scene",
       "name": "Cenas"
+    },
+    {
+      "id": "track-music",
+      "type": "music",
+      "name": "Trilha sonora",
+      "items": [
+        {
+          "id": "music-main",
+          "assetId": "asset-music",
+          "fromInFrames": 0,
+          "durationInFrames": 360,
+          "volume": 0.35
+        }
+      ]
+    },
+    {
+      "id": "track-sfx",
+      "type": "sfx",
+      "name": "Efeitos",
+      "items": [
+        {
+          "id": "sfx-surprise",
+          "assetId": "asset-surprise",
+          "fromInFrames": 90,
+          "durationInFrames": 15,
+          "volume": 0.6
+        },
+        {
+          "id": "sfx-whoosh",
+          "assetId": "asset-whoosh",
+          "fromInFrames": 172,
+          "durationInFrames": 17,
+          "volume": 0.6
+        }
+      ]
     }
   ],
-  "assets": [],
+  "assets": [
+    {
+      "id": "asset-music",
+      "type": "audio",
+      "src": "exemplo/trilha_curiosa.wav"
+    },
+    {
+      "id": "asset-surprise",
+      "type": "audio",
+      "src": "exemplo/surpresa.wav"
+    },
+    {
+      "id": "asset-whoosh",
+      "type": "audio",
+      "src": "exemplo/whoosh.wav"
+    }
+  ],
   "audio": {},
   "export": {
     "format": "mp4"

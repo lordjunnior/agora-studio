@@ -10,6 +10,7 @@ A versão inicial está em `project.schema.json`. Mudanças incompatíveis exige
 - `scenes`: sequência ordenada de cenas, cada uma com ID, nome, duração em frames, renderer e metadados.
 - `scenes[].metadata.compositionId`: chave que seleciona a implementação visual registrada no renderer.
 - `tracks`: trilhas temporais para cenas, voz, música, efeitos, legendas e overlays.
+- `tracks[].items[]`: itens temporais com referência a ativo, início e duração em frames e volume opcional.
 - `assets`: referências a mídia, modelos, fontes e outros recursos.
 
 ## Regras
@@ -20,5 +21,6 @@ A versão inicial está em `project.schema.json`. Mudanças incompatíveis exige
 - Renderer é uma preferência/implementação, não o formato do documento.
 - Campos desconhecidos devem ser preservados durante importação quando possível.
 - A composição não pode alterar o documento original durante a renderização.
+- Itens de voz, música e efeitos devem apontar para um ativo existente e permanecer dentro da duração total do projeto.
 
-O primeiro adaptador Remotion já lê o perfil e a lista ordenada de cenas do projeto. A integração de trilhas, ativos e áudio será feita em etapas posteriores, com validação própria.
+O adaptador Remotion já lê o perfil, organiza cenas, resolve ativos e posiciona trilhas de áudio na linha do tempo. A integração de legendas, overlays, carregamento geral de mídia e persistência será feita em etapas posteriores, com validação própria.
