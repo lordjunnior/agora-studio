@@ -6,7 +6,8 @@
   "scripts": {
     "studio": "remotion studio src/index.ts",
     "exemplo": "remotion render src/index.ts Exemplo out/exemplo.mp4 --concurrency=2",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "projeto:render": "remotion render src/index.ts ProjetoExemplo out/agora-projeto.mp4 --concurrency=2"
   },
   "dependencies": {
     "@react-three/fiber": "8.18.0",

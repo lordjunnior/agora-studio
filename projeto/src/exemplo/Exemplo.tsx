@@ -23,7 +23,7 @@ const CAM1: Chave[] = [
   { t: 3, c: { pos: [3.5, 1.5, 9], look: [0, 1.9, -1], fov: 44 } },
   { t: 6, c: { pos: [2.6, 1.4, 6.5], look: [0, 1.5, 0], fov: 40 } },
 ];
-const Cidade: React.FC = () => (
+export const Cidade: React.FC = () => (
   <Cena3D
     montar={(scene) => {
       const m = criarMundo("dia");
@@ -46,7 +46,7 @@ const Cidade: React.FC = () => (
 );
 
 // --------------------------------------------------------------- cena 2: espaço
-const Espaco: React.FC = () => (
+export const Espaco: React.FC = () => (
   <Cena3D
     montar={() => {
       const m = criarMundo("espaco", [-60, 20, 40]);

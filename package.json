@@ -29,7 +29,8 @@
     "sons": "node motor/sintetizar-sons.js",
     "remotion:studio": "npm --prefix projeto run studio",
     "remotion:render:example": "npm --prefix projeto run exemplo",
-    "remotion:typecheck": "npm --prefix projeto run typecheck"
+    "remotion:typecheck": "npm --prefix projeto run typecheck",
+    "agora:render": "npm --prefix projeto run projeto:render"
   },
   "dependencies": {
     "ffmpeg-static": "5.2.0",

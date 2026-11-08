@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "agora-demo-001",
+  "name": "Demonstração ÁGORA",
+  "profile": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "h264"
+  },
+  "scenes": [
+    {
+      "id": "scene-city",
+      "name": "Cidade e personagens",
+      "durationInFrames": 180,
+      "renderer": "remotion-three",
+      "metadata": {
+        "compositionId": "cidade"
+      }
+    },
+    {
+      "id": "scene-space",
+      "name": "Terra e Lua",
+      "durationInFrames": 180,
+      "renderer": "remotion-three",
+      "metadata": {
+        "compositionId": "espaco"
+      }
+    }
+  ],
+  "tracks": [
+    {
+      "id": "track-scenes",
+      "type": "scene",
+      "name": "Cenas"
+    }
+  ],
+  "assets": [],
+  "audio": {},
+  "export": {
+    "format": "mp4"
+  }
+}

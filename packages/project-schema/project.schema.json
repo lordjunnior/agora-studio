@@ -70,7 +70,10 @@
         "additionalProperties": true,
         "required": [
           "id",
-          "durationInFrames"
+          "name",
+          "durationInFrames",
+          "renderer",
+          "metadata"
         ],
         "properties": {
           "id": {
@@ -126,7 +129,13 @@
             }
           },
           "metadata": {
-            "type": "object"
+            "type": "object",
+            "properties": {
+              "compositionId": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       }
