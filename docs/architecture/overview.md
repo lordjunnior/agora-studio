@@ -10,7 +10,7 @@ Oferecer um único ambiente de produção audiovisual. A arquitetura é organiza
 
 Responsável pelo relógio global da composição, sequência de cenas, duração em frames, sincronização temporal e renderização determinística. O projeto de composição declara Remotion 4.0.540.
 
-O primeiro adaptador de projeto consome o perfil de saída e a sequência ordenada de cenas. Cada cena declara `metadata.compositionId`, resolvido por um registro explícito de composições disponíveis.
+O adaptador consome o perfil de saída, a sequência ordenada de cenas e as trilhas temporais do projeto. Cada cena declara `metadata.compositionId`, resolvido por um registro explícito de composições disponíveis.
 
 ### Three.js e React Three Fiber
 
@@ -34,11 +34,12 @@ Disponível para muxing, normalização, mixagem e operações de pós-processam
 2. O projeto guarda roteiro, perfil de saída, cenas, ativos e trilhas.
 3. O roteiro é dividido em cenas com duração e conteúdo definidos.
 4. Cada cena referencia sua implementação visual por `metadata.compositionId`.
-5. O adaptador valida o documento e resolve cada cena pelo registro de composições.
-6. Remotion organiza as cenas na linha temporal e renderiza os frames.
-7. Áudio, legendas e efeitos são conectados às trilhas do projeto nas próximas etapas de integração.
-8. O pipeline finaliza e valida o arquivo de saída.
-9. O projeto, versões e artefatos ficam disponíveis para reabertura.
+5. As trilhas de áudio referenciam ativos por ID e definem posição, duração e volume.
+6. As trilhas de legenda e overlay definem texto, temporização por frames e estilo.
+7. O adaptador valida o documento e resolve cada cena pelo registro de composições.
+8. Remotion organiza cenas, áudio, legendas e overlays na linha temporal e renderiza os frames.
+9. O pipeline finaliza e valida o arquivo de saída.
+10. O projeto, versões e artefatos ficam disponíveis para reabertura.
 
 ## Contrato e estado da integração
 
@@ -49,9 +50,9 @@ Disponível para muxing, normalização, mixagem e operações de pós-processam
 - Adaptadores não devem alterar o documento original do projeto durante o render.
 - Toda operação de render deve ser reproduzível a partir de uma versão salva do projeto.
 
-**Implementado e validado:** leitura do projeto JSON, validação estrutural básica, cálculo da duração total, seleção de duas cenas registradas, composição vertical e renderização MP4.
+**Implementado e validado:** leitura do projeto JSON, validação estrutural, cálculo da duração total, seleção de cenas registradas, composição vertical, trilhas de música e efeitos, legendas com temporização de palavras, overlays textuais e renderização MP4.
 
-**Ainda não integrado ao adaptador:** interpretação automática das trilhas, carregamento de ativos pelo manifesto, narração/legendas dirigidas pelo projeto, salvamento e reabertura pela interface.
+**Ainda não integrado ao adaptador:** sincronização de narração com transcrição real, importação geral de mídia pelo manifesto, edição visual da linha do tempo, persistência e reabertura pela interface.
 
 ## Compatibilidade
 
@@ -62,4 +63,4 @@ O projeto de composição declara React 18.3.1, Remotion 4.0.540, Three.js 0.171
 - Apagar módulos funcionais antes de validar sua substituição.
 - Recriar imediatamente todos os personagens e ambientes.
 - Substituir a biblioteca 3D antes de inventariar e testar seus recursos.
-- Declarar integração completa antes de conectar áudio, mídia e persistência ao projeto.
+- Declarar integração completa antes de conectar mídia, persistência e interface.

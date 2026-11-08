@@ -5,6 +5,7 @@ node_modules/
 .env.local.txt
 env.txt
 *.mp4
+projeto/out/
 videos/*/narracao/
 videos/*/narracao.wav
 videos/*/timeline.json
