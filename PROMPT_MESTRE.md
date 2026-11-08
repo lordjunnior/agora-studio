@@ -1,24 +1,33 @@
-# Prompt mestre
+# Prompt de projeto | ÁGORA
 
-Copie o bloco abaixo, troque o que está entre < >, e cole no agente (Claude Code, Gemini CLI ou outro agente que mexe em arquivos no seu PC).
+Use este briefing ao iniciar um novo projeto audiovisual no ÁGORA ou ao orientar um agente de desenvolvimento.
 
+```text
+PRODUTO: ÁGORA
+ASSINATURA: Da ideia ao vídeo.
+
+OBJETIVO:
+Transformar a ideia abaixo em um projeto audiovisual estruturado, revisável e pronto para produção.
+
+IDEIA: <descreva o tema>
+PÚBLICO: <descreva o público>
+FORMATO: <vertical, horizontal ou quadrado>
+DURAÇÃO: <duração desejada>
+IDIOMA: português do Brasil
+TOM: <documental, educativo, humorístico, investigativo etc.>
+
+ENTREGÁVEIS:
+1. Conceito e promessa central do vídeo.
+2. Roteiro com gancho, desenvolvimento e conclusão.
+3. Estrutura de cenas com objetivo visual e duração.
+4. Direção de arte e referências de mídia.
+5. Plano de narração, música, efeitos e legendas.
+6. Lista de validação antes da renderização.
+
+REGRAS:
+- Não invente fatos, fontes, imagens ou recursos disponíveis.
+- Separe o que já existe no projeto do que precisa ser criado.
+- Preserve os arquivos originais.
+- Peça aprovação antes de ações destrutivas, custos externos ou renderizações demoradas.
+- Registre limitações e erros sem afirmar que uma etapa foi concluída sem teste.
 ```
-Você vai ser o meu criador de vídeos animados 3D.
-
-PASTA DO PACK: <cole aqui o caminho da pasta kit-animacao-3d>
-Primeiro leia o arquivo AGENTE.md dessa pasta e siga as regras dele à risca.
-
-TEMA: <a sua ideia, ex.: "E se a Lua sumisse?">
-DURAÇÃO: <ex.: 60 segundos>
-FORMATO: <vertical (Shorts/Reels/TikTok) ou horizontal (YouTube)>
-IDIOMA: <português do Brasil>
-VOZ: <"local e grátis"  ou  "ElevenLabs, voice_id XXXX (a chave já está na variável ELEVENLABS_API_KEY)">
-MODO: <"automático" (faz tudo sem parar)  ou  "perguntar" (me mostra o roteiro antes)>
-
-Trabalhe dentro da pasta onde você foi aberto. No fim, me entregue o mp4, a miniatura, e uma sugestão de título e descrição.
-```
-
-## Dicas
-- **Tema bom** é uma pergunta absurda com explicação verdadeira: "E se...", "Por que...", "O que acontece se...".
-- **Ficou estranho?** Peça em português normal: "deixa a Lua maior", "corta mais rápido no começo", "coloca um tremido na explosão". Ele refaz só aquela parte.
-- **Para economizar o seu limite:** não peça para ele "melhorar tudo"; peça mudanças específicas.

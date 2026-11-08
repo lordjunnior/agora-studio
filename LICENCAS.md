@@ -1,20 +1,25 @@
-# Licenças
+# Licenças e atribuições
 
-- **Código do kit** (`projeto/src/kit`, `projeto/src/exemplo`, `scripts/`): MIT. Use, mude e venda vídeos feitos com ele à vontade. Não precisa dar crédito, mas é bem-vindo.
-- **Sons** (`sons/`): sintetizados por código (`scripts/gerar_sons.py`), sem amostras de terceiros. Livres para qualquer uso, inclusive vídeo monetizado.
-- **Fonte Montserrat** (carregada pelo `@remotion/google-fonts`): SIL Open Font License.
-- **Bibliotecas** (instaladas pelo `npm install`):
-  - Remotion: licença própria, grátis para pessoas físicas e empresas pequenas. Empresas maiores precisam de licença paga. Veja remotion.dev/license.
-  - three.js, React e postprocessing: MIT.
-- **Voz local** (Piper e as vozes do rhasspy/piper-voices): verifique a licença de cada voz no cartão dela antes de monetizar.
-- **ElevenLabs:** os termos do seu plano valem para o áudio gerado.
+Este arquivo reúne referências iniciais. A presença de uma dependência neste documento não substitui a conferência da licença da versão efetivamente instalada nem dos avisos incluídos nos respectivos pacotes.
 
-MIT License
+## Dependências e recursos
 
-Copyright (c) 2026 Edu Cria com IA
+- **Remotion:** consulte os termos e a licença aplicáveis em https://www.remotion.dev/license.
+- **Three.js, React e React Three Fiber:** consulte os arquivos de licença das versões instaladas.
+- **Playwright:** consulte a licença da versão instalada.
+- **FFmpeg e binários relacionados:** verifique a licença do binário efetivamente distribuído e sua configuração de build.
+- **Fontes:** mantenha os avisos e arquivos de licença correspondentes a cada família e versão.
+- **Vozes e modelos locais:** verifique individualmente os termos de cada modelo, voz e conjunto de dados.
+- **Serviços de voz e IA:** os termos do plano e do serviço utilizado podem restringir uso, retenção e redistribuição.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+## Avisos de origem
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+Não remova avisos de copyright, atribuições, textos de licença ou notices exigidos pelas licenças dos componentes incorporados. Ao modificar ou substituir recursos, atualize este inventário com a origem, versão e licença comprovadas.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+## Auditoria pendente
+
+Antes de uma distribuição, revisar o inventário de dependências, os arquivos de lock, os recursos binários e os avisos de terceiros. Não presumir que todo o conteúdo do repositório possui a mesma licença.
+
+## MIT License
+
+O texto da licença MIT deve ser mantido junto aos componentes que efetivamente estejam cobertos por ela, com o aviso de copyright original correspondente. Não reutilize um aviso de titularidade sem confirmar a origem e os direitos do código.
