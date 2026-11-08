@@ -3,21 +3,16 @@ import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import type { AgoraProject } from "./types";
 import { projectDurationInFrames, validateAgoraProject } from "./types";
 import { Cidade, Espaco } from "../exemplo/Exemplo";
+import { TimelineText } from "./TimelineText";
 
-const sceneRegistry: Record<string, React.ComponentType> = {
-  cidade: Cidade,
-  espaco: Espaco,
-};
-
+const sceneRegistry: Record<string, React.ComponentType> = { cidade: Cidade, espaco: Espaco };
 type Props = { project: AgoraProject };
 
 export const ProjetoComposition: React.FC<Props> = ({ project }) => {
   const validatedProject = useMemo(() => {
     validateAgoraProject(project);
     for (const scene of project.scenes) {
-      if (!sceneRegistry[scene.metadata.compositionId]) {
-        throw new Error(`Composição não registrada no ÁGORA: ${scene.metadata.compositionId}`);
-      }
+      if (!sceneRegistry[scene.metadata.compositionId]) throw new Error(`Composição não registrada no ÁGORA: ${scene.metadata.compositionId}`);
     }
     return project;
   }, [project]);
@@ -32,23 +27,23 @@ export const ProjetoComposition: React.FC<Props> = ({ project }) => {
         const from = cursor;
         cursor += scene.durationInFrames;
         const Scene = sceneRegistry[scene.metadata.compositionId];
-        return (
-          <Sequence key={scene.id} from={from} durationInFrames={scene.durationInFrames} name={scene.name}>
-            <Scene />
-          </Sequence>
-        );
+        return <Sequence key={scene.id} from={from} durationInFrames={scene.durationInFrames} name={scene.name}><Scene /></Sequence>;
       })}
-      {validatedProject.tracks
-        .filter((track) => ["voice", "music", "sfx"].includes(track.type))
-        .flatMap((track) => (track.items ?? []).map((item) => {
-          const asset = assets.get(item.assetId);
+      {validatedProject.tracks.flatMap((track) => (track.items ?? []).map((item) => {
+        if (["voice", "music", "sfx"].includes(track.type)) {
+          const asset = assets.get(item.assetId!);
           if (!asset) throw new Error(`Ativo não encontrado: ${item.assetId}`);
-          return (
-            <Sequence key={item.id} from={item.fromInFrames} durationInFrames={Math.min(item.durationInFrames, totalFrames - item.fromInFrames)} name={track.name ?? track.type}>
-              <Audio src={staticFile(asset.src)} volume={item.volume ?? 1} />
-            </Sequence>
-          );
-        }))}
+          return <Sequence key={item.id} from={item.fromInFrames} durationInFrames={item.durationInFrames} name={track.name ?? track.type}>
+            <Audio src={staticFile(asset.src)} volume={item.volume ?? 1} />
+          </Sequence>;
+        }
+        if (track.type === "caption" || track.type === "overlay") {
+          return <Sequence key={item.id} from={item.fromInFrames} durationInFrames={item.durationInFrames} name={track.name ?? track.type}>
+            <TimelineText item={item} kind={track.type} />
+          </Sequence>;
+        }
+        return null;
+      }))}
     </AbsoluteFill>
   );
 };

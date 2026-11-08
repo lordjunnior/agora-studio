@@ -68,6 +68,84 @@
           "volume": 0.6
         }
       ]
+    },
+    {
+      "id": "track-captions",
+      "type": "caption",
+      "name": "Legendas",
+      "items": [
+        {
+          "id": "caption-1",
+          "fromInFrames": 9,
+          "durationInFrames": 30,
+          "text": "ESTE É O ÁGORA",
+          "words": [
+            {
+              "text": "ESTE",
+              "startInFrames": 0,
+              "endInFrames": 7
+            },
+            {
+              "text": "É",
+              "startInFrames": 7,
+              "endInFrames": 13
+            },
+            {
+              "text": "O",
+              "startInFrames": 13,
+              "endInFrames": 19
+            },
+            {
+              "text": "ÁGORA",
+              "startInFrames": 19,
+              "endInFrames": 30
+            }
+          ],
+          "style": {
+            "fontSize": 72,
+            "bottom": 22,
+            "highlightColor": "#ffd23f"
+          }
+        },
+        {
+          "id": "caption-2",
+          "fromInFrames": 48,
+          "durationInFrames": 60,
+          "text": "CENAS 3D COM PERSONAGENS",
+          "style": {
+            "fontSize": 64,
+            "bottom": 22
+          }
+        },
+        {
+          "id": "caption-3",
+          "fromInFrames": 186,
+          "durationInFrames": 54,
+          "text": "UMA VIAGEM PELO ESPAÇO",
+          "style": {
+            "fontSize": 64,
+            "bottom": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "track-overlays",
+      "type": "overlay",
+      "name": "Elementos gráficos",
+      "items": [
+        {
+          "id": "overlay-title",
+          "fromInFrames": 0,
+          "durationInFrames": 75,
+          "text": "DA IDEIA AO VÍDEO",
+          "style": {
+            "fontSize": 56,
+            "align": "center",
+            "background": "rgba(0,0,0,0.35)"
+          }
+        }
+      ]
     }
   ],
   "assets": [
