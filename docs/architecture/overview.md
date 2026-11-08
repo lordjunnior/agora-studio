@@ -88,3 +88,9 @@ Teste de integracao executado com um WAV real de exemplo: importacao de ativo, i
 A composição Remotion `ProjetoExemplo` agora lê `projeto-ativo.agora.json`, que é o destino padrão do importador. Assim, o fluxo passa a ser: gerar narração e manifesto, importar manifesto para o projeto ativo e renderizar a composição sem editar manualmente o código ou o JSON. O projeto de demonstração original permanece separado como modelo de entrada.
 
 Teste ponta a ponta realizado: manifesto com um segmento WAV e quatro palavras temporizadas foi importado para o projeto ativo e renderizado pelo Remotion. O MP4 foi concluído e verificado com FFprobe: H.264, 1080x1920, AAC 48 kHz estéreo, duração 12,011 s. O arquivo de projeto ativo e o áudio de teste foram restaurados/removidos após a validação; o MP4 de teste permanece em `projeto/out/` (ignorado pelo Git).
+
+### Trilhas visuais de mídia
+
+O contrato de projeto agora aceita trilhas `image` e `video`. O importador `npm --prefix projeto run media:import -- <media-manifest.json>` copia os arquivos para `projeto/public/agora-assets/`, registra os ativos e cria itens posicionados por segundos convertidos em frames. Imagens usam `Img`; vídeos usam `Video` do Remotion. Os itens aceitam `fit` (`cover`, `contain`, `fill`), `position`, `opacity` e `scale`; vídeos também aceitam `volume`.
+
+Teste executado com uma imagem real da biblioteca de exemplo: manifesto importado, ativo copiado, trilha de 360 frames validada e MP4 renderizado com sucesso. O projeto ativo foi restaurado e o arquivo de teste removido. O suporte de vídeo foi implementado no renderer, mas ainda precisa de um teste ponta a ponta com um arquivo de vídeo real. Modelos 3D externos ainda não são importados como ativos de timeline; permanecem dependentes de cenas/composições 3D registradas.

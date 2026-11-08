@@ -4,6 +4,7 @@ import type { AgoraProject } from "./types";
 import { projectDurationInFrames, validateAgoraProject } from "./types";
 import { Cidade, Espaco } from "../exemplo/Exemplo";
 import { TimelineText } from "./TimelineText";
+import { TimelineMedia } from "./TimelineMedia";
 
 const sceneRegistry: Record<string, React.ComponentType> = { cidade: Cidade, espaco: Espaco };
 type Props = { project: AgoraProject };
@@ -36,6 +37,11 @@ export const ProjetoComposition: React.FC<Props> = ({ project }) => {
           return <Sequence key={item.id} from={item.fromInFrames} durationInFrames={item.durationInFrames} name={track.name ?? track.type}>
             <Audio src={staticFile(asset.src)} volume={item.volume ?? 1} />
           </Sequence>;
+        }
+        if (track.type === "image" || track.type === "video") {
+          const asset = assets.get(item.assetId!);
+          if (!asset) throw new Error(`Ativo de mídia não encontrado: ${item.assetId}`);
+          return <Sequence key={item.id} from={item.fromInFrames} durationInFrames={item.durationInFrames} name={track.name ?? track.type}><TimelineMedia item={item} asset={asset} /></Sequence>;
         }
         if (track.type === "caption" || track.type === "overlay") {
           return <Sequence key={item.id} from={item.fromInFrames} durationInFrames={item.durationInFrames} name={track.name ?? track.type}>

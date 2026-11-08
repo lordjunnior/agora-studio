@@ -160,7 +160,9 @@
               "music",
               "sfx",
               "caption",
-              "overlay"
+              "overlay",
+              "image",
+              "video"
             ]
           },
           "name": {
@@ -191,6 +193,15 @@
                   "type": "number",
                   "minimum": 0,
                   "maximum": 1
+                },
+                "media": {
+                  "type": "object",
+                  "properties": {
+                    "fit": { "enum": ["cover", "contain", "fill"] },
+                    "position": { "type": "string" },
+                    "opacity": { "type": "number", "minimum": 0, "maximum": 1 },
+                    "scale": { "type": "number", "exclusiveMinimum": 0 }
+                  }
                 },
                 "text": {
                   "type": "string"
@@ -265,7 +276,9 @@
                   "enum": [
                     "voice",
                     "music",
-                    "sfx"
+                    "sfx",
+                    "image",
+                    "video"
                   ]
                 }
               },

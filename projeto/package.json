@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit",
     "projeto:render": "remotion render src/index.ts ProjetoExemplo out/agora-projeto.mp4 --concurrency=2",
     "narration:import": "node scripts/importar-narracao.mjs",
-    "projeto:render:ativo": "npm run projeto:render"
+    "projeto:render:ativo": "npm run projeto:render",
+    "media:import": "node scripts/importar-midias.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "8.18.0",
