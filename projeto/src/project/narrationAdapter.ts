@@ -31,6 +31,22 @@ export type NarrationTimelineInput = {
   captionStyle?: AgoraTrackItem["style"];
 };
 
+export type NarrationManifestV1 = {
+  manifestVersion: 1;
+  product: "ÁGORA";
+  fps: number;
+  durationSeconds: number;
+  phrases: LegacyTimedPhrase[];
+  audioSegments: Array<{
+    id: string;
+    assetId: string;
+    src: string;
+    startSeconds: number;
+    durationSeconds: number;
+    volume?: number;
+  }>;
+};
+
 export type NarrationTracksResult = {
   assets: AgoraAsset[];
   tracks: AgoraTrack[];
@@ -44,10 +60,7 @@ function assertFiniteNonNegative(value: number, label: string) {
   }
 }
 
-/**
- * Converte a timeline de narração já alinhada por palavra para as trilhas do ÁGORA.
- * Os tempos de entrada são segundos absolutos da timeline de origem.
- */
+/** Converte a timeline alinhada por palavra em trilhas de voz e legenda do ÁGORA. */
 export function buildNarrationTracks(input: NarrationTimelineInput): NarrationTracksResult {
   if (!Number.isInteger(input.fps) || input.fps < 1 || input.fps > 120) {
     throw new Error("FPS inválido para conversão da narração.");
@@ -113,7 +126,7 @@ export function buildNarrationTracks(input: NarrationTimelineInput): NarrationTr
       durationInFrames,
       text: phrase.texto,
       ...(words.length ? { words } : {}),
-      style: input.captionStyle,
+      ...(input.captionStyle ? { style: input.captionStyle } : {}),
     }];
   });
 
@@ -124,4 +137,24 @@ export function buildNarrationTracks(input: NarrationTimelineInput): NarrationTr
       { id: "track-captions", type: "caption", name: "Legendas sincronizadas", items: captionItems },
     ],
   };
+}
+
+/** Converte diretamente o narration-manifest.json exportado pelo render em trilhas ÁGORA. */
+export function buildNarrationTracksFromManifest(
+  manifest: NarrationManifestV1,
+  captionStyle?: AgoraTrackItem["style"],
+): NarrationTracksResult {
+  if (manifest.manifestVersion !== 1 || manifest.product !== "ÁGORA") {
+    throw new Error("Manifesto de narração incompatível com o ÁGORA.");
+  }
+  if (!Number.isFinite(manifest.durationSeconds) || manifest.durationSeconds <= 0) {
+    throw new Error("Duração inválida no manifesto de narração.");
+  }
+  return buildNarrationTracks({
+    fps: manifest.fps,
+    totalFrames: Math.ceil(manifest.durationSeconds * manifest.fps),
+    phrases: manifest.phrases,
+    audioSegments: manifest.audioSegments,
+    captionStyle,
+  });
 }
