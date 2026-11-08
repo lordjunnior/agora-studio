@@ -100,3 +100,5 @@ Teste executado com uma imagem real da biblioteca de exemplo: manifesto importad
 O importador de mídia também aceita `type: "model"` para arquivos `.glb` autocontidos. Cada item entra em uma trilha própria de modelos 3D e é renderizado com Three.js/GLTFLoader dentro do Remotion, com transparência para compor sobre as cenas. O manifesto pode fornecer `model.position`, `model.rotation` (radianos), `model.scale`, `model.spinPerSecond`, `model.cameraPosition`, `model.cameraFov` e `model.ambientIntensity`.
 
 A importação foi validada com um GLB mínimo gerado localmente e a renderização completa de 360 frames terminou com sucesso. A saída foi validada como MP4 H.264, 1080×1920, com áudio AAC. Nesta etapa, o importador limita modelos a GLB autocontido; arquivos `.gltf` com texturas/arquivos externos e animações esqueléticas ainda não estão cobertos pelo fluxo de importação/testes.
+
+O componente de vídeo também passou por teste ponta a ponta com um MP4 real de 12 segundos: importação, trilha visual e renderização de 360 frames concluídas sem erro. O projeto ativo foi restaurado após o teste e os arquivos temporários removidos.
