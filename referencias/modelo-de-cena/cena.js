@@ -1,4 +1,4 @@
-// Modelo de cena (Máquina Preguiça 3D): o guarda-chuva gigante no quintal, na chuva, feito só com os ajudantes do
+// Modelo de cena (ÁGORA): o guarda-chuva gigante no quintal, na chuva, feito só com os ajudantes do
 // kit (K.pecas, K.entraNo, K.filmar, menino.reagir, K.entrar, K.falhar, K.brilhar), sem coordenada de câmera na mão.
 //
 // Como usar num vídeo novo:

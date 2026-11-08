@@ -1,4 +1,4 @@
-// Modelo de cena com CENÁRIO PRONTO (Máquina Preguiça 3D): "Por que o concreto tem ferro dentro?", no canteiro de obras
+// Modelo de cena com CENÁRIO PRONTO (ÁGORA): "Por que o concreto tem ferro dentro?", no canteiro de obras
 // (K.cenario('construcao')). O cenário já traz o prédio em obra, o guindaste, a betoneira, os operários e a poeira; aqui
 // só entra o objeto do vídeo (a coluna), o personagem e um plano por frase, todos com os ajudantes do kit.
 //

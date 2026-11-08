@@ -1,5 +1,5 @@
 #!/bin/sh
-# Abre o painel da Máquina Preguiça 3D no navegador: dois cliques neste arquivo.
+# Abre o painel da ÁGORA no navegador: dois cliques neste arquivo.
 # Na primeira vez, se o Mac disser que não pode abrir, peça pra IA: "instalar" (ela libera este atalho).
 cd "$(dirname "$0")" || exit 1
 if ! command -v node >/dev/null 2>&1; then

@@ -1,4 +1,4 @@
-// Lanterna (exemplo da Máquina Preguiça 3D, estilo redondo): uma lanterna gigante deitada num cavalete no quintal, à
+// Lanterna (exemplo da ÁGORA, estilo redondo): uma lanterna gigante deitada num cavalete no quintal, à
 // noite, com o corpo transparente pra ver por dentro. Ela vai se montando peça por peça (lâmpada → pilha → refletor →
 // botão) e o facho vai do quintal até a chave caída na grama. No fim, as peças se separam no ar (vista explodida) e
 // entra o cartão de seguir do canal.

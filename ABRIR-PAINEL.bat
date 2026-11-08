@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul
-rem Abre o painel da Máquina Preguiça 3D no navegador: dois cliques neste arquivo.
+rem Abre o painel da ÁGORA no navegador: dois cliques neste arquivo.
 cd /d "%~dp0"
 where node >nul 2>nul
 if errorlevel 1 (

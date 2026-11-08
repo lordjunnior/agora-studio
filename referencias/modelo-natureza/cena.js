@@ -1,4 +1,4 @@
-// Modelo de cena com CENÁRIO PRONTO (Máquina Preguiça 3D): "Como a árvore bebe água?", no campo com montanhas
+// Modelo de cena com CENÁRIO PRONTO (ÁGORA): "Como a árvore bebe água?", no campo com montanhas
 // (K.cenario('natureza')). O cenário já traz a grama, as poucas árvores, as montanhas com neve, o céu azul, as flores, as
 // borboletas e os pássaros; aqui só entra o objeto do vídeo (a árvore que se explica), o personagem e um plano por frase.
 //
