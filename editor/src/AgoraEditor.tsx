@@ -35,6 +35,7 @@ export const AgoraEditor: React.FC = () => {
   });
   const [past, setPast] = useState<AgoraProject[]>([]);
   const [future, setFuture] = useState<AgoraProject[]>([]);
+  const projectRef = useRef(project);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [selected, setSelected] = useState<{ trackId: string; itemId?: string }>({ trackId: "track-scenes" });
   const [zoom, setZoom] = useState(1);
@@ -54,24 +55,24 @@ export const AgoraEditor: React.FC = () => {
   }, [duration, fps]);
 
   const updateProject = useCallback((mutator: (draft: AgoraProject) => void) => {
-    setProject((current) => {
-      const draft = clone(current);
-      mutator(draft);
-      draft.updatedAt = new Date().toISOString();
-      try { validateAgoraProject(draft); }
-      catch (error) { setNotice(error instanceof Error ? error.message : "Projeto inválido"); return current; }
-      setPast((history) => [...history.slice(-49), current]);
-      setFuture([]);
-      setNotice("Alterações aplicadas");
-      return draft;
-    });
+    const current = projectRef.current;
+    const draft = clone(current);
+    mutator(draft);
+    draft.updatedAt = new Date().toISOString();
+    try { validateAgoraProject(draft); }
+    catch (error) { setNotice(error instanceof Error ? error.message : "Projeto inválido"); return; }
+    setPast((history) => [...history.slice(-49), current]);
+    setFuture([]);
+    projectRef.current = draft;
+    setProject(draft);
+    setNotice("Alterações aplicadas");
   }, []);
-
   const undo = useCallback(() => {
     if (!past.length) return;
     const previous = past[past.length - 1];
     setPast(past.slice(0, -1));
     setFuture([project, ...future].slice(0, 50));
+    projectRef.current = previous;
     setProject(previous);
     setNotice("Alteração desfeita");
   }, [past, future, project]);
@@ -81,6 +82,7 @@ export const AgoraEditor: React.FC = () => {
     const next = future[0];
     setFuture(future.slice(1));
     setPast([...past, project].slice(-50));
+    projectRef.current = next;
     setProject(next);
     setNotice("Alteração refeita");
   }, [past, future, project]);
@@ -128,6 +130,7 @@ export const AgoraEditor: React.FC = () => {
     try {
       const parsed = JSON.parse(await file.text()) as AgoraProject;
       validateAgoraProject(parsed);
+      projectRef.current = parsed;
       setProject(parsed);
       setPast([]);
       setFuture([]);
