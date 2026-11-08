@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Player } from "@remotion/player";
 import type { AgoraProject, AgoraTrack, AgoraTrackItem } from "../../projeto/src/project/types";
 import { projectDurationInFrames, validateAgoraProject } from "../../projeto/src/project/types";
@@ -22,7 +22,19 @@ const itemLabel = (track: AgoraTrack, item: AgoraTrackItem) =>
   item.text || item.assetId || (trackNames[track.type] ?? track.type);
 
 export const AgoraEditor: React.FC = () => {
-  const [project, setProject] = useState<AgoraProject>(() => clone(initialProject as AgoraProject));
+  const [project, setProject] = useState<AgoraProject>(() => {
+    try {
+      const saved = localStorage.getItem("agora.editor.project.v1");
+      if (saved) {
+        const parsed = JSON.parse(saved) as AgoraProject;
+        validateAgoraProject(parsed);
+        return parsed;
+      }
+    } catch { /* inicia com o projeto-base quando não há cópia local válida */ }
+    return clone(initialProject as AgoraProject);
+  });
+  const [past, setPast] = useState<AgoraProject[]>([]);
+  const [future, setFuture] = useState<AgoraProject[]>([]);
   const [currentFrame, setCurrentFrame] = useState(0);
   const [selected, setSelected] = useState<{ trackId: string; itemId?: string }>({ trackId: "track-scenes" });
   const [zoom, setZoom] = useState(1);
@@ -46,12 +58,55 @@ export const AgoraEditor: React.FC = () => {
       const draft = clone(current);
       mutator(draft);
       draft.updatedAt = new Date().toISOString();
-      try { validateAgoraProject(draft); setNotice("Alterações aplicadas"); }
+      try { validateAgoraProject(draft); }
       catch (error) { setNotice(error instanceof Error ? error.message : "Projeto inválido"); return current; }
+      setPast((history) => [...history.slice(-49), current]);
+      setFuture([]);
+      setNotice("Alterações aplicadas");
       return draft;
     });
   }, []);
 
+  const undo = useCallback(() => {
+    setPast((history) => {
+      if (!history.length) return history;
+      const previous = history[history.length - 1];
+      setFuture((redoHistory) => [project, ...redoHistory].slice(0, 50));
+      setProject(previous);
+      setNotice("Alteração desfeita");
+      return history.slice(0, -1);
+    });
+  }, [project]);
+
+  const redo = useCallback(() => {
+    setFuture((history) => {
+      if (!history.length) return history;
+      const next = history[0];
+      setPast((undoHistory) => [...undoHistory, project].slice(-50));
+      setProject(next);
+      setNotice("Alteração refeita");
+      return history.slice(1);
+    });
+  }, [project]);
+
+  useEffect(() => {
+    try { localStorage.setItem("agora.editor.project.v1", JSON.stringify(project)); }
+    catch { setNotice("Não foi possível salvar automaticamente neste navegador"); }
+  }, [project]);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const editingText = target?.matches("input, textarea, select, [contenteditable=true]");
+      if (!(event.ctrlKey || event.metaKey)) return;
+      const key = event.key.toLowerCase();
+      if (key === "s") { event.preventDefault(); saveProject(); }
+      else if (key === "z" && !editingText) { event.preventDefault(); if (event.shiftKey) redo(); else undo(); }
+      else if (key === "y" && !editingText) { event.preventDefault(); redo(); }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  });
   const updateItem = (patch: Partial<AgoraTrackItem>) => {
     if (!selectedItem) return;
     updateProject((draft) => {
@@ -119,6 +174,8 @@ export const AgoraEditor: React.FC = () => {
       <div className="brand"><span className="brand-mark">A</span><div><strong>ÁGORA</strong><small>STUDIO / EDITOR</small></div></div>
       <div className="project-title"><span className="status-dot" />{project.name}<small>{project.profile.width} × {project.profile.height} · {fps} FPS</small></div>
       <div className="top-actions">
+        <button className="button quiet" onClick={undo} disabled={!past.length} title="Desfazer (Ctrl+Z)">Desfazer</button>
+        <button className="button quiet" onClick={redo} disabled={!future.length} title="Refazer (Ctrl+Y)">Refazer</button>
         <button className="button quiet" onClick={() => importRef.current?.click()}>Abrir projeto</button>
         <input ref={importRef} type="file" accept=".json,.agora.json,application/json" hidden onChange={(event) => void importProject(event.target.files?.[0])} />
         <button className="button primary" onClick={saveProject}>Salvar projeto</button>
