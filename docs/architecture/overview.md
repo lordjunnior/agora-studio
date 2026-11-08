@@ -82,3 +82,9 @@ O render agora preserva cada segmento WAV gerado em `agora-import/assets/` e esc
 O comando `npm --prefix projeto run narration:import -- <manifest.json> <projeto.agora.json> [saida.agora.json]` importa um manifesto v1, copia os arquivos de audio para `projeto/public/agora-assets/` e grava um documento de projeto com trilhas de voz e legendas sincronizadas. O importador valida a versao, FPS, duracao, caminhos, IDs e intervalos. Por seguranca, interrompe a importacao se a narracao exceder a duracao atual das cenas; nao altera cenas automaticamente.
 
 Teste de integracao executado com um WAV real de exemplo: importacao de ativo, item de voz, frase e tres palavras temporizadas confirmada. TypeScript aprovado. O teste temporario foi removido depois da verificacao. Ainda falta registrar dinamicamente o projeto importado como composicao renderizavel e executar o render final com a narracao importada.
+
+### Render do projeto importado
+
+A composição Remotion `ProjetoExemplo` agora lê `projeto-ativo.agora.json`, que é o destino padrão do importador. Assim, o fluxo passa a ser: gerar narração e manifesto, importar manifesto para o projeto ativo e renderizar a composição sem editar manualmente o código ou o JSON. O projeto de demonstração original permanece separado como modelo de entrada.
+
+Teste ponta a ponta realizado: manifesto com um segmento WAV e quatro palavras temporizadas foi importado para o projeto ativo e renderizado pelo Remotion. O MP4 foi concluído e verificado com FFprobe: H.264, 1080x1920, AAC 48 kHz estéreo, duração 12,011 s. O arquivo de projeto ativo e o áudio de teste foram restaurados/removidos após a validação; o MP4 de teste permanece em `projeto/out/` (ignorado pelo Git).

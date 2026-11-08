@@ -1,0 +1,172 @@
+{
+  "schemaVersion": 1,
+  "id": "agora-demo-001",
+  "name": "Demonstração ÁGORA",
+  "profile": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "codec": "h264"
+  },
+  "scenes": [
+    {
+      "id": "scene-city",
+      "name": "Cidade e personagens",
+      "durationInFrames": 180,
+      "renderer": "remotion-three",
+      "metadata": {
+        "compositionId": "cidade"
+      }
+    },
+    {
+      "id": "scene-space",
+      "name": "Terra e Lua",
+      "durationInFrames": 180,
+      "renderer": "remotion-three",
+      "metadata": {
+        "compositionId": "espaco"
+      }
+    }
+  ],
+  "tracks": [
+    {
+      "id": "track-scenes",
+      "type": "scene",
+      "name": "Cenas"
+    },
+    {
+      "id": "track-music",
+      "type": "music",
+      "name": "Trilha sonora",
+      "items": [
+        {
+          "id": "music-main",
+          "assetId": "asset-music",
+          "fromInFrames": 0,
+          "durationInFrames": 360,
+          "volume": 0.35
+        }
+      ]
+    },
+    {
+      "id": "track-sfx",
+      "type": "sfx",
+      "name": "Efeitos",
+      "items": [
+        {
+          "id": "sfx-surprise",
+          "assetId": "asset-surprise",
+          "fromInFrames": 90,
+          "durationInFrames": 15,
+          "volume": 0.6
+        },
+        {
+          "id": "sfx-whoosh",
+          "assetId": "asset-whoosh",
+          "fromInFrames": 172,
+          "durationInFrames": 17,
+          "volume": 0.6
+        }
+      ]
+    },
+    {
+      "id": "track-captions",
+      "type": "caption",
+      "name": "Legendas",
+      "items": [
+        {
+          "id": "caption-1",
+          "fromInFrames": 9,
+          "durationInFrames": 30,
+          "text": "ESTE É O ÁGORA",
+          "words": [
+            {
+              "text": "ESTE",
+              "startInFrames": 0,
+              "endInFrames": 7
+            },
+            {
+              "text": "É",
+              "startInFrames": 7,
+              "endInFrames": 13
+            },
+            {
+              "text": "O",
+              "startInFrames": 13,
+              "endInFrames": 19
+            },
+            {
+              "text": "ÁGORA",
+              "startInFrames": 19,
+              "endInFrames": 30
+            }
+          ],
+          "style": {
+            "fontSize": 72,
+            "bottom": 22,
+            "highlightColor": "#ffd23f"
+          }
+        },
+        {
+          "id": "caption-2",
+          "fromInFrames": 48,
+          "durationInFrames": 60,
+          "text": "CENAS 3D COM PERSONAGENS",
+          "style": {
+            "fontSize": 64,
+            "bottom": 22
+          }
+        },
+        {
+          "id": "caption-3",
+          "fromInFrames": 186,
+          "durationInFrames": 54,
+          "text": "UMA VIAGEM PELO ESPAÇO",
+          "style": {
+            "fontSize": 64,
+            "bottom": 22
+          }
+        }
+      ]
+    },
+    {
+      "id": "track-overlays",
+      "type": "overlay",
+      "name": "Elementos gráficos",
+      "items": [
+        {
+          "id": "overlay-title",
+          "fromInFrames": 0,
+          "durationInFrames": 75,
+          "text": "DA IDEIA AO VÍDEO",
+          "style": {
+            "fontSize": 56,
+            "align": "center",
+            "background": "rgba(0,0,0,0.35)"
+          }
+        }
+      ]
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-music",
+      "type": "audio",
+      "src": "exemplo/trilha_curiosa.wav"
+    },
+    {
+      "id": "asset-surprise",
+      "type": "audio",
+      "src": "exemplo/surpresa.wav"
+    },
+    {
+      "id": "asset-whoosh",
+      "type": "audio",
+      "src": "exemplo/whoosh.wav"
+    }
+  ],
+  "audio": {},
+  "export": {
+    "format": "mp4"
+  }
+}

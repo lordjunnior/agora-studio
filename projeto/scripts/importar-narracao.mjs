@@ -6,7 +6,7 @@ const [manifestArg, projectArg, outputArg] = process.argv.slice(2);
 function fail(message) { console.error("Import aborted: " + message); process.exit(1); }
 if (!manifestArg || !projectArg) fail("usage: npm run narration:import -- <manifest.json> <project.agora.json> [output.agora.json]");
 const readJson = (file) => JSON.parse(fs.readFileSync(file, "utf8").trimStart());
-const manifestPath = path.resolve(manifestArg), projectPath = path.resolve(projectArg), outputPath = path.resolve(outputArg || projectArg);
+const manifestPath = path.resolve(manifestArg), projectPath = path.resolve(projectArg), outputPath = path.resolve(outputArg || path.join(root, "src", "project", "projeto-ativo.agora.json"));
 if (!fs.existsSync(manifestPath) || !fs.existsSync(projectPath)) fail("manifest or project file not found.");
 let manifest, project;
 try { manifest = readJson(manifestPath); project = readJson(projectPath); } catch (error) { fail("invalid JSON: " + error.message); }
