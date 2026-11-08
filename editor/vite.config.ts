@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [react()],
   root,
   publicDir: path.resolve(root, "../projeto/public"),
-  server: { port: 5174, strictPort: true },
+  resolve: { alias: { remotion: path.resolve(root, "node_modules/remotion") } },
+  server: { port: 5174, strictPort: true, proxy: { "/api/media": { target: "http://127.0.0.1:5175", changeOrigin: false }, "/api/render": { target: "http://127.0.0.1:5175", changeOrigin: false } } },
   build: { outDir: "dist", emptyOutDir: true },
 });

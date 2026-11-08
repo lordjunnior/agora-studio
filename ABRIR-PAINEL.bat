@@ -24,6 +24,9 @@ if not exist "editor\node_modules\vite\bin\vite.js" (
   )
 )
 
+rem Biblioteca persistente de imagens, videos e audios.
+start "AGORA Biblioteca" /min cmd /c "node motor\media-server.js"
+
 rem O editor roda em segundo plano; o painel antigo continua disponivel.
 start "AGORA Editor Visual" /min cmd /c "npm run editor"
 

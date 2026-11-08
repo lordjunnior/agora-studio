@@ -1,5 +1,11 @@
 node_modules/
 editor/dist/
+editor/media-library.json
+editor/media-library.json.tmp
+editor/render-queue.json
+editor/render-queue.json.tmp
+editor/render-jobs/
+projeto/public/uploads/
 *.tsbuildinfo
 .env
 .env.local

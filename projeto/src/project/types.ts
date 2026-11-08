@@ -3,7 +3,7 @@ export type AgoraScene = {
   renderer: "remotion-react" | "remotion-three" | "legacy-adapter";
   metadata: { compositionId: string; [key: string]: unknown };
 };
-export type AgoraAsset = { id: string; type: string; src: string; license?: string; metadata?: Record<string, unknown> };
+export type AgoraAsset = { id: string; type: string; src: string; name?: string; mimeType?: string; size?: number; durationSeconds?: number; createdAt?: string; license?: string; metadata?: Record<string, unknown> };
 export type AgoraWord = { text: string; startInFrames: number; endInFrames: number };
 export type AgoraTrackItem = {
   id: string; assetId?: string; fromInFrames: number; durationInFrames: number;

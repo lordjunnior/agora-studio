@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Player } from "@remotion/player";
-import type { AgoraProject, AgoraTrack, AgoraTrackItem } from "../../projeto/src/project/types";
+import type { AgoraAsset, AgoraProject, AgoraTrack, AgoraTrackItem } from "../../projeto/src/project/types";
 import { projectDurationInFrames, validateAgoraProject } from "../../projeto/src/project/types";
 import { ProjetoComposition } from "../../projeto/src/project/ProjectComposition";
 import initialProject from "../../projeto/src/project/projeto-ativo.agora.json";
@@ -20,6 +20,33 @@ const trackColors: Record<AgoraTrack["type"], string> = {
 };
 const itemLabel = (track: AgoraTrack, item: AgoraTrackItem) =>
   item.text || item.assetId || (trackNames[track.type] ?? track.type);
+const mimeForFile = (name: string) => {
+  const extension = name.toLowerCase().split(".").pop();
+  const types: Record<string, string> = {
+    jpg: "image/jpeg", jpeg: "image/jpeg", png: "image/png", webp: "image/webp", gif: "image/gif",
+    mp4: "video/mp4", m4v: "video/mp4", mov: "video/quicktime", webm: "video/webm",
+    mp3: "audio/mpeg", wav: "audio/wav", m4a: "audio/mp4", aac: "audio/aac",
+    ogg: "audio/ogg", opus: "audio/opus", flac: "audio/flac",
+  };
+  return types[extension ?? ""] ?? "application/octet-stream";
+};
+const probeDuration = (file: File, type: string) => new Promise<number>((resolve) => {
+  if (type === "image") return resolve(5);
+  const url = URL.createObjectURL(file);
+  const media = document.createElement(type === "video" ? "video" : "audio");
+  media.preload = "metadata";
+  media.onloadedmetadata = () => {
+    const duration = Number.isFinite(media.duration) ? media.duration : 5;
+    URL.revokeObjectURL(url);
+    resolve(Math.max(1, duration));
+  };
+  media.onerror = () => { URL.revokeObjectURL(url); resolve(5); };
+  media.src = url;
+});
+type RenderJob = {
+  id: string; projectName: string; status: "queued" | "rendering" | "completed" | "failed" | "cancelled";
+  progress: number; outputFile: string; createdAt: string; updatedAt: string; error?: string | null; logs?: string[];
+};
 
 export const AgoraEditor: React.FC = () => {
   const [project, setProject] = useState<AgoraProject>(() => {
@@ -43,6 +70,13 @@ export const AgoraEditor: React.FC = () => {
   const [notice, setNotice] = useState("Projeto carregado");
   const playerRef = useRef<any>(null);
   const importRef = useRef<HTMLInputElement>(null);
+  const mediaImportRef = useRef<HTMLInputElement>(null);
+  const [libraryAssets, setLibraryAssets] = useState<AgoraAsset[]>([]);
+  const [audioTrackType, setAudioTrackType] = useState<"voice" | "music" | "sfx">("voice");
+  const [uploading, setUploading] = useState(false);
+  const [renderJobs, setRenderJobs] = useState<RenderJob[]>([]);
+  const [renderSubmitting, setRenderSubmitting] = useState(false);
+  const [renderPanelOpen, setRenderPanelOpen] = useState(false);
   const duration = projectDurationInFrames(project);
   const fps = project.profile.fps;
   const seconds = duration / fps;
@@ -91,6 +125,29 @@ export const AgoraEditor: React.FC = () => {
     try { localStorage.setItem("agora.editor.project.v1", JSON.stringify(project)); }
     catch { setNotice("Não foi possível salvar automaticamente neste navegador"); }
   }, [project]);
+
+  useEffect(() => {
+    fetch("/api/media").then(async (response) => {
+      if (!response.ok) throw new Error("Biblioteca indisponível");
+      const data = await response.json() as { assets?: AgoraAsset[] };
+      setLibraryAssets(data.assets ?? []);
+    }).catch(() => setNotice("Biblioteca local indisponível. Inicie pelo ABRIR-PAINEL.bat."));
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const refresh = async () => {
+      try {
+        const response = await fetch("/api/render/jobs");
+        if (!response.ok) return;
+        const data = await response.json() as { jobs?: RenderJob[] };
+        if (active) setRenderJobs(data.jobs ?? []);
+      } catch { /* a fila pode estar iniciando junto com o editor */ }
+    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), 1500);
+    return () => { active = false; window.clearInterval(timer); };
+  }, []);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -148,6 +205,117 @@ export const AgoraEditor: React.FC = () => {
     setSelected({ trackId: id });
   };
 
+  const insertAssetIntoTimeline = (asset: AgoraAsset, durationSeconds = 5, requestedFrame = currentFrame) => {
+    const type: AgoraTrack["type"] = asset.type === "audio" ? audioTrackType : asset.type as "image" | "video";
+    const existing = projectRef.current.assets.some((entry) => entry.id === asset.id);
+    const existingItemTrack = projectRef.current.tracks.find((track) => track.items?.some((item) => item.assetId === asset.id));
+    if (existingItemTrack) {
+      const item = existingItemTrack.items?.find((entry) => entry.assetId === asset.id);
+      setSelected({ trackId: existingItemTrack.id, itemId: item?.id });
+      setNotice("Ativo já está na timeline");
+      return;
+    }
+    const track = projectRef.current.tracks.find((entry) => entry.type === type);
+    const trackId = track?.id ?? `track-${type}-${Date.now()}`;
+    const fromInFrames = requestedFrame >= duration ? 0 : Math.max(0, requestedFrame);
+    const durationInFrames = Math.max(1, Math.min(Math.round(durationSeconds * fps), duration - fromInFrames));
+    updateProject((draft) => {
+      if (!existing) draft.assets.push(asset);
+      let target = draft.tracks.find((entry) => entry.id === trackId);
+      if (!target) {
+        target = { id: trackId, type, name: trackNames[type], items: [] };
+        draft.tracks.push(target);
+      }
+      target.items ??= [];
+      target.items.push({ id: `item-${crypto.randomUUID()}`, assetId: asset.id, fromInFrames, durationInFrames, volume: type === "voice" ? 1 : 0.8 });
+    });
+    const insertedTrack = projectRef.current.tracks.find((entry) => entry.id === trackId);
+    const insertedItem = insertedTrack?.items?.find((entry) => entry.assetId === asset.id);
+    setSelected({ trackId, itemId: insertedItem?.id });
+  };
+
+  const uploadFiles = async (fileList: FileList | File[]) => {
+    const files = Array.from(fileList);
+    if (!files.length) return;
+    setUploading(true);
+    let cursor = currentFrame;
+    let completed = 0;
+    try {
+      for (const file of files) {
+        const mime = file.type || mimeForFile(file.name);
+        const mediaType = mime.startsWith("image/") ? "image" : mime.startsWith("video/") ? "video" : "audio";
+        const seconds = await probeDuration(file, mediaType);
+        const response = await fetch("/api/media/upload", {
+          method: "POST",
+          headers: { "Content-Type": mime, "X-File-Name": encodeURIComponent(file.name), "X-Media-Duration": String(seconds) },
+          body: file,
+        });
+        const result = await response.json() as { asset?: AgoraAsset; error?: string };
+        if (!response.ok || !result.asset) throw new Error(result.error || `Falha ao importar ${file.name}`);
+        const asset = result.asset;
+        setLibraryAssets((items) => [asset, ...items.filter((entry) => entry.id !== asset.id)]);
+        insertAssetIntoTimeline(asset, seconds, cursor);
+        cursor += Math.max(1, Math.round(seconds * fps));
+        completed += 1;
+      }
+      setNotice(`${completed} arquivo(s) salvo(s) na biblioteca e inserido(s) na timeline`);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha no envio de mídia");
+    } finally {
+      setUploading(false);
+      if (mediaImportRef.current) mediaImportRef.current.value = "";
+    }
+  };
+
+  const addLibraryAsset = async (asset: AgoraAsset) => {
+    if (projectRef.current.assets.some((entry) => entry.id === asset.id)) {
+      insertAssetIntoTimeline(asset, asset.durationSeconds ?? 5);
+      return;
+    }
+    let seconds = asset.durationSeconds ?? 5;
+    if (!asset.durationSeconds && (asset.type === "audio" || asset.type === "video")) {
+      seconds = await new Promise<number>((resolve) => {
+        const media = document.createElement(asset.type === "video" ? "video" : "audio");
+        media.preload = "metadata";
+        media.onloadedmetadata = () => resolve(Number.isFinite(media.duration) ? media.duration : 5);
+        media.onerror = () => resolve(5);
+        media.src = `/${asset.src}`;
+      });
+    }
+    insertAssetIntoTimeline(asset, seconds);
+  };
+
+  const startRender = async () => {
+    setRenderSubmitting(true);
+    setRenderPanelOpen(true);
+    try {
+      const response = await fetch("/api/render/jobs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ project }),
+      });
+      const result = await response.json() as { job?: RenderJob; error?: string };
+      if (!response.ok || !result.job) throw new Error(result.error || "Não foi possível iniciar a renderização.");
+      setRenderJobs((items) => [result.job!, ...items.filter((item) => item.id !== result.job!.id)]);
+      setNotice("Projeto enviado para a fila do Remotion");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha ao iniciar a renderização");
+    } finally {
+      setRenderSubmitting(false);
+    }
+  };
+
+  const cancelRender = async (id: string) => {
+    try {
+      const response = await fetch(`/api/render/jobs/${id}/cancel`, { method: "POST" });
+      const result = await response.json() as { job?: RenderJob; error?: string };
+      if (!response.ok) throw new Error(result.error || "Não foi possível cancelar.");
+      if (result.job) setRenderJobs((items) => items.map((item) => item.id === id ? result.job! : item));
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha ao cancelar a renderização");
+    }
+  };
+
   const seek = (frame: number) => {
     const next = Math.max(0, Math.min(duration - 1, Math.round(frame)));
     setCurrentFrame(next);
@@ -179,13 +347,16 @@ export const AgoraEditor: React.FC = () => {
         <button className="button quiet" onClick={redo} disabled={!future.length} title="Refazer (Ctrl+Y)">Refazer</button>
         <button className="button quiet" onClick={() => importRef.current?.click()}>Abrir projeto</button>
         <input ref={importRef} type="file" accept=".json,.agora.json,application/json" hidden onChange={(event) => void importProject(event.target.files?.[0])} />
-        <button className="button primary" onClick={saveProject}>Salvar projeto</button>
+        <button className="button quiet" onClick={() => setRenderPanelOpen((open) => !open)}>Fila ({renderJobs.length})</button>
+        <button className="button quiet" onClick={saveProject}>Salvar projeto</button>
+        <button className="button primary" onClick={() => void startRender()} disabled={renderSubmitting}>{renderSubmitting ? "Enviando…" : "Renderizar MP4"}</button>
       </div>
     </header>
 
     <section className="workspace">
       <aside className="sidebar left-panel">
-        <div className="panel-heading"><span>PROJETO</span><span className="muted">{project.assets.length} ativos</span></div>
+        <div className="panel-heading"><span>PROJETO</span><button className="library-add" onClick={() => mediaImportRef.current?.click()} disabled={uploading}>{uploading ? "Enviando…" : "+ Importar"}</button></div>
+        <input ref={mediaImportRef} type="file" accept="image/jpeg,image/png,image/webp,image/gif,video/mp4,video/quicktime,video/webm,audio/mpeg,audio/wav,audio/mp4,audio/aac,audio/ogg,audio/opus,audio/flac" multiple hidden onChange={(event) => void uploadFiles(event.target.files ?? [])} />
         <div className="asset-list">
           {project.assets.map((asset) => <button className="asset-row" key={asset.id} onClick={() => {
             const track = project.tracks.find((entry) => entry.items?.some((item) => item.assetId === asset.id));
@@ -193,9 +364,18 @@ export const AgoraEditor: React.FC = () => {
             if (track) setSelected({ trackId: track.id, itemId: item?.id });
           }}>
             <span className={`asset-icon ${asset.type}`}>{asset.type === "model" ? "3D" : asset.type.slice(0, 2).toUpperCase()}</span>
-            <span><strong>{asset.id}</strong><small>{asset.src}</small></span>
+            <span><strong>{asset.name ?? asset.id}</strong><small>{asset.src}</small></span>
           </button>)}
           {project.assets.length === 0 && <p className="empty">Nenhum ativo neste projeto.</p>}
+        </div>
+        <div className="panel-heading library-heading"><span>BIBLIOTECA LOCAL</span><span className="muted">{libraryAssets.length} arquivos</span></div>
+        <div className="library-audio-target"><label>Destino dos áudios<select value={audioTrackType} onChange={(event) => setAudioTrackType(event.target.value as "voice" | "music" | "sfx")}><option value="voice">Narração</option><option value="music">Música</option><option value="sfx">Efeitos</option></select></label></div>
+        <div className="asset-list library-list">
+          {libraryAssets.map((asset) => <button className="asset-row" key={asset.id} onClick={() => void addLibraryAsset(asset)} title="Inserir na timeline">
+            <span className={`asset-icon ${asset.type}`}>{asset.type === "audio" ? "AU" : asset.type === "video" ? "VI" : "IM"}</span>
+            <span><strong>{asset.name ?? asset.id}</strong><small>{asset.size ? `${(asset.size / 1048576).toFixed(1)} MB · ` : ""}{asset.durationSeconds ? `${asset.durationSeconds.toFixed(1)} s · ` : ""}{asset.type.toUpperCase()} · inserir na timeline</small></span>
+          </button>)}
+          {libraryAssets.length === 0 && <p className="empty">Importe imagens, vídeos ou áudios para criar sua biblioteca permanente.</p>}
         </div>
         <div className="panel-heading tools-heading">ADICIONAR TRILHA</div>
         <div className="track-tools">
@@ -268,6 +448,26 @@ export const AgoraEditor: React.FC = () => {
         </div>
       </div>
     </section>
+    {renderPanelOpen && <aside className="render-queue-panel">
+      <div className="render-queue-head">
+        <div><strong>FILA DE RENDERIZAÇÃO</strong><small>Remotion · MP4 · armazenamento local</small></div>
+        <button onClick={() => setRenderPanelOpen(false)}>Fechar</button>
+      </div>
+      <div className="render-queue-list">
+        {renderJobs.length === 0 && <p className="empty">Nenhuma renderização ainda. Use Renderizar MP4 para criar o primeiro vídeo.</p>}
+        {renderJobs.map((job) => <article className="render-job" key={job.id}>
+          <div className="render-job-title"><strong>{job.projectName}</strong><span className={`render-status ${job.status}`}>{({ queued: "Na fila", rendering: "Renderizando", completed: "Concluído", failed: "Falhou", cancelled: "Cancelado" })[job.status]}</span></div>
+          <div className="render-progress"><i style={{ width: `${Math.max(0, Math.min(100, job.progress))}%` }} /></div>
+          <div className="render-job-meta"><span>{job.progress}%</span><span>{new Date(job.createdAt).toLocaleString("pt-BR")}</span></div>
+          {job.error && <p className="render-error">{job.error}</p>}
+          {job.logs?.length ? <details className="render-logs"><summary>Logs do Remotion</summary><pre>{job.logs.join("\n")}</pre></details> : null}
+          <div className="render-job-actions">
+            {job.status === "completed" && <a href={`/api/render/jobs/${job.id}/download`} download>Baixar MP4</a>}
+            {(job.status === "queued" || job.status === "rendering") && <button onClick={() => void cancelRender(job.id)}>Cancelar</button>}
+          </div>
+        </article>)}
+      </div>
+    </aside>}
     <footer className="statusbar"><span>{notice}</span><span>ÁGORA · EDITOR VISUAL</span></footer>
   </main>;
 };
