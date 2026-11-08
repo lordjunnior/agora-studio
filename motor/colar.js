@@ -24,7 +24,7 @@ function areaDeTransferencia() {
     if (process.platform === 'darwin') return execSync('pbpaste', { encoding: 'utf8' });
     if (process.platform === 'win32') {
       // Por arquivo em UTF-8: pela saída do console, o PowerShell 5.1 usa a página de código antiga e estraga os acentos
-      const arq = path.join(os.tmpdir(), `preguica3d-colar-${process.pid}.txt`);
+      const arq = path.join(os.tmpdir(), `agora-colar-${process.pid}.txt`);
       execFileSync('powershell', ['-NoProfile', '-Command',
         `[IO.File]::WriteAllText('${arq.replace(/'/g, "''")}', (Get-Clipboard -Raw), (New-Object Text.UTF8Encoding $false))`]);
       try { return fs.readFileSync(arq, 'utf8'); } finally { fs.rmSync(arq, { force: true }); }

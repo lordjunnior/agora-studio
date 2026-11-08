@@ -21,7 +21,7 @@ const args = process.argv.slice(2);
 const todos = args.includes('--todos');
 const pedidos = args.filter((a) => !a.startsWith('--'));
 // Só uma rodada por vez (o painel confere este arquivo pra mostrar "tirando as fotos")
-const TRAVA = path.join(os.tmpdir(), `preguica3d-fotos-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.txt`);
+const TRAVA = path.join(os.tmpdir(), `agora-fotos-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.txt`);
 
 const PAGINA = `<!doctype html><html><head><meta charset="utf-8">
 <style>html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}

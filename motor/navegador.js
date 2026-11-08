@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const RAIZ = path.resolve(__dirname, '..');
-const GUARDADO = path.join(RAIZ, 'node_modules', '.cache', 'preguica3d', 'navegador.json');
+const GUARDADO = path.join(RAIZ, 'node_modules', '.cache', 'agora', 'navegador.json');
 const CANAIS = ['chromium', 'msedge', 'chrome'];
 const NOMES = { chromium: 'o Chromium da Máquina', msedge: 'o Microsoft Edge', chrome: 'o Google Chrome' };
 // GPU de cada sistema (no Mac, Metal; no resto, o padrão do navegador)

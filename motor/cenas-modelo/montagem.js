@@ -1,4 +1,4 @@
-// Cena-modelo "montagem" (Preguiça 3D): o objeto do vídeo é montado peça por peça, sem escrever código de cena, e cada
+// Cena-modelo "montagem" (ÁGORA): o objeto do vídeo é montado peça por peça, sem escrever código de cena, e cada
 // frase sai com uma cena diferente (câmera, lugar e ação do personagem, entrada da peça, falha). Tudo vem do roteiro.json
 // (exemplo completo no Prompt B de comandos/modo-chat.md; campos em referencias/montagem.md):
 //
