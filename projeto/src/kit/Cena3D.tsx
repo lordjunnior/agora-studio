@@ -2,7 +2,7 @@
 //   montar(scene)          -> monta o mundo UMA vez e devolve o que você quiser guardar (personagens, objetos)
 //   quadro(estado, t, cam)  -> chamado a cada quadro com o tempo t em segundos: mova câmera, personagens e objetos
 // Pós-processamento: contorno de tinta (InkPass) + tone mapping neutro. Tudo é função do quadro (render determinístico).
-import React, { useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { ThreeCanvas } from "@remotion/three";
