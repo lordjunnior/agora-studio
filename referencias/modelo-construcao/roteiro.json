@@ -1,0 +1,27 @@
+{
+  "titulo": "Concreto armado",
+  "capa": "Por que o concreto\ntem *ferro* dentro?",
+  "cor": "#f5c518",
+  "arroba": "@pordentrodascoisas",
+  "estilo": "redondo",
+  "fps": 60,
+  "voz": {"motor": "teste"},
+  "alvoPpm": 190,
+  "frases": [
+    {"texto": "Por que todo prédio tem ferro escondido dentro do concreto?", "plano": "gancho", "mostra": ["coluna", "personagem"], "gancho": true},
+    {"texto": "Se você precisa de uma coluna que segure um prédio, enche uma fôrma de concreto e espera secar.", "plano": "coluna", "mostra": ["concreto", "personagem"]},
+    {"texto": "Mas o concreto puro aguenta aperto e não aguenta puxão: quando o vento empurra, ele racha.", "plano": "racha", "mostra": ["concreto"], "jogo": "falha"},
+    {"texto": "Então você põe dentro uma gaiola de vergalhões de aço, amarrados com arame.", "plano": "gaiola", "mostra": ["gaiola", "personagem"], "jogo": "conserta", "rebobina": 0.6},
+    {"texto": "Essa é a *armadura*.", "plano": "armadura_rotulo", "mostra": ["gaiola"]},
+    {"texto": "Mas o ferro sozinho, na chuva, enferruja e fica fraco.", "plano": "ferrugem", "mostra": ["gaiola", "personagem"], "jogo": "falha"},
+    {"texto": "Então o concreto envolve o ferro inteiro e protege ele da água e do ar.", "plano": "cobre", "mostra": ["concreto", "personagem"], "jogo": "corrige"},
+    {"texto": "Esse é o *concreto armado*.", "plano": "concreto_rotulo", "mostra": ["coluna"]},
+    {"texto": "É por isso que numa obra você vê ferro saindo do topo das colunas.", "plano": "obra", "mostra": ["predio", "personagem"]},
+    {"texto": "Por fora, é só uma coluna cinza.", "plano": "por_fora", "mostra": ["coluna", "personagem"]},
+    {"texto": "Por dentro, é aço que aguenta o puxão e concreto que aguenta o aperto.", "plano": "por_dentro", "mostra": ["concreto", "gaiola"]},
+    {"texto": "E segue o canal pra ver o próximo.", "plano": "segue", "mostra": ["personagem"]}
+  ],
+  "cauda": {"segundos": 1.6, "plano": "cartao"},
+  "trilha": {"arquivo": "trilha", "ganho": 0.22},
+  "efeitos": {"abaixa": true}
+}

@@ -1,0 +1,2549 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Painel · Máquina Preguiça 3D</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='52' r='44' fill='%23A8794F' stroke='%23221B14' stroke-width='5'/%3E%3Cpath d='M50 30C74 30 84 46 83 60C82 78 66 88 50 88C34 88 18 78 17 60C16 46 26 30 50 30Z' fill='%23EBD8B5' stroke='%23221B14' stroke-width='3'/%3E%3Cellipse cx='33' cy='58' rx='12' ry='6.5' transform='rotate(-18 33 58)' fill='%235C3A22'/%3E%3Cellipse cx='67' cy='58' rx='12' ry='6.5' transform='rotate(18 67 58)' fill='%235C3A22'/%3E%3Cellipse cx='50' cy='68' rx='6.5' ry='4.5' fill='%233A2416'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500..700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&display=swap">
+<!-- A página do painel (motor/painel.js serve ela no navegador da pessoa). O visual é o da página de vendas da Máquina
+     (papel, tinta, amarelo, a Fraunces e a letra de mão Caveat), com vidro fosco no menu e nos quadros. Tudo aqui:
+     estilo, telas e o que cada botão faz -->
+<style>
+:root {
+  --papel: #F3EBDC;
+  --papel-claro: #FBF6EC;
+  --tinta: #221B14;
+  --tinta-2: #5C5042;
+  --vermelho: #E0362C;
+  --amarelo: #FFD23F;
+  --noite: #0E1430;
+  --azul: #2F5FB3;
+  --verde: #2E9D5B;
+  --vidro: rgba(251, 246, 236, .62);
+  --vidro-forte: rgba(251, 246, 236, .84);
+  --linha: rgba(34, 27, 20, .16);
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --mao: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+  --raio: 22px 18px 24px 16px / 18px 24px 16px 22px;
+  --raio-p: 14px 10px 16px 12px / 12px 16px 10px 14px;
+  --sombra: 5px 6px 0 var(--tinta);
+  --sombra-p: 3px 4px 0 var(--tinta);
+  --lado: 262px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0; min-height: 100vh;
+  background-color: var(--papel);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .13 0 0 0 0 .1 0 0 0 0 .07 0 0 0 .12 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"),
+    radial-gradient(rgba(34, 27, 20, .07) 1px, transparent 1.5px);
+  background-size: 240px 240px, 26px 26px;
+  color: var(--tinta);
+  font-family: var(--serif); font-size: 17px; line-height: 1.5;
+  font-optical-sizing: auto; font-variation-settings: "SOFT" 50, "WONK" 0;
+  -webkit-font-smoothing: antialiased;
+}
+img, video { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+::selection { background: var(--amarelo); color: var(--tinta); }
+:focus-visible { outline: 3px dashed var(--vermelho); outline-offset: 3px; }
+code { padding: 1px 6px; background: rgba(34, 27, 20, .08); border-radius: 6px; font-size: .86em; font-family: ui-monospace, Menlo, Consolas, monospace; }
+p { margin: 0 0 .8em; text-wrap: pretty; }
+h1, h2, h3 { margin: 0; font-weight: 900; font-variation-settings: "SOFT" 100, "WONK" 1; letter-spacing: -.025em; line-height: 1; text-wrap: balance; }
+h1 { font-size: clamp(40px, 3.6vw + 18px, 66px); }
+h2 { margin-bottom: 10px; font-size: clamp(25px, 1vw + 19px, 32px); letter-spacing: -.02em; }
+h3 { margin-bottom: 6px; font-size: 20px; letter-spacing: -.01em; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.mao { font-family: var(--mao); font-weight: 700; line-height: 1.05; }
+.suave { color: var(--tinta-2); }
+small { font-size: 14.5px; }
+
+/* ---------- o fundo: manchas de cor que o vidro desfoca ---------- */
+.fundo { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.fundo i { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .42; animation: boia 40s ease-in-out infinite alternate; }
+.fundo i:nth-child(1) { width: 44vmax; height: 44vmax; left: -10vmax; top: -12vmax; background: #FFD23F; }
+.fundo i:nth-child(2) { width: 36vmax; height: 36vmax; right: -12vmax; top: 14vh; background: #F49A8B; animation-duration: 48s; animation-delay: -14s; }
+.fundo i:nth-child(3) { width: 40vmax; height: 40vmax; left: 22vw; bottom: -22vmax; background: #93B4EC; animation-duration: 54s; animation-delay: -22s; }
+.fundo i:nth-child(4) { width: 26vmax; height: 26vmax; right: 14vw; bottom: -4vmax; background: #9FD9B0; animation-duration: 43s; animation-delay: -8s; }
+@keyframes boia { to { transform: translate(6vmax, -5vmax) scale(1.12); } }
+
+/* ---------- vidro: os quadros ---------- */
+.vidro {
+  position: relative;
+  background: var(--vidro);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5); backdrop-filter: blur(18px) saturate(1.5);
+  border: 2.5px solid var(--tinta); border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+.quadro { padding: clamp(18px, 2vw, 28px); margin-bottom: 26px; }
+.quadro > h2:first-child { margin-top: 2px; }
+.quadro .sub-quadro { margin: -2px 0 16px; color: var(--tinta-2); max-width: 46em; }
+
+/* ---------- menu do lado ---------- */
+.lado {
+  position: fixed; z-index: 30; left: 16px; top: 16px; bottom: 16px; width: var(--lado);
+  display: flex; flex-direction: column; gap: 16px; padding: 18px 14px 14px; overflow-y: auto;
+}
+.marca { display: flex; align-items: center; gap: 10px; padding: 0 4px; text-decoration: none; font-size: 18px; font-weight: 850; line-height: 1.02; letter-spacing: -.01em; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.marca svg { flex: none; width: 46px; height: 46px; }
+.marca small { display: block; margin-top: 3px; color: var(--vermelho); font-family: var(--mao); font-size: 21px; font-weight: 700; transform: rotate(-2deg); transform-origin: left; }
+.canal-mini { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border: 2px dashed rgba(34, 27, 20, .4); border-radius: var(--raio-p); text-decoration: none; transition: background .15s; }
+.canal-mini:hover { background: rgba(255, 255, 255, .45); }
+.canal-mini div { min-width: 0; line-height: 1.15; }
+.canal-mini b { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15.5px; }
+.canal-mini div > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--tinta-2); font-size: 13.5px; }
+.bolinha { flex: none; display: grid; place-items: center; width: 40px; height: 40px; overflow: hidden; border: 2px solid var(--tinta); border-radius: 50%; background: var(--amarelo); font-size: 19px; font-weight: 900; line-height: 1; }
+.bolinha img { width: 100%; height: 100%; object-fit: cover; }
+.menu { display: flex; flex-direction: column; gap: 6px; }
+.menu a {
+  display: flex; align-items: center; gap: 12px; padding: 8px 10px 8px 8px;
+  border: 2px solid transparent; border-radius: var(--raio-p);
+  font-size: 18px; font-weight: 780; text-decoration: none; font-variation-settings: "SOFT" 100, "WONK" 0;
+  transition: transform .18s cubic-bezier(.3, 1.6, .5, 1), background .15s;
+}
+.menu a svg { flex: none; width: 38px; height: 38px; transition: transform .25s cubic-bezier(.3, 1.6, .5, 1); }
+.menu a:hover { background: rgba(255, 210, 63, .3); }
+.menu a:hover svg { transform: rotate(-8deg) scale(1.08); }
+.menu a.ativo { background: var(--amarelo); border-color: var(--tinta); box-shadow: var(--sombra-p); transform: rotate(-1.2deg); }
+.menu a.ativo svg { filter: url(#tremido); }
+.menu a.chama { animation: chama .9s ease-in-out 3; }
+@keyframes chama { 50% { background: rgba(255, 210, 63, .6); transform: rotate(-2deg) scale(1.05); } }
+.menu .num { margin-left: auto; min-width: 26px; padding: 0 7px; border: 2px solid var(--tinta); border-radius: 999px; background: var(--papel-claro); font-size: 13px; font-weight: 900; line-height: 19px; text-align: center; }
+.menu .num.alerta { background: var(--vermelho); color: #fff; }
+.pronto-mini { display: block; padding: 10px 10px 12px; border-radius: var(--raio-p); text-decoration: none; transition: background .15s; }
+.pronto-mini:hover { background: rgba(255, 255, 255, .45); }
+.pronto-mini .linha1 { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; font-size: 14.5px; font-weight: 800; }
+.pronto-mini .linha1 span { font-family: var(--mao); font-size: 21px; color: var(--vermelho); }
+.lado-pe { margin-top: auto; display: grid; gap: 10px; }
+.lembrete { margin: 0; padding: 0 6px; color: var(--azul); font-family: var(--mao); font-size: 21px; font-weight: 700; line-height: 1.05; transform: rotate(-1.5deg); }
+
+.topo-celular { display: none; align-items: center; justify-content: space-between; gap: 10px; margin: -4px 0 18px; }
+
+/* ---------- conteúdo ---------- */
+.conteudo { margin-left: calc(var(--lado) + 32px); padding: 34px clamp(16px, 3vw, 44px) 130px; }
+main { max-width: 1080px; }
+.cabeca { margin: 4px 0 30px; }
+.chamada { margin: 0 0 10px; color: var(--vermelho); font-family: var(--mao); font-size: clamp(26px, 1vw + 20px, 33px); font-weight: 700; line-height: 1; transform: rotate(-2deg); transform-origin: left; }
+.sub { max-width: 40em; margin: 16px 0 0; color: var(--tinta-2); font-size: clamp(18px, .35vw + 16px, 21px); line-height: 1.45; }
+.voltar { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 14px; color: var(--tinta-2); font-weight: 800; text-decoration: none; }
+.voltar:hover { color: var(--tinta); }
+.carregando { padding: 50px 0; color: var(--tinta-2); font-family: var(--mao); font-size: 28px; }
+
+/* ---------- rabiscos (desenhados pelo script, como na página de vendas) ---------- */
+.rabisco { position: absolute; overflow: visible; pointer-events: none; fill: none; stroke: var(--cor, var(--vermelho)); stroke-width: var(--traco, 3.4); stroke-linecap: round; stroke-linejoin: round; }
+.rabisco path { stroke-dasharray: var(--L, 0) var(--L, 0); stroke-dashoffset: var(--L, 0); transition: stroke-dashoffset var(--dur, .75s) cubic-bezier(.6, .05, .35, 1) calc(var(--espera, .2s) + var(--atraso, 0s)); }
+.rabisco.on path { stroke-dashoffset: 0; }
+.circula { position: relative; display: inline-block; white-space: nowrap; }
+.circula > .rabisco { left: -.28em; top: -.18em; width: calc(100% + .56em); height: calc(100% + .38em); }
+.sublinha { position: relative; display: inline-block; }
+.sublinha > .rabisco { left: 0; bottom: -.22em; width: 100%; height: .32em; --cor: var(--azul); --traco: 4; }
+
+/* ---------- botões e campos ---------- */
+.botao {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 46px; padding: 9px 18px;
+  background: var(--amarelo); color: var(--tinta);
+  border: 2.5px solid var(--tinta); border-radius: 16px 12px 18px 11px / 12px 18px 11px 16px;
+  box-shadow: var(--sombra-p);
+  font: inherit; font-size: 17px; font-weight: 850; line-height: 1.1; text-decoration: none; font-variation-settings: "SOFT" 100, "WONK" 0;
+  cursor: pointer; transition: transform .12s ease, box-shadow .12s ease;
+}
+.botao:hover { transform: translate(-1px, -2px); box-shadow: 4px 6px 0 var(--tinta); }
+.botao:active { transform: translate(3px, 4px); box-shadow: 0 0 0 var(--tinta); }
+.botao.claro { background: var(--papel-claro); }
+.botao.escuro { background: var(--tinta); color: var(--papel); }
+.botao.mini { min-height: 34px; padding: 4px 12px; border-width: 2px; box-shadow: 2px 3px 0 var(--tinta); font-size: 15px; }
+.botao.mini:hover { box-shadow: 3px 4px 0 var(--tinta); }
+.botao:disabled { opacity: .4; cursor: default; transform: none; box-shadow: var(--sombra-p); }
+.botao.mini:disabled { box-shadow: 2px 3px 0 var(--tinta); }
+.botao svg { width: 20px; height: 20px; flex: none; }
+.acoes { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 16px; }
+.salvo { color: var(--verde); font-family: var(--mao); font-size: 23px; font-weight: 700; line-height: 1; }
+.salvo.erro { color: var(--vermelho); }
+.campo { display: block; margin: 0 0 18px; }
+.campo > span { display: block; font-size: 17.5px; font-weight: 820; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.campo > small { display: block; margin-top: 1px; color: var(--tinta-2); line-height: 1.35; }
+input[type=text], textarea {
+  display: block; width: 100%; margin-top: 7px; padding: 11px 13px;
+  color: var(--tinta); background: rgba(255, 255, 255, .6);
+  border: 2px solid var(--tinta); border-radius: 12px 9px 13px 10px;
+  font: inherit; font-size: 16.5px; line-height: 1.45;
+  transition: box-shadow .15s, background .15s;
+}
+input[type=text]:focus, textarea:focus { outline: none; background: #fff; box-shadow: 3px 4px 0 var(--amarelo), 0 0 0 1px var(--tinta); }
+textarea { resize: vertical; min-height: 50px; }
+::placeholder { color: #9A8E7E; opacity: 1; }
+.grade2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: 26px; }
+.grade2 > .quadro { margin-bottom: 0; }
+.caixa { margin: 14px 0 0; padding: 12px 15px; border: 2px solid var(--tinta); border-radius: var(--raio-p); line-height: 1.4; }
+.caixa.ok { background: #DDF1E2; }
+.caixa.espera { background: #FFF0B8; }
+.caixa.erro { background: #FBDAD6; color: #8E1F17; }
+.conta { color: var(--tinta-2); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.conta.passou { color: var(--vermelho); font-weight: 800; }
+
+/* ---------- Comece aqui ---------- */
+.passos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 22px; margin: 0 0 30px; padding: 0; list-style: none; counter-reset: passo; }
+.passos li { position: relative; padding: 18px 18px 20px 20px; transform: rotate(var(--r, 0deg)); }
+.passos li::before { counter-increment: passo; content: counter(passo); position: absolute; right: 14px; top: 2px; color: var(--vermelho); font-family: var(--mao); font-size: 54px; font-weight: 700; line-height: 1; opacity: .9; }
+.passos h3 { padding-right: 34px; font-size: 21px; }
+.passos p { margin: 0; color: var(--tinta-2); font-size: 16px; }
+.passos code { white-space: nowrap; }
+.post-it {
+  position: relative; margin: 0 0 30px; padding: 20px 24px 22px 22px; max-width: 760px;
+  background: rgba(255, 225, 90, .88); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  box-shadow: 0 18px 22px -16px rgba(70, 45, 20, .65);
+  clip-path: polygon(0 0, 100% 0, 100% 84%, 95% 100%, 0 100%);
+  transform: rotate(-.8deg);
+}
+.post-it p { margin: 0; font-size: 18px; line-height: 1.45; }
+.post-it p + p { margin-top: 8px; }
+.post-it .mao { display: block; margin-bottom: 4px; color: var(--vermelho); font-size: 27px; }
+.progresso { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px; margin: 6px 0 4px; }
+.porcento { position: relative; font-size: clamp(56px, 4vw + 26px, 86px); font-weight: 900; letter-spacing: -.045em; line-height: .9; font-variation-settings: "SOFT" 100, "WONK" 1; font-variant-numeric: tabular-nums; }
+.porcento small { font-size: .42em; letter-spacing: -.01em; vertical-align: .9em; }
+.progresso .texto { flex: 1; min-width: 220px; }
+.progresso .texto b { display: block; font-size: 22px; line-height: 1.15; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.barra { position: relative; height: 22px; margin-top: 10px; overflow: hidden; background: var(--papel-claro); border: 2.5px solid var(--tinta); border-radius: 999px 860px 920px 780px / 780px 920px 860px 999px; box-shadow: 2px 3px 0 var(--tinta); }
+.barra i { position: absolute; inset: 0 auto 0 0; width: 0; background: repeating-linear-gradient(-45deg, var(--amarelo) 0 12px, #FFC21F 12px 24px); border-right: 2.5px solid var(--tinta); transition: width 1.1s cubic-bezier(.3, 1.25, .5, 1); }
+.barra.mini { height: 14px; margin: 0; border-width: 2px; box-shadow: none; }
+.barra.mini i { border-right-width: 2px; }
+.status { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 12px; margin: 22px 0 0; padding: 0; list-style: none; }
+.status li > *, .status a { display: flex; align-items: flex-start; gap: 12px; height: 100%; padding: 12px 13px; background: rgba(255, 255, 255, .5); border: 2px solid var(--linha); border-radius: var(--raio-p); text-decoration: none; }
+.status a { transition: transform .15s, border-color .15s; }
+.status a:hover { border-color: var(--tinta); transform: translateY(-2px); }
+.status .falta > * { border-color: var(--vermelho); background: rgba(224, 54, 44, .07); }
+.status svg { flex: none; width: 30px; height: 30px; margin-top: -1px; }
+.status b { display: block; line-height: 1.2; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.status small { display: block; margin-top: 3px; color: var(--tinta-2); line-height: 1.35; }
+.status .ir { margin-top: 5px; color: var(--azul); font-family: var(--mao); font-size: 20px; font-weight: 700; line-height: 1; }
+.esqueleto { height: 64px; border-radius: var(--raio-p); background: linear-gradient(90deg, rgba(255, 255, 255, .3), rgba(255, 255, 255, .75), rgba(255, 255, 255, .3)); background-size: 200% 100%; animation: brilho 1.3s linear infinite; }
+@keyframes brilho { to { background-position: -200% 0; } }
+.gira { width: 26px; height: 26px; flex: none; fill: none; stroke: var(--tinta); stroke-width: 2.6; stroke-dasharray: 5 5; stroke-linecap: round; animation: gira 1s linear infinite; }
+@keyframes gira { to { transform: rotate(360deg); } }
+.prompt { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 14px; padding: 12px 14px; background: var(--papel-claro); border: 2.5px solid var(--tinta); border-radius: 22px 18px 24px 16px; box-shadow: var(--sombra-p); }
+.prompt span { flex: 1; min-width: 200px; font-size: 18px; }
+
+/* ---------- subir modelos 3D ---------- */
+.soltar { display: grid; justify-items: center; gap: 4px; padding: 26px 18px 22px; text-align: center; background: rgba(255, 255, 255, .38); border: 2.5px dashed var(--tinta); border-radius: var(--raio); transition: background .15s, transform .2s; }
+.soltar.em-cima { background: rgba(255, 210, 63, .38); transform: rotate(-.6deg) scale(1.01); }
+.soltar svg.caixote { width: 66px; height: 66px; margin-bottom: 2px; }
+.soltar b { font-size: 21px; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.soltar .acoes { justify-content: center; margin-top: 12px; }
+.pacotes { margin: 16px 0 0; padding: 0; list-style: none; }
+.pacotes li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 2px dashed var(--linha); }
+.pacotes li div { flex: 1; min-width: 0; }
+.pacotes svg { width: 34px; height: 34px; flex: none; }
+
+/* ---------- Meu canal ---------- */
+.perfil { overflow: hidden; margin-bottom: 26px; }
+.capa-canal { position: relative; display: grid; place-items: center; aspect-ratio: 6.2 / 1; min-height: 110px; overflow: hidden; background: repeating-linear-gradient(-45deg, rgba(34, 27, 20, .05) 0 14px, transparent 14px 28px), #EADFC9; border-bottom: 2.5px solid var(--tinta); color: var(--tinta-2); font-family: var(--mao); font-size: 25px; font-weight: 700; }
+.capa-canal img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.perfil-linha { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px 22px; padding: 0 clamp(16px, 2vw, 28px) 22px; }
+.logo-grande { flex: none; display: grid; place-items: center; width: 128px; height: 128px; margin-top: -54px; overflow: hidden; background: var(--amarelo); border: 3px solid var(--tinta); border-radius: 50%; box-shadow: var(--sombra-p); font-size: 52px; font-weight: 900; position: relative; z-index: 1; }
+.logo-grande img { width: 100%; height: 100%; object-fit: cover; }
+.perfil-nome { flex: 1; min-width: 200px; padding-bottom: 4px; }
+.perfil-nome h2 { margin: 0; font-size: clamp(28px, 1.6vw + 18px, 40px); }
+.perfil-nome span { color: var(--tinta-2); }
+.perfil .acoes { margin: 0; padding-bottom: 4px; }
+.banner { position: relative; display: grid; place-items: center; aspect-ratio: 16 / 9; overflow: hidden; background: #EADFC9; border: 2px solid var(--tinta); border-radius: var(--raio-p); color: var(--tinta-2); font-family: var(--mao); font-size: 24px; }
+.banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.banner .seguro { position: absolute; left: 19.8%; top: 35.3%; width: 60.4%; height: 29.4%; border: 2px dashed rgba(255, 255, 255, .95); outline: 1px dashed rgba(0, 0, 0, .5); border-radius: 4px; pointer-events: none; }
+.banner .seguro span { position: absolute; left: 6px; bottom: 5px; padding: 0 8px; background: rgba(34, 27, 20, .78); color: #fff; border-radius: 999px; font-family: var(--serif); font-size: 11.5px; font-weight: 700; line-height: 1.6; }
+.escolhas { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; margin: 10px 0 18px; }
+.escolhas.largas { grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
+.opcao { position: relative; display: flex; flex-direction: column; padding: 0; overflow: hidden; text-align: left; background: rgba(255, 255, 255, .55); border: 2px solid var(--linha); border-radius: var(--raio-p); color: inherit; font: inherit; cursor: pointer; transition: transform .15s, border-color .15s, box-shadow .15s; }
+.opcao:hover { border-color: var(--tinta); transform: translateY(-2px); }
+.opcao[aria-pressed=true] { border: 2.5px solid var(--tinta); background: var(--papel-claro); box-shadow: var(--sombra-p); transform: rotate(-1deg); }
+.opcao[aria-pressed=true]::after { content: "✓"; position: absolute; top: 6px; right: 6px; display: grid; place-items: center; width: 28px; height: 28px; background: var(--amarelo); border: 2px solid var(--tinta); border-radius: 50%; font-weight: 900; }
+.opcao img { width: 100%; aspect-ratio: 1; object-fit: cover; background: #EFE5D2; }
+.opcao.alta img { aspect-ratio: 9 / 13; object-position: center 70%; }
+.opcao b { padding: 7px 10px 9px; font-size: 15.5px; line-height: 1.2; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.opcao .texto-opcao { padding: 14px 14px 16px; }
+.opcao .texto-opcao b { display: block; padding: 0 30px 4px 0; font-size: 18px; }
+.opcao .texto-opcao span { display: block; color: var(--tinta-2); font-size: 15px; line-height: 1.35; }
+.opcao .sem-foto { display: grid; place-items: center; aspect-ratio: 1; background: #EFE5D2; font-family: var(--mao); font-size: 22px; color: var(--tinta-2); text-align: center; padding: 10px; }
+.cores { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 14px; }
+.cor-item { position: relative; display: flex; align-items: center; gap: 8px; padding: 5px 12px 5px 5px; background: rgba(255, 255, 255, .55); border: 2px solid var(--tinta); border-radius: 999px; cursor: pointer; font-size: 15px; font-weight: 700; }
+.cor-item i { width: 28px; height: 28px; border: 2px solid var(--tinta); border-radius: 50%; }
+.cor-item input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+.segmentos { display: inline-flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 18px; }
+.segmentos button { min-height: 40px; padding: 6px 16px; background: rgba(255, 255, 255, .55); border: 2px solid var(--tinta); border-radius: 999px; color: inherit; font: inherit; font-weight: 800; cursor: pointer; }
+.segmentos button[aria-pressed=true] { background: var(--amarelo); box-shadow: 2px 3px 0 var(--tinta); }
+.cor-linha { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px; }
+.cor-escolha { flex: 1; min-width: 240px; }
+.paleta { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 14px; }
+.paleta button { width: 40px; height: 40px; padding: 0; border: 2.5px solid var(--tinta); border-radius: 50%; cursor: pointer; transition: transform .15s; }
+.paleta button:hover { transform: scale(1.12) rotate(-6deg); }
+.paleta button[aria-pressed=true] { box-shadow: 0 0 0 3px var(--papel-claro), 0 0 0 5.5px var(--tinta); }
+.cor-propria { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; }
+.cor-propria input { width: 52px; height: 40px; padding: 0; border: 2.5px solid var(--tinta); border-radius: 10px; background: none; cursor: pointer; }
+.mini-capa { position: relative; flex: none; width: 168px; aspect-ratio: 9 / 16; overflow: hidden; background: linear-gradient(#9ccff4, #d9ecfa 58%, #8cc85c 58%); border: 2.5px solid var(--tinta); border-radius: 16px; box-shadow: var(--sombra-p); }
+.mini-capa .pergunta { position: absolute; left: 9px; right: 9px; top: 14px; padding: 7px 8px; background: #fff; border-radius: 8px; font-family: Arial, sans-serif; font-size: 13px; font-weight: 900; line-height: 1.15; text-align: center; text-transform: uppercase; }
+.mini-capa .pergunta em { padding: 0 3px; border-radius: 3px; font-style: normal; }
+.mini-capa .seguir { position: absolute; left: 50%; bottom: 16px; padding: 6px 12px; border-radius: 999px; font-family: Arial, sans-serif; font-size: 12.5px; font-weight: 900; white-space: nowrap; transform: translateX(-50%); }
+.mini-capa svg { position: absolute; left: 50%; bottom: 52px; width: 58%; transform: translateX(-50%) rotate(-6deg); }
+.rede { margin: 0 0 16px; }
+.rede-topo { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 2px; }
+.rede-topo b { margin-right: auto; font-size: 18px; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.aviso-bloco { margin: 0 0 20px; }
+.tudo summary { display: flex; align-items: center; gap: 12px; cursor: pointer; list-style: none; }
+.tudo summary::-webkit-details-marker { display: none; }
+.tudo summary h2 { margin: 0; }
+.tudo summary .mao { margin-left: auto; color: var(--azul); font-size: 22px; }
+.tudo[open] summary .mao { visibility: hidden; }
+.tudo summary svg { width: 40px; height: 40px; flex: none; }
+.passos-tudo { display: grid; gap: 14px; margin: 18px 0 16px; padding: 0; list-style: none; counter-reset: p; }
+.passos-tudo li { position: relative; padding-left: 46px; }
+.passos-tudo li::before { counter-increment: p; content: counter(p); position: absolute; left: 0; top: -2px; display: grid; place-items: center; width: 32px; height: 32px; background: var(--amarelo); border: 2px solid var(--tinta); border-radius: 50%; font-weight: 900; }
+.passos-tudo li > b:first-child { display: block; font-size: 18px; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.passos-tudo .acoes { margin-top: 8px; }
+.relatorio { display: grid; gap: 10px; margin-top: 16px; }
+.relatorio > div { padding: 12px 14px; border: 2px solid var(--tinta); border-radius: var(--raio-p); }
+.relatorio b { display: block; margin-bottom: 4px; }
+.relatorio ul { margin: 0; padding-left: 20px; font-size: 15px; }
+.relatorio .ok { background: #DDF1E2; }
+.relatorio .padrao { background: #FFF0B8; }
+.relatorio .erro { background: #FBDAD6; }
+.relatorio .branco { background: rgba(255, 255, 255, .55); }
+
+/* ---------- Vídeos ---------- */
+.dica { display: flex; gap: 14px; align-items: flex-start; margin: 0 0 34px; padding: 16px 20px; background: rgba(14, 20, 48, .9); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); color: var(--papel); border: 2.5px solid var(--tinta); border-radius: var(--raio); box-shadow: 5px 6px 0 var(--amarelo); }
+.dica svg { flex: none; width: 40px; height: 40px; }
+.dica p { margin: 0; }
+.dica p + p { margin-top: 6px; color: #C9C2B4; font-size: 15.5px; }
+.dica b { color: var(--amarelo); }
+.dica code { background: rgba(255, 255, 255, .14); color: #fff; }
+.videos { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 40px 24px; margin: 0; padding: 12px 0 0; list-style: none; }
+.cartao-video { position: relative; display: block; padding: 8px 8px 14px; background: var(--papel-claro); border: 1px solid rgba(34, 27, 20, .18); box-shadow: 0 1px 0 rgba(34, 27, 20, .08), 0 18px 24px -16px rgba(70, 45, 20, .6); text-decoration: none; transform: rotate(var(--r, 0deg)); transition: transform .25s cubic-bezier(.3, 1.5, .5, 1); }
+.cartao-video:hover { transform: rotate(0) translateY(-5px); }
+.videos li:nth-child(4n + 1) .cartao-video { --r: -1.6deg; --rf: 3deg; }
+.videos li:nth-child(4n + 2) .cartao-video { --r: 1.2deg; --rf: -4deg; }
+.videos li:nth-child(4n + 3) .cartao-video { --r: -.8deg; --rf: 2deg; }
+.videos li:nth-child(4n + 4) .cartao-video { --r: 1.8deg; --rf: -2deg; }
+.fita { position: absolute; z-index: 2; top: -11px; left: 50%; width: 74px; height: 23px; background: rgba(232, 214, 160, .85); transform: translateX(-50%) rotate(var(--rf, -3deg)); clip-path: polygon(3% 0, 97% 0, 100% 20%, 96% 40%, 100% 60%, 96% 80%, 99% 100%, 2% 100%, 0 78%, 4% 58%, 0 40%, 4% 20%); }
+.miniatura { position: relative; display: grid; place-items: center; aspect-ratio: 9 / 16; overflow: hidden; background: #E3D8C2; color: var(--tinta-2); font-family: var(--mao); font-size: 24px; }
+.miniatura img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.miniatura .duracao { position: absolute; right: 7px; bottom: 7px; padding: 1px 8px; background: rgba(14, 20, 48, .82); color: #fff; border-radius: 8px; font-size: 13px; font-weight: 800; }
+.adesivo { position: absolute; z-index: 2; margin: 0; padding: 5px 10px 6px; background: var(--amarelo); border: 2px solid var(--tinta); border-radius: 12px 8px 14px 9px; box-shadow: 2px 3px 0 var(--tinta); font-size: 15px; font-weight: 900; line-height: 1; transform: rotate(var(--ra, -5deg)); }
+.cartao-video .adesivo { left: -10px; top: 26px; }
+.cartao-video .adesivo.mudar { background: #FFB59E; }
+.cartao-video h3 { display: -webkit-box; margin: 11px 4px 8px; overflow: hidden; font-size: 18px; line-height: 1.18; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.etapas { display: flex; flex-wrap: wrap; gap: 5px; margin: 0 4px; padding: 0; list-style: none; }
+.etapas li { padding: 1px 9px; background: rgba(34, 27, 20, .07); border: 1.5px solid transparent; border-radius: 999px; color: #9A8E7E; font-size: 12.5px; font-weight: 800; }
+.etapas li.feito { background: #DDF1E2; border-color: var(--verde); color: #1C6B3C; }
+.etapas li.teste { background: #FFF0B8; border-color: #C79A00; color: #7A5A00; }
+.quando { display: block; margin: 8px 4px 0; color: var(--tinta-2); font-family: var(--mao); font-size: 19px; font-weight: 600; line-height: 1; }
+.vazio-grande { display: grid; justify-items: center; gap: 8px; padding: 50px 20px; text-align: center; }
+.vazio-grande svg { width: 90px; height: 90px; }
+.vazio-grande p { max-width: 26em; color: var(--tinta-2); }
+
+/* um vídeo */
+.secoes { position: sticky; top: 12px; z-index: 15; display: flex; flex-wrap: wrap; gap: 6px; width: fit-content; max-width: 100%; margin: 18px 0 28px; padding: 6px; border-width: 2px; border-radius: 999px; box-shadow: var(--sombra-p); }
+.secoes button { padding: 7px 16px; background: none; border: 0; border-radius: 999px; color: var(--tinta-2); font: inherit; font-size: 16px; font-weight: 800; cursor: pointer; }
+.secoes button:hover { background: rgba(255, 210, 63, .35); color: var(--tinta); }
+.secoes button.ativo { background: var(--tinta); color: var(--papel); }
+.secoes i { margin-left: 5px; padding: 0 7px; background: var(--amarelo); border-radius: 999px; color: var(--tinta); font-size: 12px; font-style: normal; }
+.topo-video { display: grid; grid-template-columns: minmax(0, 330px) minmax(0, 1fr); gap: 34px; align-items: start; margin-bottom: 40px; scroll-margin-top: 90px; }
+.celular { position: relative; width: min(320px, 100%); margin: 6px auto 0; background: #16120E; border: 10px solid #16120E; border-radius: 38px; box-shadow: 10px 12px 0 rgba(34, 27, 20, .16); transform: rotate(-1.5deg); }
+.celular::after { content: ""; position: absolute; top: 6px; left: 50%; width: 30%; height: 15px; background: #16120E; border-radius: 12px; transform: translateX(-50%); pointer-events: none; }
+.celular video, .celular .tela-vazia { display: block; width: 100%; aspect-ratio: 9 / 16; object-fit: cover; background: var(--noite); border-radius: 28px; }
+.celular .tela-vazia { display: grid; place-items: center; padding: 24px; color: #C9C2B4; font-family: var(--mao); font-size: 24px; text-align: center; }
+.baixar { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 22px; }
+.nota-teste { margin: 16px 0 0; text-align: center; }
+.postar .bloco-postar { margin-bottom: 20px; }
+.postar .rede-topo { margin-bottom: 7px; }
+.texto-pronto { margin: 0; padding: 13px 15px; overflow-wrap: anywhere; white-space: pre-wrap; background: rgba(255, 255, 255, .6); border: 2px solid var(--linha); border-radius: var(--raio-p); font-size: 16px; line-height: 1.55; }
+.titulo-pronto { font-size: 21px; font-weight: 820; line-height: 1.28; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.dobra summary { cursor: pointer; color: var(--azul); font-family: var(--mao); font-size: 21px; font-weight: 700; list-style: none; }
+.dobra summary::-webkit-details-marker { display: none; }
+.estrelas { display: flex; gap: 6px; margin: 6px 0 12px; }
+.estrelas button { padding: 0; background: none; border: 0; cursor: pointer; transition: transform .15s; }
+.estrelas button:hover { transform: scale(1.15) rotate(-8deg); }
+/* a cor vai no svg: o desenho do ícone (o <use>) herda dele, e o CSS não alcança o path lá dentro */
+.estrelas svg { width: 38px; height: 38px; fill: var(--papel-claro); stroke: var(--tinta); stroke-width: 2.4; stroke-linejoin: round; }
+.estrelas .acesa svg { fill: var(--amarelo); }
+.custos { margin-top: 22px; }
+.custos h3 { margin-bottom: 10px; }
+.custos ul { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+.custos li { display: grid; grid-template-columns: auto 1fr; gap: 0 12px; align-items: baseline; padding: 10px 12px; background: rgba(255, 255, 255, .55); border: 2px solid var(--linha); border-radius: var(--raio-p); }
+.custos li b { font-size: 15px; color: var(--tinta-2); }
+.custos li span { font-size: 21px; font-weight: 900; letter-spacing: -.01em; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.custos li small { grid-column: 1 / -1; color: var(--tinta-2); line-height: 1.35; }
+.secao-video { margin-bottom: 44px; scroll-margin-top: 90px; }
+.secao-video > h2 { display: flex; align-items: baseline; gap: 12px; }
+.secao-video > h2 .mao { color: var(--vermelho); font-size: 26px; font-weight: 700; letter-spacing: 0; }
+.cenas { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+.cena { display: flex; flex-direction: column; overflow: hidden; background: var(--vidro-forte); border: 2px solid var(--tinta); border-radius: var(--raio-p); box-shadow: 2px 3px 0 var(--tinta); transition: border-color .15s, box-shadow .15s; }
+.cena.gostei { box-shadow: 3px 4px 0 var(--verde); border-color: var(--verde); }
+.cena.mudar { box-shadow: 3px 4px 0 var(--vermelho); border-color: var(--vermelho); }
+.cena.faltando { box-shadow: 0 0 0 4px rgba(224, 54, 44, .35); }
+.foto { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; overflow: hidden; background: #E3D8C2; border: 0; border-bottom: 2px solid var(--linha); cursor: zoom-in; }
+.foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.num-cena { position: absolute; top: 8px; left: 8px; display: grid; place-items: center; min-width: 32px; height: 32px; padding: 0 8px; background: var(--amarelo); border: 2px solid var(--tinta); border-radius: 50%; font-weight: 900; }
+.cena-corpo { flex: 1; display: flex; flex-direction: column; gap: 9px; padding: 10px 10px 12px; }
+.frase { flex: 1; margin: 0; font-size: 14.5px; line-height: 1.38; }
+.votos { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.voto { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 36px; padding: 4px 6px; background: rgba(255, 255, 255, .6); border: 2px solid var(--tinta); border-radius: 10px 8px 11px 7px; color: inherit; font: inherit; font-size: 14.5px; font-weight: 800; cursor: pointer; }
+.voto svg { width: 18px; height: 18px; }
+.voto.gostei[aria-pressed=true] { background: #DDF1E2; border-color: var(--verde); color: #1C6B3C; }
+.voto.mudar[aria-pressed=true] { background: #FBDAD6; border-color: var(--vermelho); color: #8E1F17; }
+.cena textarea { margin: 0; padding: 8px 10px; font-size: 14.5px; }
+.envio { position: sticky; bottom: 14px; z-index: 12; margin: 22px 0 0; padding: 14px 16px; border-width: 2.5px; }
+.envio-dentro { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.envio-dentro label { flex: 1; min-width: 240px; margin: 0; }
+.envio-dentro textarea { height: 48px; min-height: 48px; margin: 0; }
+.progresso-cenas { width: 100%; margin-bottom: -4px; color: var(--tinta-2); font-size: 14.5px; font-weight: 700; }
+.md h2 { margin: 24px 0 10px; font-size: 26px; }
+.md h3 { margin: 20px 0 8px; font-size: 20px; }
+.md h4, .md h5 { margin: 16px 0 6px; font-size: 17px; }
+.md > :first-child { margin-top: 0; }
+.md ol, .md ul { margin: 0 0 12px; padding-left: 24px; }
+.md li { margin: 3px 0; }
+.md blockquote { margin: 0 0 12px; padding: 8px 14px; background: rgba(255, 255, 255, .5); border-left: 4px solid var(--amarelo); border-radius: 0 10px 10px 0; color: var(--tinta-2); }
+.md hr { margin: 18px 0; border: 0; border-top: 2px dashed var(--linha); }
+.tabela { margin: 0 0 14px; overflow-x: auto; }
+.md table { min-width: 560px; border-collapse: collapse; font-size: 14.5px; }
+.md th, .md td { padding: 7px 9px; text-align: left; vertical-align: top; border: 1.5px solid var(--linha); }
+.md th { background: rgba(255, 255, 255, .55); }
+.lista-simples { margin: 0; padding: 0; list-style: none; }
+.lista-simples li { padding: 7px 0; border-bottom: 2px dashed var(--linha); }
+
+/* ---------- Modelos 3D ---------- */
+.filtros { position: sticky; top: 12px; z-index: 15; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 30px; padding: 8px; border-width: 2px; border-radius: 26px 22px 28px 24px; box-shadow: var(--sombra-p); }
+.filtros button { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 5px 14px; background: none; border: 2px solid transparent; border-radius: 999px; color: var(--tinta); font: inherit; font-size: 15.5px; font-weight: 800; cursor: pointer; }
+.filtros button:hover { background: rgba(255, 210, 63, .35); }
+.filtros button[aria-pressed=true] { background: var(--amarelo); border-color: var(--tinta); box-shadow: 2px 3px 0 var(--tinta); }
+.filtros button span { color: var(--tinta-2); font-size: 13px; }
+.filtros input { flex: 1; min-width: 170px; margin: 0 0 0 auto; padding: 7px 14px; border-radius: 999px; font-size: 15.5px; }
+.categoria { margin-bottom: 40px; }
+.categoria h2 { display: flex; align-items: baseline; gap: 12px; }
+.categoria h2 .mao { color: var(--vermelho); font-size: 26px; font-weight: 700; letter-spacing: 0; }
+.categoria > p { margin: -4px 0 16px; color: var(--tinta-2); }
+.modelos { display: grid; grid-template-columns: repeat(auto-fill, minmax(156px, 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.modelos.altos { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.modelo { position: relative; display: flex; flex-direction: column; width: 100%; height: 100%; padding: 0; overflow: hidden; text-align: left; background: var(--papel-claro); border: 2px solid var(--tinta); border-radius: var(--raio-p); box-shadow: 2px 3px 0 var(--tinta); color: inherit; font: inherit; cursor: zoom-in; transition: transform .2s cubic-bezier(.3, 1.6, .5, 1), box-shadow .2s; }
+.modelo:hover { transform: translate(-1px, -3px) rotate(-.8deg); box-shadow: 4px 6px 0 var(--tinta); }
+.modelo img, .modelo .sem-foto { width: 100%; aspect-ratio: 1; object-fit: cover; background: #EFE5D2; border-bottom: 2px solid var(--linha); }
+.modelos.altos .modelo img, .modelos.altos .modelo .sem-foto { aspect-ratio: 9 / 14; object-position: center 62%; }
+.modelo .sem-foto { display: grid; place-items: center; gap: 4px; padding: 12px; color: var(--tinta-2); font-family: var(--mao); font-size: 20px; text-align: center; }
+.modelo .sem-foto svg { width: 48px; height: 48px; opacity: .55; }
+.modelo b { padding: 8px 10px 3px; font-size: 16px; line-height: 1.2; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.modelo span.pedir { padding: 0 10px 10px; color: var(--tinta-2); font-size: 13px; line-height: 1.3; }
+.modelo .adesivo { top: 8px; right: 8px; left: auto; padding: 3px 8px; font-size: 12px; --ra: 4deg; }
+.fotografando { display: flex; align-items: center; gap: 12px; margin: 0 0 22px; padding: 12px 16px; }
+
+/* ---------- avisos do topo, zoom, ficha e o "Copiado!" ---------- */
+#avisos:empty { display: none; }
+#avisos { display: grid; gap: 10px; margin-bottom: 20px; }
+.faixa { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 16px; border-width: 2.5px; }
+.faixa span { flex: 1; min-width: 220px; }
+.faixa.erro { background: rgba(251, 218, 214, .9); }
+.faixa.espera { background: rgba(255, 240, 184, .9); }
+.faixa.ok { background: rgba(221, 241, 226, .9); }
+#zoom { position: fixed; inset: 0; z-index: 50; display: none; align-items: center; justify-content: center; gap: 28px; padding: 24px 80px; background: rgba(14, 20, 48, .62); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+#zoom.aberto { display: flex; }
+#zoom .grande { max-width: min(100%, 860px); max-height: calc(100dvh - 120px); border: 6px solid var(--papel-claro); border-radius: 12px; box-shadow: 0 20px 50px rgba(0, 0, 0, .45); }
+#zoom .ficha { max-width: 360px; padding: 22px; }
+#zoom .ficha h2 { margin-bottom: 6px; }
+#zoom .legenda-zoom { position: absolute; left: 0; right: 0; bottom: 16px; margin: 0; padding: 0 80px; color: #fff; text-align: center; font-size: 16px; text-shadow: 0 1px 6px rgba(0, 0, 0, .6); }
+.redondo-btn { position: absolute; display: grid; place-items: center; width: 50px; height: 50px; padding: 0; background: var(--amarelo); border: 2.5px solid var(--tinta); border-radius: 50%; box-shadow: var(--sombra-p); color: var(--tinta); font: 900 26px/1 var(--serif); cursor: pointer; }
+#zoom .fechar { top: 16px; right: 16px; }
+#zoom .ant { left: 16px; top: 50%; transform: translateY(-50%); }
+#zoom .prox { right: 16px; top: 50%; transform: translateY(-50%); }
+#toast { position: fixed; z-index: 60; left: 50%; bottom: 26px; padding: 11px 20px; background: var(--tinta); color: var(--papel); border-radius: 14px 10px 16px 12px; box-shadow: 3px 4px 0 var(--amarelo); font-weight: 800; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(20px); transition: .22s; }
+#toast.ver { opacity: 1; transform: translateX(-50%); }
+
+/* ---------- Potencializar a máquina ---------- */
+.produtos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 26px; margin: 0 0 40px; }
+.produto { display: flex; flex-direction: column; gap: 12px; padding: 20px 22px 22px; transform: rotate(var(--r, 0deg)); }
+.produto-topo { display: flex; align-items: center; gap: 14px; }
+.produto-topo svg { flex: none; width: 58px; height: 58px; }
+.produto-topo h3 { margin: 0 0 6px; font-size: 22px; line-height: 1.1; }
+.produto > p { margin: 0; color: var(--tinta-2); font-size: 16.5px; }
+.produto .acoes { margin-top: auto; padding-top: 4px; }
+.selo { display: inline-block; padding: 2px 10px 3px; background: rgba(255, 255, 255, .6); border: 2px solid var(--linha); border-radius: 10px 7px 11px 8px; color: var(--tinta-2); font-size: 13.5px; font-weight: 900; line-height: 1.2; white-space: nowrap; transform: rotate(-2deg); }
+.selo.tem { background: #DDF1E2; border-color: var(--verde); color: #1C6B3C; }
+.selo.versao { background: var(--amarelo); border-color: var(--tinta); color: var(--tinta); }
+.comprar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.comprar p { flex: 1; min-width: 240px; margin: 0; }
+.passos-tudo .prompt { margin-top: 8px; }
+.passos-tudo li > .suave { display: block; margin-top: 8px; font-size: 15px; }
+.prompt.longo span { white-space: pre-wrap; font-size: 15.5px; line-height: 1.5; }
+.lista-roteiros { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr)); gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; }
+.lista-roteiros li { display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 12px; background: rgba(255, 255, 255, .55); border: 2px solid var(--linha); border-radius: var(--raio-p); }
+.lista-roteiros li.feito { background: rgba(221, 241, 226, .7); border-color: var(--verde); }
+.lista-roteiros a { flex: 1; min-width: 0; overflow: hidden; font-weight: 800; text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+.lista-roteiros a:hover { color: var(--vermelho); }
+.n-mao { flex: none; min-width: 26px; color: var(--vermelho); font-family: var(--mao); font-size: 23px; font-weight: 700; line-height: 1; }
+.temas { max-height: 560px; overflow: auto; margin: 14px 0 0; padding: 0 6px 0 0; list-style: none; }
+.temas li { display: flex; align-items: center; gap: 12px; padding: 9px 2px; border-bottom: 2px dashed var(--linha); }
+.temas li div { flex: 1; min-width: 0; line-height: 1.3; }
+.temas li b { display: block; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.temas li .suave { font-size: 14.5px; }
+
+/* ---------- Ajuda ---------- */
+.busca-ajuda { position: relative; display: block; margin: 0 0 18px; }
+.busca-ajuda input { margin: 0; padding: 16px 18px 16px 54px; border-width: 2.5px; border-radius: 22px 18px 24px 16px; box-shadow: var(--sombra-p); font-size: 19px; }
+.busca-ajuda svg { position: absolute; left: 18px; top: 50%; width: 24px; height: 24px; transform: translateY(-50%); fill: none; stroke: var(--tinta); stroke-width: 2.6; stroke-linecap: round; pointer-events: none; }
+.ajuda-temas { margin-bottom: 26px; }
+.tema-ajuda { margin-bottom: 26px; }
+.tema-ajuda > h2 { display: flex; align-items: baseline; gap: 12px; }
+.tema-ajuda > h2 .mao { color: var(--vermelho); font-size: 24px; font-weight: 700; letter-spacing: 0; }
+.pergunta { border-top: 2px dashed var(--linha); }
+.pergunta:first-of-type { border-top: 0; }
+.pergunta summary { display: flex; align-items: center; gap: 12px; padding: 13px 2px; cursor: pointer; list-style: none; font-size: 18px; font-weight: 820; line-height: 1.3; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.pergunta summary::-webkit-details-marker { display: none; }
+.pergunta summary::after { content: "+"; margin-left: auto; flex: none; display: grid; place-items: center; width: 30px; height: 30px; background: var(--papel-claro); border: 2px solid var(--tinta); border-radius: 50%; font-size: 20px; font-weight: 900; line-height: 1; }
+.pergunta[open] summary::after { content: "–"; background: var(--amarelo); }
+.pergunta summary:hover { color: var(--vermelho); }
+.resposta { padding: 0 2px 16px; }
+.novidades { margin: 0; padding-left: 22px; }
+.novidades li { margin: 0 0 8px; line-height: 1.5; }
+.resposta p { margin: 0 0 8px; font-size: 17px; }
+.resposta .acoes { margin-top: 8px; }
+.pede { margin: 4px 0 0; color: var(--azul); font-family: var(--mao); font-size: 21px; font-weight: 700; line-height: 1; }
+.dicas-boas { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 18px; margin: 0 0 30px; padding: 0; list-style: none; counter-reset: dica; }
+.dicas-boas li { position: relative; padding: 16px 18px 18px 68px; transform: rotate(var(--r, 0deg)); }
+.dicas-boas li::before { counter-increment: dica; content: counter(dica); position: absolute; left: 14px; top: 10px; color: var(--vermelho); font-family: var(--mao); font-size: 40px; font-weight: 700; line-height: 1; }
+.dicas-boas b { display: block; font-size: 18px; line-height: 1.2; font-variation-settings: "SOFT" 100, "WONK" 0; }
+.dicas-boas span { display: block; margin-top: 4px; color: var(--tinta-2); font-size: 15.5px; line-height: 1.4; }
+.nada-achado { padding: 10px 2px; color: var(--tinta-2); font-family: var(--mao); font-size: 24px; }
+
+@media (max-width: 1100px) {
+  .topo-video { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .lado { left: 10px; right: 10px; top: auto; bottom: calc(10px + env(safe-area-inset-bottom)); width: auto; flex-direction: row; gap: 0; padding: 6px; overflow: visible; border-radius: 22px 18px 24px 16px; }
+  .lado > :not(.menu) { display: none; }
+  .menu { flex: 1; flex-direction: row; justify-content: space-around; gap: 4px; }
+  .menu a { flex: 1; flex-direction: column; gap: 2px; padding: 5px 2px; font-size: 12.5px; line-height: 1.1; text-align: center; }
+  .menu a svg { width: 30px; height: 30px; }
+  .menu .num, .so-largo { display: none; }
+  .menu a.ativo { transform: none; }
+  .topo-celular { display: flex; }
+  .secoes { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .secoes button { flex: none; }
+  .conteudo { margin-left: 0; padding: 18px 16px 130px; }
+  #zoom { flex-direction: column; gap: 14px; padding: 70px 14px 20px; overflow-y: auto; }
+  #zoom .ficha { max-width: 100%; }
+  #zoom .ant, #zoom .prox { top: auto; bottom: 14px; transform: none; }
+}
+@media (max-width: 560px) {
+  .videos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 14px; }
+  .cenas, .modelos, .modelos.altos { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .logo-grande { width: 100px; height: 100px; margin-top: -42px; }
+  .filtros input { flex-basis: 100%; margin: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<svg class="defs" aria-hidden="true" focusable="false">
+  <!-- O traço "fervendo" de desenho à mão (o mesmo da página de vendas), no ícone do menu aberto -->
+  <filter id="tremido" x="-8%" y="-8%" width="116%" height="116%">
+    <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="2" result="ruido">
+      <animate attributeName="seed" values="2;5;9;13" dur=".52s" calcMode="discrete" repeatCount="indefinite"/>
+    </feTurbulence>
+    <feDisplacementMap in="SourceGraphic" in2="ruido" scale="2.2" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <symbol id="rosto" viewBox="0 0 100 100">
+    <circle cx="50" cy="52" r="44" fill="#A8794F" stroke="#221B14" stroke-width="5"/>
+    <path d="M50 30C74 30 84 46 83 60C82 78 66 88 50 88C34 88 18 78 17 60C16 46 26 30 50 30Z" fill="#EBD8B5" stroke="#221B14" stroke-width="3"/>
+    <ellipse cx="33" cy="58" rx="12" ry="6.5" transform="rotate(-18 33 58)" fill="#5C3A22"/>
+    <ellipse cx="67" cy="58" rx="12" ry="6.5" transform="rotate(18 67 58)" fill="#5C3A22"/>
+    <path d="M27 57q5 4 10 0M63 57q5 4 10 0" stroke="#F3E3C6" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <ellipse cx="50" cy="68" rx="6.5" ry="4.5" fill="#3A2416"/>
+    <path d="M43 76q7 5 14 0" stroke="#221B14" stroke-width="3" fill="none" stroke-linecap="round"/>
+  </symbol>
+  <!-- Ícones do menu: traço de tinta grosso e cor chapada, desenhados à mão -->
+  <symbol id="i-inicio" viewBox="0 0 40 40">
+    <g stroke="#221B14" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M9.5 18.5L9.2 33.6Q9.2 34.4 10 34.4L30.2 34.6Q31 34.6 31 33.8L30.7 18.2" fill="#FFD23F"/>
+      <path d="M4.6 20.4L20.2 6.2L35.6 20.2Q36.2 21 35.2 21.4L31.4 21.2L20.1 11.4L8.8 21.6L5.1 21.6Q4.2 21.2 4.6 20.4Z" fill="#E0362C"/>
+      <path d="M17 34.4V25.6Q17 24.6 18 24.6H22.4Q23.4 24.6 23.4 25.6V34.5" fill="#221B14"/>
+      <path d="M26.6 10.2V6.4H30.2V13.6" fill="#FBF6EC"/>
+    </g>
+  </symbol>
+  <symbol id="i-canal" viewBox="0 0 40 40">
+    <g stroke="#221B14" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M13.6 4.6L20 11.4L27.4 4" fill="none"/>
+      <path d="M6.2 12.6Q5.2 12.6 5.2 13.8L5.6 32.4Q5.8 33.6 7 33.6L33.4 33.8Q34.6 33.8 34.8 32.6L34.6 13.4Q34.4 12.2 33.2 12.2Z" fill="#FFD23F"/>
+      <rect x="9.2" y="16.2" width="17.4" height="13.6" rx="3" fill="#2F5FB3"/>
+      <path d="M15.6 19.6L21.6 23L15.6 26.4Z" fill="#FBF6EC" stroke-width="1.8"/>
+      <circle cx="30.6" cy="19" r="1.6" fill="#221B14" stroke="none"/>
+      <circle cx="30.6" cy="25" r="1.6" fill="#221B14" stroke="none"/>
+    </g>
+  </symbol>
+  <symbol id="i-videos" viewBox="0 0 40 40">
+    <g stroke="#221B14" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M6.2 17.4H34Q34.8 17.4 34.8 18.2L34.6 33.4Q34.6 34.6 33.4 34.6H7.4Q6.2 34.6 6.2 33.4Z" fill="#FBF6EC"/>
+      <path d="M6.2 17.4H34.6V22.4H6.2Z" fill="#221B14"/>
+      <path d="M11 17.6L8.8 22.2M18.4 17.6L16.2 22.2M25.8 17.6L23.6 22.2M33 17.6L30.8 22.2" stroke="#FFD23F" stroke-width="2.2"/>
+      <g transform="rotate(-14 6 15)">
+        <path d="M5.8 8.6H34.2Q35 8.6 35 9.4V14.2H5.8Z" fill="#FFD23F"/>
+        <path d="M12.4 8.8L9.6 14M19.8 8.8L17 14M27.2 8.8L24.4 14M34.4 9L31.8 14" stroke-width="2.6"/>
+      </g>
+      <path d="M17.4 25.4L24 28.6L17.4 31.8Z" fill="#E0362C" stroke-width="1.8"/>
+    </g>
+  </symbol>
+  <symbol id="i-modelos" viewBox="0 0 40 40">
+    <g stroke="#221B14" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M20 4.8L34.6 12.2L20.2 19.6L5.4 12.4Z" fill="#FFD23F"/>
+      <path d="M5.4 12.4L5.6 27.8L20.2 35.4L20.2 19.6Z" fill="#E0362C"/>
+      <path d="M34.6 12.2L34.4 27.6L20.2 35.4L20.2 19.6Z" fill="#2F5FB3"/>
+      <path d="M12.6 8.6L27.4 15.8" stroke="#FBF6EC" stroke-width="1.6" opacity=".7"/>
+    </g>
+  </symbol>
+  <!-- Os de status, como os passos da página de vendas -->
+  <symbol id="s-ok" viewBox="0 0 30 30"><circle cx="15" cy="15" r="12" fill="#DDF1E2" stroke="#2E9D5B" stroke-width="2.6"/><path d="M9 15.5l4.2 4.2 8.4-9.4" fill="none" stroke="#2E9D5B" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="s-falta" viewBox="0 0 30 30"><circle cx="15" cy="15" r="12" fill="#FBDAD6" stroke="#E0362C" stroke-width="2.6"/><path d="M10.4 10.6l9.2 8.8M19.8 10.4l-9.4 9.2" fill="none" stroke="#E0362C" stroke-width="3.2" stroke-linecap="round"/></symbol>
+  <symbol id="s-aviso" viewBox="0 0 30 30"><path d="M15 3.6L27.4 25.4H2.8Z" fill="#FFD23F" stroke="#221B14" stroke-width="2.4" stroke-linejoin="round"/><path d="M15 11v7.4" stroke="#221B14" stroke-width="3" stroke-linecap="round"/><circle cx="15" cy="21.8" r="1.7" fill="#221B14"/></symbol>
+  <symbol id="s-opcional" viewBox="0 0 30 30"><circle cx="15" cy="15" r="11.5" fill="none" stroke="#9A8E7E" stroke-width="2.4" stroke-dasharray="4 4"/><path d="M10.5 15h9" stroke="#9A8E7E" stroke-width="2.6" stroke-linecap="round"/></symbol>
+  <symbol id="caixote" viewBox="0 0 66 66">
+    <g stroke="#221B14" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M8 24L33 14L58 24L33 34Z" fill="#E9C38B"/>
+      <path d="M8 24V49L33 59V34Z" fill="#D9A766"/>
+      <path d="M58 24V49L33 59V34Z" fill="#C88F4D"/>
+      <path d="M33 4.5V25M25.5 11.5L33 4L40.5 11.5" fill="none" stroke="#E0362C" stroke-width="3.4"/>
+    </g>
+  </symbol>
+  <symbol id="i-copiar" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="6.5" y="6.5" width="10" height="11" rx="2"/><path d="M13.5 6.2V4.4q0-1.4-1.4-1.4H4.6Q3.2 3 3.2 4.4v8.2q0 1.4 1.4 1.4h1.8"/></g></symbol>
+  <symbol id="i-baixar" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v10M5.5 8.6 10 13l4.5-4.4M3.6 16.6h12.8"/></g></symbol>
+  <symbol id="i-gostei" viewBox="0 0 20 20"><path d="M4.5 10.5l3.6 3.6 7.6-8.4" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-mudar" viewBox="0 0 20 20"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12.8 3.8l3.4 3.4-9 9-4.2.8.8-4.2z"/><path d="M11 5.6l3.4 3.4"/></g></symbol>
+  <symbol id="i-estrela" viewBox="0 0 40 40"><path d="M20 4.5l4.7 9.8 10.6 1.4-7.8 7.4 2 10.6L20 28.6l-9.5 5.1 2-10.6-7.8-7.4 10.6-1.4z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 40 40"><g stroke="#221B14" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"><path d="M6 8.4Q6 6 8.4 6H31.6Q34 6 34 8.4V24.6Q34 27 31.6 27H17L9.6 33.6V27H8.4Q6 27 6 24.6Z" fill="#FFD23F"/><path d="M12.6 14.4H27.4M12.6 19.6H22" fill="none"/></g></symbol>
+  <!-- Potencializar: o foguete do menu e um desenho por produto -->
+  <symbol id="i-potencializar" viewBox="0 0 40 40">
+    <g stroke="#221B14" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M13.6 26.4Q8.6 27 6.2 33.8Q13 31.4 13.6 26.4Z" fill="#FFD23F"/>
+      <path d="M15.4 18.2L9 17.8L5.8 22.4L12.4 23.6Z" fill="#E0362C"/>
+      <path d="M21.8 24.6L22.2 31L17.6 34.2L16.4 27.6Z" fill="#E0362C"/>
+      <path d="M13.2 26.8C12.4 18.8 19.2 8.6 33.8 6.2C31.6 20.6 21.4 27.6 13.2 26.8Z" fill="#FBF6EC"/>
+      <circle cx="24.4" cy="15.6" r="3.4" fill="#2F5FB3"/>
+    </g>
+  </symbol>
+  <symbol id="p-roteiros" viewBox="0 0 56 56">
+    <g stroke="#221B14" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M15 9.6L37.4 6.8L41.6 41.4L19.2 44.2Z" fill="#FFD23F"/>
+      <path d="M10.6 13.4H33.2L40 20.2V48.6H10.6Z" fill="#FBF6EC"/>
+      <path d="M33.2 13.4V20.2H40M16 26H34.6M16 32H34.6M16 38H27.4" fill="none"/>
+    </g>
+  </symbol>
+  <symbol id="p-gringo" viewBox="0 0 56 56">
+    <g stroke="#221B14" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round">
+      <circle cx="28" cy="28" r="20" fill="#2F5FB3"/>
+      <path d="M19 13.6Q27 14.8 26 21.6Q20.6 23.8 22.4 29.6Q16.6 31.6 12.4 26.8Q11.6 18.8 19 13.6Z" fill="#5FB85A"/>
+      <path d="M33.6 30.8Q41.6 29.2 46 34.4Q42.8 43.4 34.2 46.6Q30.4 39.6 33.6 30.8Z" fill="#5FB85A"/>
+      <path d="M8.4 28H47.6M28 8.4Q18.6 28 28 47.6M28 8.4Q37.4 28 28 47.6" fill="none" stroke-width="1.8" opacity=".55"/>
+    </g>
+  </symbol>
+  <symbol id="p-checklist" viewBox="0 0 56 56">
+    <g stroke="#221B14" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M11.4 11.6Q11.4 9.6 13.4 9.6H42.6Q44.6 9.6 44.6 11.6V47.4Q44.6 49.4 42.6 49.4H13.4Q11.4 49.4 11.4 47.4Z" fill="#FBF6EC"/>
+      <path d="M20.6 6.4H35.4V13.6H20.6Z" fill="#221B14"/>
+      <path d="M17 23.4L20 26.4L25 20.8M17 33.4L20 36.4L25 30.8" fill="none" stroke="#2E9D5B" stroke-width="3.2"/>
+      <path d="M29.4 24.4H39M29.4 34.4H39M17.4 43H39" fill="none"/>
+    </g>
+  </symbol>
+  <symbol id="p-atualizacoes" viewBox="0 0 56 56">
+    <g stroke="#221B14" stroke-width="2.8" stroke-linejoin="round" stroke-linecap="round" fill="none">
+      <circle cx="28" cy="28" r="20.5" fill="#FFD23F"/>
+      <path d="M17.6 25.6Q19.4 16.4 28.4 15.8Q35 15.8 38.2 21.4M39.4 14.8L38.6 22.2L31.4 21"/>
+      <path d="M38.4 30.4Q36.6 39.6 27.6 40.2Q21 40.2 17.8 34.6M16.6 41.2L17.4 33.8L24.6 35"/>
+    </g>
+  </symbol>
+  <symbol id="i-ajuda" viewBox="0 0 40 40">
+    <g stroke="#221B14" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <path d="M20 5.4C28 5.4 34.4 11.4 34.4 19C34.4 26.6 28 32.6 20 32.6Q17 32.6 14.4 31.6L7.4 34.6L9.6 28.4Q5.6 24.6 5.6 19C5.6 11.4 12 5.4 20 5.4Z" fill="#FFD23F"/>
+      <path d="M15.6 15.6Q15.8 11.4 20.2 11.4Q24.4 11.6 24.4 15.2Q24.4 17.8 21.6 19Q20 19.8 20 22.2" fill="none" stroke-width="3"/>
+      <circle cx="20" cy="27" r="1.8" fill="#221B14" stroke="none"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="fundo" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+<aside class="lado vidro" aria-label="Menu do painel">
+  <a class="marca" href="#/inicio"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rosto"/></svg><span>Máquina Preguiça 3D<small>o painel</small></span></a>
+  <a class="canal-mini" href="#/canal" id="canal-mini"><span class="bolinha" id="lado-logo">M</span><div><b id="lado-nome">Seu canal</b><span id="lado-arroba">configure em Meu canal</span></div></a>
+  <nav class="menu">
+    <a href="#/inicio" data-pag="inicio"><svg aria-hidden="true"><use href="#i-inicio"/></svg>Comece aqui</a>
+    <a href="#/canal" data-pag="canal"><svg aria-hidden="true"><use href="#i-canal"/></svg>Meu canal</a>
+    <a href="#/videos" data-pag="videos"><svg aria-hidden="true"><use href="#i-videos"/></svg>Vídeos<span class="num" id="num-videos"></span></a>
+    <a href="#/modelos" data-pag="modelos"><svg aria-hidden="true"><use href="#i-modelos"/></svg>Modelos 3D<span class="num" id="num-modelos"></span></a>
+    <a href="#/potencializar" data-pag="potencializar"><svg aria-hidden="true"><use href="#i-potencializar"/></svg><span>Potencializar<span class="so-largo"> a máquina</span></span></a>
+    <a href="#/ajuda" data-pag="ajuda"><svg aria-hidden="true"><use href="#i-ajuda"/></svg>Ajuda</a>
+  </nav>
+  <div class="lado-pe">
+    <a class="pronto-mini" href="#/inicio" id="pronto-mini"><span class="linha1">Configuração <span id="pronto-num">...</span></span><div class="barra mini"><i id="pronto-barra"></i></div></a>
+    <p class="lembrete">Quer mudar algo no vídeo? Pede no chat da IA ✦</p>
+  </div>
+</aside>
+
+<div class="conteudo">
+  <div class="topo-celular"><a class="marca" href="#/inicio"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rosto"/></svg><span>Máquina Preguiça 3D<small>o painel</small></span></a><a href="#/canal" aria-label="Meu canal"><span class="bolinha" id="topo-logo">M</span></a></div>
+  <div id="avisos"></div>
+  <main id="app"><p class="carregando">Abrindo o painel...</p></main>
+</div>
+
+<div id="zoom" role="dialog" aria-modal="true" aria-label="Imagem grande"><img class="grande" alt=""><div class="ficha vidro" hidden></div><p class="legenda-zoom"></p>
+  <button class="redondo-btn ant" aria-label="Anterior">‹</button><button class="redondo-btn prox" aria-label="Próxima">›</button><button class="redondo-btn fechar" aria-label="Fechar">✕</button></div>
+<div id="toast" role="status"></div>
+
+<script>
+const T = '__TOKEN__';
+const NS = 'http://www.w3.org/2000/svg';
+const app = document.getElementById('app');
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = (t) => String(t ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const data = (d) => (d ? new Date(d).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '');
+const dur = (s) => (s ? `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}` : '');
+const icone = (id, classe = '') => `<svg class="${classe}" aria-hidden="true"><use href="#${id}"/></svg>`;
+const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+const mil = (n) => Math.round(n || 0).toLocaleString('pt-BR');
+// 1234567 → "1,2 milhão"
+const curto = (n) => (n >= 1e6 ? `${(n / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} ${n >= 2e6 ? 'milhões' : 'milhão'}` : n >= 1e3 ? `${Math.round(n / 1e3)} mil` : String(n || 0));
+
+let estado = null;     // /api/estado: o canal, os vídeos, os modelos e os pacotes
+let video = null;      // /api/video do vídeo aberto
+let conferido = null;  // o npm run conferir
+let rascunho = null;   // a opinião das cenas que a pessoa está dando
+let acabou = false;    // no --esperar, a pessoa já clicou em "Mandar pra IA" ou "Terminei"
+let falhas = 0;
+const sujos = new Set(); // os quadros com mudança ainda não salva (a tela não redesenha por cima deles)
+const ABA = Math.random().toString(36).slice(2, 10), NASCEU = Date.now(); // esta aba (ver "Uma aba só", no fim)
+let aposentada = null; // 'velha' (o painel abriu em outra aba e esta não pôde fechar) ou 'ocupada' (ficou: tem coisa sem salvar)
+
+// ---------- Conversa com a Máquina ----------
+async function pedir(rota, corpo) {
+  try {
+    const r = await fetch(`/api/${rota}${rota.includes('?') ? '&' : '?'}t=${T}`, corpo === undefined ? { cache: 'no-store' }
+      : { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
+    const j = await r.json().catch(() => ({}));
+    // O que a própria pessoa salvou não conta como novidade
+    if (j.versao && corpo !== undefined) vigiar.ultima = j.versao;
+    return { ...j, ok: r.ok && j.ok !== false, mensagem: j.mensagem || (r.ok ? '' : 'Não deu certo. Tente de novo.') };
+  } catch {
+    return { ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' };
+  }
+}
+function avisar(texto) {
+  const t = $('#toast');
+  t.textContent = texto;
+  t.classList.add('ver');
+  clearTimeout(avisar.t);
+  avisar.t = setTimeout(() => t.classList.remove('ver'), 2200);
+}
+async function copiar(texto) {
+  try { await navigator.clipboard.writeText(texto); }
+  catch {
+    const c = document.createElement('textarea');
+    c.value = texto; document.body.appendChild(c); c.select(); document.execCommand('copy'); c.remove();
+  }
+  avisar('Copiado!');
+}
+
+// ---------- Rabiscos (o círculo e o sublinhado feitos à mão da página de vendas) ----------
+const sorteio = (s) => () => (s = (s * 16807) % 2147483647) / 2147483647;
+const f1 = (n) => n.toFixed(1);
+function curva(pts) {
+  let d = `M${f1(pts[0][0])} ${f1(pts[0][1])}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i - 1] || pts[i], b = pts[i], c = pts[i + 1], e = pts[i + 2] || c;
+    d += ` C${f1(b[0] + (c[0] - a[0]) / 6)} ${f1(b[1] + (c[1] - a[1]) / 6)} ${f1(c[0] - (e[0] - b[0]) / 6)} ${f1(c[1] - (e[1] - b[1]) / 6)} ${f1(c[0])} ${f1(c[1])}`;
+  }
+  return d;
+}
+const FORMAS = {
+  circulo(w, h, r) {
+    const cx = w / 2, cy = h / 2, rx = w / 2 - 4, ry = h / 2 - 4;
+    const ini = -Math.PI * (0.62 + r() * 0.16), giro = Math.PI * 2 * (1.08 + r() * 0.1), fa = r() * 6.3, fb = r() * 6.3, incl = (r() - 0.5) * 0.1;
+    const pts = [];
+    for (let i = 0; i <= 30; i++) {
+      const t = i / 30, a = ini + t * giro, k = 1 + 0.04 * Math.sin(2 * a + fa) + 0.025 * Math.sin(3 * a + fb) + 0.09 * (t - 0.55);
+      const x = Math.cos(a) * rx * k, y = Math.sin(a) * ry * k;
+      pts.push([cx + x * Math.cos(incl) - y * Math.sin(incl), cy + x * Math.sin(incl) + y * Math.cos(incl)]);
+    }
+    return curva(pts);
+  },
+  sublinhado(w, h, r) {
+    const pts = [];
+    for (let i = 0; i <= 6; i++) { const t = i / 6; pts.push([3 + t * (w - 6), h * 0.55 + Math.sin(t * Math.PI * 1.3 + r() * 0.6) * h * 0.14 - t * h * 0.12]); }
+    return curva(pts);
+  }
+};
+function rabiscar(raiz = document) {
+  for (const svg of $$('svg.rabisco', raiz)) {
+    const w = svg.clientWidth, h = svg.clientHeight;
+    if (!w || !h || svg.dataset.feito) continue;
+    svg.dataset.feito = '1';
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    const p = document.createElementNS(NS, 'path');
+    p.setAttribute('d', FORMAS[svg.dataset.forma](w, h, sorteio((Number(svg.dataset.semente) || 3) * 7919)));
+    svg.replaceChildren(p);
+    p.style.setProperty('--L', Math.ceil(p.getTotalLength()) + 2);
+    requestAnimationFrame(() => requestAnimationFrame(() => svg.classList.add('on')));
+  }
+}
+const rabisco = (forma, semente) => `<svg class="rabisco" data-forma="${forma}" data-semente="${semente}" aria-hidden="true"></svg>`;
+
+// ---------- Menu do lado, faixas de aviso e rotas ----------
+const corDoTexto = (hex) => {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
+  if (!m) return '#221B14';
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16));
+  return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#221B14' : '#fff';
+};
+function bolinha(c, el) {
+  const cor = c.bloco.cor || '#FFD23F';
+  el.style.background = c.logo ? '#fff' : cor;
+  el.style.color = corDoTexto(cor);
+  el.innerHTML = c.logo ? `<img src="${c.logo}" alt="">` : esc((c.nome || 'M').trim()[0].toUpperCase());
+}
+function lado() {
+  const c = estado.canal;
+  $('#lado-nome').textContent = c.nome || 'Seu canal';
+  $('#lado-arroba').textContent = c.arroba || (c.nome ? '' : 'configure em Meu canal');
+  bolinha(c, $('#lado-logo'));
+  bolinha(c, $('#topo-logo'));
+  document.title = `${c.nome ? c.nome + ' · ' : ''}Painel da Máquina Preguiça 3D`;
+  const reais = estado.videos.filter((v) => !v.exemplo).length;
+  $('#num-videos').textContent = reais || '';
+  $('#num-videos').hidden = !reais;
+  $('#num-modelos').textContent = estado.modelos.itens.length || '';
+  const p = progresso();
+  $('#pronto-num').textContent = p ? `${p.pct}%` : '...';
+  $('#pronto-barra').style.width = p ? `${p.pct}%` : '0';
+}
+function faixas() {
+  const a = [];
+  if (falhas >= 2 && !acabou) a.push(`<div class="faixa vidro erro"><span>O painel perdeu a ligação com a Máquina (ele fecha depois de umas horas, ou quando o computador reinicia). Pra abrir de novo: dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da Máquina, ou peça pra IA: <b>abre o painel</b>.</span></div>`);
+  else if (acabou) a.push(`<div class="faixa vidro ok"><span>Pronto, a IA já recebeu. Pode voltar pra conversa com ela.</span></div>`);
+  else if (estado && estado.esperando) a.push(`<div class="faixa vidro espera"><span>A IA está esperando você aqui. Quando acabar, clique em <b>Terminei</b> (ou, nas cenas, em <b>Mandar pra IA</b>).</span><button class="botao escuro mini" id="terminei">Terminei, voltar pra conversa</button></div>`);
+  if (faixas.novidade && !acabou) a.push(`<div class="faixa vidro espera"><span>A IA mudou alguma coisa por aqui.</span><button class="botao mini" id="ver-novidade">Atualizar</button></div>`);
+  if (aposentada === 'velha') a.push(`<div class="faixa vidro espera"><span>O painel abriu de novo em outra aba. Esta ficou velha: pode fechar.</span></div>`);
+  else if (aposentada === 'ocupada') a.push(`<div class="faixa vidro espera"><span>O painel abriu de novo em outra aba. Esta ficou aberta porque tem coisa sem salvar aqui: termine e depois feche esta aba.</span></div>`);
+  if (faixas.outraAba) a.push(`<div class="faixa vidro espera"><span>Tem outra aba do painel aberta, com coisa sem salvar. Termine lá e feche aquela aba.</span></div>`);
+  if (faixas.irPara) a.push(`<div class="faixa vidro espera"><span>A IA quer te mostrar outra tela do painel.</span><button class="botao mini" id="ir-pedido">Ver agora</button></div>`);
+  $('#avisos').innerHTML = a.join('');
+  const b = $('#terminei');
+  if (b) b.onclick = async () => { const r = await pedir('terminei', {}); if (r.ok) { acabou = true; faixas(); } else avisar(r.mensagem); };
+  const n = $('#ver-novidade');
+  if (n) n.onclick = () => { faixas.novidade = false; sujos.clear(); faixas(); mostrar(); };
+  const ir = $('#ir-pedido');
+  if (ir) ir.onclick = () => { const r = faixas.irPara; faixas.irPara = null; sujos.clear(); faixas(); irPara(r, true); };
+}
+
+// Não redesenha a tela no meio do que a pessoa está fazendo (escrevendo, vendo o vídeo, com mudança sem salvar)
+const ocupado = () => (document.activeElement && /^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) || $$('video').some((v) => !v.paused) || sujos.size > 0;
+
+function rota() {
+  const [pag = '', id = '', aba = ''] = location.hash.replace(/^#\/?/, '').split('/').map((p) => { try { return decodeURIComponent(p); } catch { return p; } });
+  return { pag, id, aba };
+}
+async function mostrar() {
+  const r = rota();
+  const menu = r.pag === 'video' ? 'videos' : r.pag === 'projeto' ? 'inicio' : r.pag;
+  $$('.menu a').forEach((a) => a.classList.toggle('ativo', a.dataset.pag === menu));
+  if (!estado) return;
+  if (r.pag === 'inicio' || r.pag === 'projeto') paginaInicio(r.id);
+  else if (r.pag === 'canal') paginaCanal(r.id);
+  else if (r.pag === 'videos') paginaVideos();
+  else if (r.pag === 'video' && r.id) await paginaVideo(r.id, r.aba);
+  else if (r.pag === 'modelos') paginaModelos();
+  else if (r.pag === 'potencializar') paginaPotencializar(r.id);
+  else if (r.pag === 'ajuda') paginaAjuda();
+  else return location.replace('#/inicio');
+  rabiscar(app);
+}
+window.addEventListener('hashchange', () => { if (!location.hash.startsWith('#/canal')) relatorioTudo = null; if (!location.hash.startsWith('#/potencializar')) extraMsg = null; if (!location.hash.startsWith('#/inicio')) importado = null; sujos.clear(); faixas.novidade = false; faixas(); window.scrollTo(0, 0); mostrar(); });
+
+// ---------- Comece aqui ----------
+const depois = (t) => t.replace(/^[^:]*:\s*/, '').replace(/\s*\([^)]*npm run[^)]*\)/g, '').replace(/;?\s*rode npm run[^.;]*/g, '');
+// Cada linha do npm run conferir em palavras simples. chave junta as linhas do mesmo item; onde: a tela que resolve
+function traduzir({ status, texto }) {
+  const t = texto.toLowerCase(), ok = status === 'ok';
+  const it = (chave, titulo, detalhe = '', onde = '') => ({ chave, status, titulo, detalhe, onde });
+  if (t.startsWith('node.js')) return it('node', 'Programa base (Node.js)', ok ? `Versão ${texto.replace(/^node\.js\s*/i, '')}` : 'Precisa do Node.js 20 ou mais novo. Peça pra IA: "instala o que falta".');
+  if (t.startsWith('motor de animação')) return it('motor', 'Motor de animação', ok ? 'As peças que montam e juntam o vídeo' : 'Falta instalar. Peça pra IA: "instala o que falta".');
+  if (t.startsWith('navegador')) return it('navegador', 'Navegador que desenha o vídeo', ok ? (texto.match(/\(([^)]+)\)/) || [])[1] || '' : 'Falta instalar. Peça pra IA: "instala o que falta".');
+  if (t.startsWith('voz de teste')) return it('vozteste', 'Voz de teste', ok ? 'A voz do computador, pras prévias' : depois(texto));
+  if (t.startsWith('canal/') || t.startsWith('canal configurado')) {
+    const faltam = ok ? [] : ((texto.match(/\(([^)]*)\)\s*$/) || [])[1] || '').replace(/\.\.\.$/, '').split(/,\s*/).filter(Boolean);
+    return { ...it('canal', 'Seu canal', ok ? 'Assunto, jeito de falar, personagem e o resto' : '', '#/canal/tudo'), faltam };
+  }
+  if (t.startsWith('voz do canal')) {
+    const m = texto.match(/^voz do canal(?: \(([^)]+)\))?:\s*/i);
+    const titulo = `Voz dos vídeos${m && m[1] ? ` (${m[1].replace(/,.*$/, '')})` : ''}`;
+    if (status === 'falta') {
+      return it('voz', titulo, /não escolhida/.test(t) ? 'Falta escolher. Dá pra escolher em Meu canal (uma das opções é grátis).'
+        : /falta a chave/.test(t) ? 'Falta colar a chave da ElevenLabs. Tem um botão pra isso em Meu canal, na voz.'
+        : /recusou/.test(t) ? 'A ElevenLabs recusou a chave salva. Cole a chave de novo em Meu canal, na voz.' : depois(texto), '#/canal/voz');
+    }
+    return it('voz', titulo, depois(texto), '#/canal/voz');
+  }
+  if (t.startsWith('logo')) return it('logo', 'Logo do canal', ok ? 'Aparece no fim de todo vídeo' : 'Opcional. Coloque em Meu canal.', '#/canal/logo');
+  if (t.startsWith('banner')) return it('banner', 'Capa do canal', ok ? 'O banner do YouTube' : 'Opcional: o banner do YouTube. Coloque em Meu canal.', '#/canal/capa');
+  if (t.startsWith('descrições')) {
+    const faltam = ((texto.match(/falta ([^(]+)/) || [])[1] || '').trim().replace(/, ([^,]+)$/, ' e $1');
+    return it('redes', 'Descrições nas redes', ok ? 'YouTube, TikTok e Instagram' : `Opcional${faltam ? `: falta ${faltam}` : ''}. A IA escreve com você, se quiser.`, '#/canal/redes');
+  }
+  if (t.startsWith('chave da elevenlabs salva')) return null;
+  if (t.startsWith('peças próprias')) return it('pecas', 'Peças próprias do canal', `O canal usa ${(texto.match(/usa ([^,]+(?:, K\.[^,]+)*), que/) || [, 'peças'])[1]}, que não estão nesta pasta (feitas pela IA dentro do motor de uma versão antiga). Traga da pasta antiga, ou troque pra um personagem pronto em Meu canal.`, '#/inicio/importar');
+  return it(texto, texto);
+}
+const PESO = { falta: 3, aviso: 2, opcional: 1, ok: 0 };
+// Os itens do conferir juntos por chave, e quanto da configuração está pronto
+function itensDoConferir() {
+  if (!conferido || !conferido.itens) return null;
+  const itens = [];
+  for (const x of conferido.itens.map(traduzir).filter(Boolean)) {
+    const j = itens.find((i) => i.chave === x.chave);
+    if (!j) { itens.push({ ...x }); continue; }
+    if (PESO[x.status] > PESO[j.status]) { j.status = x.status; j.titulo = x.titulo; }
+    if (x.faltam) j.faltam = [...(j.faltam || []), ...x.faltam];
+    if (x.status !== 'ok' && x.detalhe && x.detalhe !== j.detalhe) j.detalhe = j.status === x.status && j.detalhe ? `${j.detalhe} ${x.detalhe}` : x.detalhe;
+  }
+  const canal = itens.find((i) => i.chave === 'canal');
+  if (canal && canal.faltam && canal.faltam.length) canal.detalhe = `Falta: ${canal.faltam.join(', ')}. Em Meu canal tem um modelo pra responder tudo de uma vez.`;
+  return itens;
+}
+function progresso() {
+  const itens = itensDoConferir();
+  if (!itens) return null;
+  const feitos = itens.filter((i) => i.status === 'ok' || i.status === 'aviso').length;
+  return { itens, feitos, total: itens.length, pct: Math.round((feitos / itens.length) * 100), faltam: itens.filter((i) => i.status === 'falta').length };
+}
+function htmlStatus() {
+  if (!conferido) {
+    return `<h2>Como está a sua Máquina</h2><p class="sub-quadro">Conferindo o que já está instalado e configurado (uns segundos)...</p>
+      <ul class="status">${Array(8).fill('<li><div class="esqueleto"></div></li>').join('')}</ul>`;
+  }
+  if (conferido.erro) return `<h2>Como está a sua Máquina</h2><p class="caixa erro">Não consegui conferir agora. Peça pra IA: <b>confere se está tudo instalado</b>.</p>`;
+  const p = progresso();
+  const titulo = p.faltam ? `Falta${p.faltam > 1 ? 'm' : ''} ${plural(p.faltam, 'coisa', 'coisas')} pro primeiro vídeo` : p.feitos === p.total ? 'Tudo pronto, até os detalhes!' : 'Pronto pra fazer vídeos!';
+  return `<h2>Como está a sua Máquina</h2>
+    <div class="progresso">
+      <p class="porcento"><span class="circula">${p.pct}<small>%</small>${rabisco('circulo', 6)}</span></p>
+      <div class="texto"><b>${titulo}</b><span class="suave">${p.feitos} de ${p.total} itens prontos${p.faltam ? '. Os marcados em vermelho são os que faltam.' : p.feitos < p.total ? '. O resto é opcional.' : '.'}</span>
+        <div class="barra"><i style="width:0" data-pct="${p.pct}"></i></div></div>
+    </div>
+    <ul class="status">${p.itens.map((i) => {
+      const dentro = `${icone(`s-${i.status}`)}<div><b>${esc(i.titulo)}</b>${i.detalhe ? `<small>${esc(i.detalhe)}</small>` : ''}${i.onde && i.status !== 'ok' ? '<span class="ir">resolver →</span>' : ''}</div>`;
+      return `<li class="${i.status}">${i.onde ? `<a href="${i.onde}">${dentro}</a>` : `<div>${dentro}</div>`}</li>`;
+    }).join('')}</ul>
+    ${p.faltam ? `<p class="caixa espera">O que é de instalar, a IA resolve: volte pra conversa e diga <b>configura o que falta</b>.</p>`
+      : `<div class="prompt">${icone('i-chat').replace('<svg', '<svg style="width:34px;height:34px;flex:none"')}<span>Agora é só pedir, numa <b>conversa nova</b> com a IA: <b>faz um vídeo sobre ...</b></span><button class="botao mini claro" id="copiar-prompt">${icone('i-copiar')}Copiar</button></div>`}
+    <div class="acoes"><button class="botao mini claro" id="conferir-de-novo">Conferir de novo</button></div>`;
+}
+function ligarStatus() {
+  const b = $('#conferir-de-novo');
+  if (b) b.onclick = () => carregarConferir(true);
+  const c = $('#copiar-prompt');
+  if (c) c.onclick = () => copiar('Faz um vídeo sobre ');
+  const barra = $('.barra i[data-pct]');
+  if (barra) requestAnimationFrame(() => requestAnimationFrame(() => { barra.style.width = `${barra.dataset.pct}%`; }));
+  rabiscar($('#c-status') || document);
+}
+async function carregarConferir(limpar) {
+  if (carregarConferir.indo) return;
+  carregarConferir.indo = true;
+  if (limpar) conferido = null;
+  const c = $('#c-status');
+  if (c && !conferido) c.innerHTML = htmlStatus();
+  const r = await pedir('conferir');
+  conferido = r.itens ? r : { erro: true };
+  carregarConferir.indo = false;
+  const d = $('#c-status');
+  if (d) { d.innerHTML = htmlStatus(); ligarStatus(); }
+  if (estado) lado();
+}
+
+function paginaInicio(secao) {
+  app.innerHTML = `
+  <header class="cabeca">
+    <p class="chamada">Oi! Essa é a sua Máquina.</p>
+    <h1>Comece <span class="circula">aqui${rabisco('circulo', 4)}</span></h1>
+    <p class="sub">A Máquina Preguiça 3D transforma um pedido seu num vídeo curto animado em 3D: roteiro, cenas, narração, legenda, capa e o texto pra postar.</p>
+  </header>
+  <ol class="passos">
+    <li class="vidro" style="--r:-1deg"><h3>Você pede no chat</h3><p>Numa conversa nova com a IA, diga: <code>faz um vídeo sobre ...</code></p></li>
+    <li class="vidro" style="--r:.8deg"><h3>A IA faz o vídeo</h3><p>Ela escreve o roteiro, monta as cenas em 3D, narra e junta tudo, aqui no seu computador.</p></li>
+    <li class="vidro" style="--r:-.6deg"><h3>Você confere aqui</h3><p>Assista em Vídeos, diga o que achou de cada cena e copie o texto pra postar.</p></li>
+  </ol>
+  <div class="post-it">
+    <span class="mao">Importante:</span>
+    <p><b>Este site é só a parte visual.</b> Ele mostra o que a Máquina fez e facilita algumas configurações, como o logo, a capa e a voz do canal.</p>
+    <p>Qualquer mudança no vídeo, no roteiro ou nas cenas, você pede no <b>chat da IA</b>. O que muda lá aparece aqui sozinho.</p>
+    <p>Pra abrir este painel de novo: peça pra IA <b>abre o painel</b>, ou dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da Máquina. Dica: salve esta página nos favoritos (Ctrl+D, ou Cmd+D no Mac).</p>
+  </div>
+  <section class="quadro vidro" id="c-status">${htmlStatus()}</section>
+  <section class="quadro vidro" id="c-exemplo">${htmlExemplo()}</section>
+  <details class="quadro vidro tudo" id="c-importar" ${!estado.canal.configurado || secao === 'importar' || importado ? 'open' : ''}>
+    <summary>${icone('caixote')}<h2>Já tinha a Máquina? Traga tudo da versão antiga</h2><span class="mao">abrir ↓</span></summary>
+    <p class="sub-quadro" style="margin-top:12px">O canal, os vídeos, o logo e a chave da voz vêm da pasta antiga pra esta. A pasta antiga não muda nada (só é lida), e aqui nada é apagado: se esta pasta já tiver o canal configurado, ele fica. Prefere conversar? Peça pra IA: <b>traz o canal da minha pasta antiga</b>.</p>
+    <div class="acoes" style="margin-top:0"><button class="botao" id="procurar-antiga">Procurar a pasta antiga</button></div>
+    <div id="importar-lista">${importado ? htmlImportado(importado) : ''}</div>
+  </details>
+  <section class="quadro vidro" id="c-subir">${htmlSubir(true)}</section>`;
+  ligarStatus();
+  ligarExemplo();
+  ligarSubir();
+  ligarImportar();
+  if (!conferido) carregarConferir();
+  if (secao === 'importar' || secao === 'exemplo') setTimeout(() => $(`#c-${secao}`).scrollIntoView({ behavior: 'smooth', block: 'start' }), 60);
+}
+
+// ---------- O vídeo de exemplo (vem no zip, em videos/exemplo/; se sumiu, a pessoa importa de novo aqui) ----------
+function htmlExemplo(acabou) {
+  const v = estado.videos.find((x) => x.exemplo);
+  if (v && v.etapas.video === 'pronto') {
+    return `<h2>Vídeo de exemplo</h2>
+      ${acabou ? '<p class="caixa ok" style="margin-bottom:12px">Pronto! O vídeo de exemplo foi importado.</p>' : ''}
+      <p class="sub-quadro">O vídeo da lanterna fica em <b>Vídeos</b>, no menu do lado, junto com os vídeos que você fizer. Assista pra ver até onde a Máquina chega.</p>
+      <div class="acoes"><a class="botao" href="#/video/exemplo">Assistir o vídeo de exemplo →</a><a class="botao claro" href="#/videos">Ir pra Vídeos</a></div>`;
+  }
+  return `<h2>Importe o vídeo de exemplo</h2>
+    <p class="sub-quadro">O vídeo pronto da lanterna vem no zip da Máquina, na pasta <b>videos/exemplo</b>, mas não está nesta pasta. Abra o zip de novo, pegue o <b>video.mp4</b> de dentro de videos/exemplo e arraste aqui. Ele vai pra <b>Vídeos</b>, no menu do lado.</p>
+    <div class="soltar" id="soltar-exemplo">
+      ${icone('i-videos', 'caixote')}<b>Arraste o vídeo de exemplo aqui</b><span class="suave">o video.mp4 da pasta videos/exemplo do zip</span>
+      <div class="acoes"><label class="botao">Escolher o vídeo<input type="file" accept=".mp4,video/mp4" id="up-exemplo" hidden></label></div>
+    </div>
+    <div id="exemplo-msg"></div>`;
+}
+function ligarExemplo() {
+  const caixa = $('#c-exemplo'), zona = $('#soltar-exemplo');
+  if (!caixa || !zona) return;
+  const msg = (html, tipo) => { $('#exemplo-msg').innerHTML = html ? `<p class="caixa ${tipo}">${html}</p>` : ''; };
+  async function mandar(arquivo) {
+    if (!arquivo) return;
+    if (!/\.mp4$/i.test(arquivo.name)) return msg('Esse arquivo não é um vídeo .mp4. Arraste o <b>video.mp4</b> da pasta videos/exemplo, de dentro do zip da Máquina.', 'erro');
+    sujos.add('exemplo');
+    msg('Importando o vídeo de exemplo... (uns segundos)', 'espera');
+    const r = await fetch(`/api/exemplo?t=${T}`, { method: 'POST', headers: { 'X-Painel': T, 'Content-Type': 'application/octet-stream' }, body: arquivo })
+      .then((x) => x.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' }));
+    sujos.delete('exemplo');
+    if (r.versao) vigiar.ultima = r.versao;
+    await recarregar(false);
+    caixa.innerHTML = htmlExemplo(r.ok);
+    ligarExemplo();
+    if (!r.ok) return msg(esc(r.mensagem || 'Não deu certo. Tente de novo.'), 'erro');
+    // Mostra onde ele foi parar: o Vídeos do menu pisca
+    const item = $('.menu a[data-pag="videos"]');
+    item.classList.remove('chama');
+    requestAnimationFrame(() => item.classList.add('chama'));
+  }
+  ['dragenter', 'dragover'].forEach((ev) => zona.addEventListener(ev, (e) => { e.preventDefault(); zona.classList.add('em-cima'); }));
+  ['dragleave', 'drop'].forEach((ev) => zona.addEventListener(ev, () => zona.classList.remove('em-cima')));
+  zona.addEventListener('drop', (e) => { e.preventDefault(); mandar(e.dataTransfer.files[0]); });
+  $('#up-exemplo').onchange = (e) => mandar(e.target.files[0]);
+}
+
+// O que veio da versão antiga (fica na tela depois que o painel redesenha)
+let importado = null;
+const tamanho = (n) => (n >= 1e9 ? `${(n / 1e9).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} GB` : `${Math.max(1, Math.round(n / 1e6))} MB`);
+function htmlImportado(r) {
+  if (!r.ok) return `<p class="caixa erro">${esc(r.mensagem)}</p>`;
+  const lista = (t, itens, classe) => (itens.length ? `<div class="${classe}"><b>${t}</b><ul>${itens.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '');
+  return `<div class="relatorio">${lista('Veio da versão antiga', r.feitos, 'ok') || '<div class="ok"><b>Nada novo pra trazer: esta pasta já tinha tudo.</b></div>'}
+    ${lista('Ficou como estava aqui', r.ficou, 'branco')}${lista('Atenção', r.avisos, 'erro')}</div>
+    <p class="suave" style="margin:12px 0 0"><small>O relatório e o que foi guardado ficam em <code>${esc(r.guarda)}</code>. Guarde a pasta antiga até conferir tudo.</small></p>`;
+}
+function htmlPastas(r) {
+  if (!r.pastas || !r.pastas.length) {
+    return `<p class="caixa espera">Não achei nenhuma pasta antiga da Máquina neste computador (procurei na Mesa, em Documentos, em Downloads e no OneDrive). Sabe onde ela está? Cole o caminho aqui, ou peça pra IA: <b>traz o canal da minha pasta antiga</b> (dá pra arrastar a pasta pra conversa).</p>
+      <div class="acoes"><input type="text" id="caminho-antiga" placeholder="Ex.: C:\\Users\\voce\\Desktop\\maquina-preguica-3d" style="flex:1;min-width:240px;margin:0"><button class="botao mini" id="ver-caminho">Ver o que tem</button></div>`;
+  }
+  return `<div class="escolhas largas" style="margin-top:16px">${r.pastas.map((x, i) => `
+    <div class="opcao" style="cursor:default"><div class="texto-opcao">
+      <b>${esc(x.nome || 'Canal sem nome')}</b>
+      <span>versão ${esc(x.versao)}${x.quando ? `, mexida em ${data(x.quando)}` : ''}</span>
+      <span>${x.videos.length ? `${plural(x.videos.length, 'vídeo', 'vídeos')} (${tamanho(x.bytes)})` : 'sem vídeos'}${x.logo ? ', logo' : ''}${x.capa ? ', capa' : ''}${x.chave ? ', chave da ElevenLabs' : ''}</span>
+      <span style="word-break:break-all;margin-top:6px"><small>${esc(x.pasta)}</small></span>
+      ${x.outroCanal ? `<span class="caixa erro" style="margin-top:10px">É de outro canal: esta pasta já é do "${esc(x.outroCanal)}". Pra não misturar os dois, não dá pra trazer pra cá.</span>` : ''}
+      ${x.pecasQueFaltam.length ? `<span class="caixa espera" style="margin-top:10px">O canal usa peças que a IA escreveu dentro do motor antigo (${esc(x.pecasQueFaltam.map((n) => `K.${n}`).join(', '))}). Elas não vêm sozinhas: o motor antigo fica guardado.</span>` : ''}
+      ${x.outroCanal ? '' : `<div class="acoes"><button class="botao mini" data-trazer="${i}">Trazer desta pasta</button></div>`}
+    </div></div>`).join('')}</div>`;
+}
+function ligarImportar() {
+  const el = $('#importar-lista');
+  let achadas = null;
+  const mostrarPastas = (r) => {
+    achadas = r;
+    el.innerHTML = r.ok === false ? `<p class="caixa erro">${esc(r.mensagem)}</p>` : htmlPastas(r);
+    const vc = $('#ver-caminho');
+    if (vc) vc.onclick = async () => {
+      const p = $('#caminho-antiga').value.trim();
+      if (!p) return $('#caminho-antiga').focus();
+      el.innerHTML = '<p class="suave">Olhando a pasta...</p>';
+      mostrarPastas(await pedir(`importar?pasta=${encodeURIComponent(p)}`));
+    };
+    $$('[data-trazer]', el).forEach((b) => (b.onclick = async () => {
+      const x = achadas.pastas[Number(b.dataset.trazer)];
+      if (!confirm(`Trazer o canal${x.videos.length ? ` e ${plural(x.videos.length, 'vídeo', 'vídeos')}` : ''} de\n${x.pasta}?\n\nA pasta antiga não muda, e aqui nada é apagado.`)) return;
+      sujos.add('importar');
+      el.innerHTML = `<p class="caixa espera">Trazendo da versão antiga...${x.bytes > 2e8 ? ' Os vídeos são grandes: pode levar uns minutos. Não feche esta página.' : ''}</p>`;
+      const r = await pedir('importar', { pasta: x.pasta });
+      sujos.delete('importar');
+      importado = r.ok ? r : { ok: false, mensagem: r.mensagem };
+      conferido = null;
+      carregarConferir();
+      await recarregar(true);
+    }));
+  };
+  $('#procurar-antiga').onclick = async () => {
+    importado = null;
+    el.innerHTML = '<p class="suave">Procurando no computador (uns segundos)...</p>';
+    mostrarPastas(await pedir('importar'));
+  };
+}
+
+// ---------- Subir modelos 3D (pacote extra: o .zip ou a pasta dele, escolhido ou arrastado) ----------
+function htmlSubir(comLink) {
+  const p = estado.pacotes || { instalados: [] };
+  return `<h2>Subir modelos 3D</h2>
+    <p class="sub-quadro">Baixou um pacote de modelos 3D na área de membros? Arraste o arquivo <b>.zip</b> aqui (ou a pasta, se o computador já abriu o zip). A Máquina põe cada coisa no lugar, tira a foto de cada modelo e a IA já usa no próximo vídeo.</p>
+    <div class="soltar" id="soltar">
+      ${icone('caixote', 'caixote')}<b>Arraste o pacote aqui</b><span class="suave">o arquivo .zip ou a pasta dele</span>
+      <div class="acoes"><label class="botao">Escolher o .zip<input type="file" accept=".zip,application/zip" id="up-pacote" hidden></label>
+        <label class="botao claro">Escolher a pasta<input type="file" id="up-pasta" webkitdirectory hidden></label></div>
+    </div>
+    <div id="pacote-msg"></div>
+    ${p.instalados.length ? `<ul class="pacotes">${p.instalados.map((x) => `<li>${icone('caixote')}<div><b>${esc(x.nome)}${x.versao ? ` <small class="suave">versão ${esc(x.versao)}</small>` : ''}</b>
+      <small class="suave" style="display:block">${plural(x.modelos, 'modelo 3D', 'modelos 3D')} · vinculado em ${data(x.instalado)}</small></div>
+      <button class="botao mini claro" data-tirar="${esc(x.nome)}">Tirar</button></li>`).join('')}</ul>` : ''}
+    ${comLink ? `<div class="acoes"><a class="botao mini claro" href="#/modelos">Ver todos os modelos (${estado.modelos.itens.length}) →</a></div>` : ''}`;
+}
+function ligarSubir() {
+  const caixa = $('#c-subir');
+  if (!caixa) return;
+  const comLink = !!$('a[href="#/modelos"]', caixa);
+  const msg = (html, tipo) => { $('#pacote-msg').innerHTML = html ? `<p class="caixa ${tipo}">${html}</p>` : ''; };
+  const enviar = (etapa, corpo, extra = '') => fetch(`/api/pacote/${etapa}?t=${T}${extra}`, { method: 'POST', headers: { 'X-Painel': T, 'Content-Type': 'application/octet-stream' }, body: corpo })
+    .then((r) => r.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' }));
+  async function vincular(zip, pasta) {
+    sujos.add('pacote');
+    msg('Vinculando o pacote... (pacote grande leva alguns segundos)', 'espera');
+    let r = null;
+    if (zip) r = await enviar('zip', zip);
+    else {
+      const uteis = pasta.filter((x) => /(^|\/)(motor\/modelos|referencias\/cenarios)\/|(^|\/)pacote\.json$/i.test(x.caminho));
+      if (!uteis.length) r = { ok: false, mensagem: 'Nessa pasta não tem modelos 3D (motor/modelos) nem cenários (referencias/cenarios). Confira se é a pasta do pacote.' };
+      else {
+        await enviar('comecar', '');
+        for (let i = 0; i < uteis.length && !r; i++) {
+          msg(`Vinculando o pacote... ${i + 1} de ${uteis.length} arquivos`, 'espera');
+          const x = await enviar('arquivo', uteis[i].file, `&caminho=${encodeURIComponent(uteis[i].caminho)}`);
+          if (!x.ok) r = x;
+        }
+        r = r || await enviar('fim', '');
+      }
+    }
+    sujos.delete('pacote');
+    if (r.versao) vigiar.ultima = r.versao;
+    const texto = r.ok ? `Pronto! <b>${esc(r.nome)}</b> vinculado: ${plural(r.modelos, 'modelo 3D', 'modelos 3D')}. As fotos saem em 1 ou 2 minutos, em <a href="#/modelos">Modelos 3D</a>, e a IA já pode usar no próximo vídeo.${r.aviso ? `<br>${esc(r.aviso)}` : ''}`
+      : esc(r.mensagem || 'Não deu certo. Tente de novo.');
+    await recarregar(false);
+    caixa.innerHTML = htmlSubir(comLink);
+    ligarSubir();
+    msg(texto, !r.ok ? 'erro' : r.aviso ? 'espera' : 'ok');
+  }
+  // Pasta arrastada: junta os arquivos de dentro, com o caminho de cada um
+  async function juntar(entrada, prefixo, lista) {
+    if (entrada.isFile) { lista.push({ caminho: prefixo + entrada.name, file: await new Promise((ok, erro) => entrada.file(ok, erro)) }); return; }
+    const leitor = entrada.createReader();
+    for (let lote = await new Promise((ok, erro) => leitor.readEntries(ok, erro)); lote.length; lote = await new Promise((ok, erro) => leitor.readEntries(ok, erro))) {
+      for (const x of lote) await juntar(x, `${prefixo}${entrada.name}/`, lista);
+    }
+  }
+  const solto = (nome) => /\.(glb|gltf|fbx|obj|blend|stl|dae|3ds)$/i.test(nome)
+    ? 'Esse é um modelo 3D solto. Aqui entram os pacotes de modelos da Máquina, o .zip que vem da área de membros: um modelo solto ainda não entra direto.'
+    : 'Esse arquivo não é um .zip. Arraste o pacote que você baixou (termina em .zip) ou a pasta dele.';
+  const zona = $('#soltar');
+  ['dragenter', 'dragover'].forEach((ev) => zona.addEventListener(ev, (e) => { e.preventDefault(); zona.classList.add('em-cima'); }));
+  ['dragleave', 'drop'].forEach((ev) => zona.addEventListener(ev, () => zona.classList.remove('em-cima')));
+  zona.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    const entradas = [...e.dataTransfer.items].map((i) => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+    const arquivos = [...e.dataTransfer.files];
+    if (entradas.length === 1 && entradas[0].isFile) {
+      if (!/\.zip$/i.test(entradas[0].name)) return msg(solto(entradas[0].name), 'erro');
+      return vincular(arquivos[0]);
+    }
+    const lista = [];
+    for (const x of entradas) await juntar(x, '', lista);
+    vincular(null, lista);
+  });
+  $('#up-pacote').onchange = (e) => { const f = e.target.files[0]; if (f) { if (!/\.zip$/i.test(f.name)) msg(solto(f.name), 'erro'); else vincular(f); } };
+  $('#up-pasta').onchange = (e) => { if (e.target.files.length) vincular(null, [...e.target.files].map((file) => ({ caminho: file.webkitRelativePath || file.name, file }))); };
+  $$('[data-tirar]', caixa).forEach((b) => (b.onclick = async () => {
+    if (!confirm(`Tirar o pacote "${b.dataset.tirar}" da Máquina? Os vídeos que usam esses modelos param de funcionar até você vincular de novo.`)) return;
+    const r = await pedir('tirar-pacote', { nome: b.dataset.tirar });
+    if (!r.ok) return avisar(r.mensagem);
+    await recarregar(false);
+    caixa.innerHTML = htmlSubir(comLink);
+    ligarSubir();
+  }));
+}
+
+// ---------- Meu canal ----------
+const sugestaoArroba = (nome) => '@' + nome.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+const SOBRE = [
+  ['tema', 'Do que fala', 'O assunto do canal. A IA só faz vídeo dentro dele.', 'como funcionam as coisas do dia a dia: aparelhos da casa, máquinas, construções', 3],
+  ['quemAssiste', 'Quem assiste', 'Pra quem são os vídeos.', 'gente curiosa que rola o feed e para numa pergunta que sempre quis saber a resposta', 2],
+  ['jeito', 'Jeito de falar', 'Como a voz conversa com quem assiste.', 'conversado, como quem explica pra um amigo; frases curtas; humor seco de vez em quando', 3],
+  ['evitar', 'O que evitar', 'Palavras e jeitos que não entram nunca.', 'palavrão, "você sabia que...?", jargão técnico sem explicar', 2],
+  ['mecanismo', 'Marca registrada', 'O que todo vídeo seu tem e o dos outros não.', 'todo vídeo começa com uma pergunta polêmica e termina perguntando a opinião de quem assiste', 3],
+  ['capa', 'Estilo da capa', 'Como é a capa de todo vídeo.', 'a pergunta do vídeo em cima, o personagem com cara exagerada e o objeto mostrando o detalhe mais estranho', 3]
+];
+const NOME_COR = { camiseta: 'Camiseta', bermuda: 'Bermuda', tenis: 'Tênis', cabelo: 'Cabelo', cabeloMenina: 'Cabelo', pele: 'Pele', moletom: 'Moletom',
+  punho: 'Punho', calca: 'Calça', mochila: 'Mochila', vestido: 'Vestido', jaleco: 'Jaleco', camisa: 'Camisa', gravata: 'Gravata', sapato: 'Sapato',
+  colete: 'Colete', bota: 'Bota', capacete: 'Capacete', barba: 'Barba', faixa: 'Faixa' };
+const PALETA = ['#FFD23F', '#F39A1E', '#FF7A59', '#E0362C', '#FF5A8A', '#8A4FD8', '#2F5FB3', '#2FB5A6', '#2E9D5B', '#221B14'];
+const VOZES = [
+  ['elevenlabs', 'ElevenLabs', 'A voz mais natural. Plano grátis pra testar, pago pra monetizar.'],
+  ['voicestudio', 'VoiceStudio', 'Grátis, roda no seu computador. Abra o programa antes de cada vídeo.'],
+  ['teste', 'Voz do computador', 'Robótica: só pra testar a Máquina.']
+];
+const HORAS = [['dia', 'Dia'], ['tarde', 'Fim de tarde'], ['noite', 'Noite']];
+const doCatalogo = (cat) => estado.modelos.itens.filter((i) => i.categoria === cat);
+const campoTexto = (c, k) => (c.campos[k] || { valor: '', exemplo: '' });
+
+// O que a pessoa está escolhendo nos quadros (personagem, cenário, voz, cor), antes de salvar
+let escolha = null;
+function iniciarEscolha() {
+  const b = estado.canal.bloco, p = b.personagem || {};
+  const pessoas = doCatalogo('personagens');
+  const tipo = p.tipo || 'menino', id = tipo === 'menino' && p.roupa === 'moletom' ? 'menino-moletom' : tipo;
+  const item = pessoas.find((x) => x.chave === id);
+  escolha = {
+    pessoa: item ? id : p.tipo ? 'proprio' : 'menino',
+    cores: item ? { ...item.cores, ...Object.fromEntries(Object.entries(p.cores || {}).filter(([k]) => k in item.cores)) } : {},
+    cenario: b.cenario || '', hora: b.hora || 'dia',
+    voz: { motor: (b.voz && b.voz.motor) || '', id: (b.voz && b.voz.id) || '' },
+    cor: /^#[0-9a-f]{6}$/i.test(b.cor || '') ? b.cor : ''
+  };
+}
+
+function paginaCanal(secao) {
+  const c = estado.canal, d = c.descricoes;
+  if (!escolha || !sujos.size || iniciarEscolha.forcar) { iniciarEscolha(); iniciarEscolha.forcar = false; }
+  const v = (k) => campoTexto(c, k);
+  const pessoas = doCatalogo('personagens'), cenarios = doCatalogo('cenarios');
+  const proprio = c.bloco.personagem && c.bloco.personagem.tipo && !pessoas.some((x) => (x.tipo || 'menino') === c.bloco.personagem.tipo);
+  app.innerHTML = `
+  <header class="cabeca">
+    <p class="chamada">A cara do seu canal</p>
+    <h1>Meu <span class="sublinha">canal${rabisco('sublinhado', 5)}</span></h1>
+    <p class="sub">O que você muda aqui vale pros próximos vídeos: a IA lê tudo isso antes de escrever cada roteiro. Prefere conversar? Peça no chat, tipo <b>"muda a cor do canal pra azul"</b>.</p>
+  </header>
+  <details class="quadro vidro tudo" id="k-tudo" data-quadro="tudo" ${!c.configurado || relatorioTudo || secao === 'tudo' ? 'open' : ''}>
+    <summary>${icone('i-chat')}<h2>Preencher tudo de uma vez</h2><span class="mao">abrir ↓</span></summary>
+    <p class="sub-quadro" style="margin-top:12px">Um texto com todas as perguntas do canal: você responde num bloco de notas e cola na IA. Funciona com qualquer IA, até a mais simples, e tudo aparece aqui sozinho.</p>
+    <ol class="passos-tudo">
+      <li><b>Copie o modelo</b><span class="suave">Ele também está na pasta da Máquina: <code>CONFIGURAR-MEU-CANAL.txt</code>.</span>
+        <div class="acoes"><button class="botao mini" id="copiar-modelo">${icone('i-copiar')}Copiar o modelo</button><button class="botao mini claro" id="baixar-modelo">${icone('i-baixar')}Baixar o .txt</button></div></li>
+      <li><b>Responda num bloco de notas</b><span class="suave">Cada resposta depois de "Resposta:". O que não souber, deixe em branco: a Máquina usa o padrão ou você completa aqui depois.</span></li>
+      <li><b>Cole o texto inteiro na conversa com a IA</b><span class="suave">Ela roda um comando e salva tudo. A sua IA só conversa e não roda comando? Cole aqui embaixo e clique em Salvar tudo.</span></li>
+    </ol>
+    <textarea id="respostas" rows="5" placeholder="Cole aqui o texto respondido (o que começa com ### CONFIGURAR MEU CANAL)"></textarea>
+    <div class="acoes"><button class="botao" id="s-tudo">Salvar tudo</button><span class="salvo" id="ok-tudo"></span></div>
+    <div id="relatorio-tudo">${htmlRelatorio(relatorioTudo)}</div>
+  </details>
+
+  ${c.erroNoBloco ? '<p class="caixa erro aviso-bloco">O bloco "No roteiro.json" do <code>canal/identidade.md</code> está com um erro, então o personagem, o cenário, a voz e a cor não dá pra salvar aqui. Peça pra IA: <b>arruma o bloco do canal</b>.</p>' : ''}
+
+  <section class="perfil vidro" id="k-capa">
+    <div class="capa-canal">${c.banner ? `<img src="${c.banner}" alt="Capa do canal">` : 'sem capa ainda'}</div>
+    <div class="perfil-linha">
+      <div class="logo-grande" id="logo-grande"></div>
+      <div class="perfil-nome"><h2>${esc(c.nome || 'Seu canal')}</h2><span>${esc(c.arroba || '@seucanal')}</span></div>
+      <div class="acoes">
+        <label class="botao mini">${c.logo ? 'Trocar o logo' : 'Pôr o logo'}<input type="file" accept="image/png,image/jpeg,image/webp" id="up-logo" hidden></label>
+        <label class="botao mini claro">${c.banner ? 'Trocar a capa' : 'Pôr a capa'}<input type="file" accept="image/png,image/jpeg,image/webp" id="up-banner" hidden></label>
+      </div>
+    </div>
+  </section>
+
+  <div class="grade2" style="margin-bottom:26px">
+    <section class="quadro vidro" id="k-nome" data-quadro="nome">
+      <h2>Nome e @</h2>
+      <label class="campo"><span>Nome do canal</span><input type="text" id="f-nome" value="${esc(c.nome)}" placeholder="Ex.: Motor Curioso" maxlength="80"></label>
+      <label class="campo"><span>@ nas redes</span><small>O mesmo no YouTube, no TikTok e no Instagram.</small><input type="text" id="f-arroba" value="${esc(c.arroba)}" placeholder="${esc(c.nome ? sugestaoArroba(c.nome) : '@seucanal')}" maxlength="60"></label>
+      <label class="campo"><span>Assinatura do fim</span><small>A frase que a voz fala no fim do vídeo.</small><input type="text" id="f-assinatura" value="${esc(c.assinatura)}" placeholder="${esc(c.nome ? `E segue o ${c.nome}.` : 'E segue o seu canal.')}" maxlength="160"></label>
+      <div class="acoes"><button class="botao" id="s-nome">Salvar</button><span class="salvo" id="ok-nome"></span></div>
+    </section>
+    <section class="quadro vidro" id="k-logo">
+      <h2>Logo e capa</h2>
+      <p class="sub-quadro">O <b>logo</b> aparece redondo no fim de todo vídeo, no cartão de seguir; use a mesma imagem como foto de perfil nas redes. A <b>capa</b> é o banner do alto do canal no YouTube (2560 x 1440): o que importa fica dentro do tracejado, que é o que aparece no celular.</p>
+      <div class="banner" id="banner">${c.banner ? `<img src="${c.banner}" alt="Capa do canal">` : 'sem capa ainda'}<div class="seguro"><span>aparece em todo aparelho</span></div></div>
+      <div class="acoes">
+        ${c.logo ? `<a class="botao mini claro" href="${c.logo}&baixar=1">${icone('i-baixar')}Logo</a><button class="botao mini claro" id="rm-logo">Tirar o logo</button>` : ''}
+        ${c.banner ? `<a class="botao mini claro" href="${c.banner}&baixar=1">${icone('i-baixar')}Capa</a><button class="botao mini claro" id="rm-banner">Tirar a capa</button>` : ''}
+        ${!c.logo && !c.banner ? '<span class="suave">Use os botões lá em cima. Imagem de outro formato é cortada pra ficar do tamanho certo.</span>' : ''}
+      </div>
+    </section>
+  </div>
+
+  <section class="quadro vidro" id="k-sobre" data-quadro="sobre">
+    <h2>Sobre o canal</h2>
+    <p class="sub-quadro">Não sabe o que escrever? Peça pra IA: <b>me ajuda a preencher o meu canal</b>. Ela pergunta e escreve com você.</p>
+    <div class="grade2" style="gap:0 26px">${SOBRE.map(([k, titulo, dica, ex, linhas]) => `
+      <label class="campo"><span>${titulo}</span><small>${dica}</small><textarea data-campo="${k}" rows="${linhas}" placeholder="Ex.: ${esc(v(k).exemplo || ex)}">${esc(v(k).valor)}</textarea></label>`).join('')}</div>
+    <div class="acoes" style="margin-top:0"><button class="botao" id="s-sobre">Salvar</button><span class="salvo" id="ok-sobre"></span></div>
+  </section>
+
+  <section class="quadro vidro" id="k-personagem" data-quadro="personagem">
+    <h2>Personagem</h2>
+    <p class="sub-quadro">Quem aparece em todo vídeo. Escolha um e troque as cores da roupa.</p>
+    ${pessoas.length ? `<div class="escolhas">
+      ${proprio ? `<button class="opcao" data-pessoa="proprio" aria-pressed="${escolha.pessoa === 'proprio'}"><div class="sem-foto">${esc(c.bloco.personagem.nome || c.bloco.personagem.tipo)}</div><b>Personagem próprio</b></button>` : ''}
+      ${pessoas.map((x) => `<button class="opcao" data-pessoa="${esc(x.chave)}" aria-pressed="${escolha.pessoa === x.chave}">${x.foto ? `<img src="${x.foto}" alt="" loading="lazy">` : '<div class="sem-foto">sem foto</div>'}<b>${esc(x.nome)}</b></button>`).join('')}
+    </div>
+    <div id="cores-pessoa"></div>` : '<p class="caixa espera">Falta o catálogo dos modelos. Peça pra IA: <b>roda o npm run modelos</b>.</p>'}
+    <label class="campo"><span>Como ele é</span><small>Com as suas palavras: a IA lê isso pra dar vida a ele.</small><textarea data-campo="personagem" rows="2" placeholder="Ex.: ${esc(v('personagem').exemplo || 'menino de camiseta coral, bermuda verde e tênis branco')}">${esc(v('personagem').valor)}</textarea></label>
+    <div class="acoes" style="margin-top:0"><button class="botao" id="s-personagem">Salvar</button><span class="salvo" id="ok-personagem"></span></div>
+  </section>
+
+  <section class="quadro vidro" id="k-cenario" data-quadro="cenario">
+    <h2>Cenário e hora</h2>
+    <p class="sub-quadro">O lugar de todo vídeo quando o tema não pede outro (o de cozinha vai pra cozinha, o de espaço vai pro espaço).</p>
+    ${c.bloco.lugar && !c.bloco.cenario ? `<p class="caixa espera" style="margin:0 0 12px">Hoje o canal usa o lugar <b>${esc(c.bloco.lugar)}</b>, do jeito antigo. Escolhendo um cenário pronto, ele passa a valer no lugar.</p>` : ''}
+    <div class="escolhas">${cenarios.map((x) => `<button class="opcao alta" data-cenario="${esc(x.chave)}" aria-pressed="${escolha.cenario === x.chave}">${x.foto ? `<img src="${x.foto}" alt="" loading="lazy">` : '<div class="sem-foto">sem foto</div>'}<b>${esc(x.nome)}</b></button>`).join('')}</div>
+    <span class="campo" style="margin:0"><span>Hora</span></span>
+    <div class="segmentos">${HORAS.map(([k, t]) => `<button data-hora="${k}" aria-pressed="${escolha.hora === k}">${t}</button>`).join('')}</div>
+    <label class="campo"><span>Como é o lugar</span><small>Um detalhe que é a cara do seu canal (opcional).</small><textarea data-campo="lugar" rows="2" placeholder="Ex.: ${esc(v('lugar').exemplo || 'canteiro de obras de dia; noite quando o tema pede luz')}">${esc(v('lugar').valor)}</textarea></label>
+    <div class="acoes" style="margin-top:0"><button class="botao" id="s-cenario">Salvar</button><span class="salvo" id="ok-cenario"></span></div>
+  </section>
+
+  <section class="quadro vidro" id="k-voz" data-quadro="voz">
+    <h2>Voz</h2>
+    <p class="sub-quadro">De onde vem a voz que narra os vídeos.</p>
+    <div class="escolhas largas">${VOZES.map(([k, t, dica]) => `<button class="opcao" data-motor="${k}" aria-pressed="${escolha.voz.motor === k}"><div class="texto-opcao"><b>${t}</b><span>${dica}</span></div></button>`).join('')}</div>
+    <div id="voz-extra"></div>
+    <label class="campo"><span>Como é a voz</span><small>Pra IA escolher o ritmo e o jeito.</small><textarea data-campo="voz" rows="2" placeholder="Ex.: ${esc(v('voz').exemplo || 'narradora mulher, voz calma e clara')}">${esc(v('voz').valor)}</textarea></label>
+    <div class="acoes" style="margin-top:0"><button class="botao" id="s-voz">Salvar</button><span class="salvo" id="ok-voz"></span></div>
+  </section>
+
+  <section class="quadro vidro" id="k-cor" data-quadro="cor">
+    <h2>Cor do canal</h2>
+    <p class="sub-quadro">Vai na palavra em destaque da capa e no botão "Seguir" do fim. O texto em cima dela sai preto ou branco sozinho.</p>
+    <div class="cor-linha">
+      <div class="cor-escolha">
+        <div class="paleta">${PALETA.map((h) => `<button data-cor="${h}" style="background:${h}" aria-label="Cor ${h}" aria-pressed="${escolha.cor.toLowerCase() === h.toLowerCase()}"></button>`).join('')}</div>
+        <label class="cor-propria">Outra cor: <input type="color" id="cor-propria" value="${esc(escolha.cor || '#FFD23F')}"> <code id="cor-hex">${esc(escolha.cor || 'nenhuma ainda')}</code></label>
+        <div class="acoes"><button class="botao" id="s-cor">Salvar</button><span class="salvo" id="ok-cor"></span></div>
+      </div>
+      <div class="mini-capa" id="mini-capa" aria-hidden="true">
+        <div class="pergunta">Como um avião tão pesado <em>consegue</em> voar?</div>
+        <svg viewBox="0 0 100 100"><use href="#rosto"/></svg>
+        <div class="seguir">+ Seguir</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="quadro vidro" id="k-redes" data-quadro="redes">
+    <h2>Descrições nas redes</h2>
+    <p class="sub-quadro">O texto da página do canal em cada rede. Não sabe o que escrever? Peça pra IA: <b>escreve as descrições do meu canal</b>.</p>
+    ${[['youtube', 'YouTube', 'A descrição do canal: do que ele fala, pra quem e de quanto em quanto tempo sai vídeo novo.', 5],
+      ['tiktok', 'TikTok', 'A bio: uma frase curta.', 2], ['instagram', 'Instagram', 'A bio: uma ou duas frases.', 3]].map(([k, titulo, dica, linhas]) => `
+      <div class="rede">
+        <div class="rede-topo"><b>${titulo}</b><span class="conta" id="conta-${k}"></span><button class="botao mini claro" data-copiar="${k}">${icone('i-copiar')}Copiar</button></div>
+        <textarea id="d-${k}" rows="${linhas}" placeholder="${esc(dica)}">${esc(d[k])}</textarea>
+      </div>`).join('')}
+    <div class="acoes"><button class="botao" id="s-desc">Salvar</button><span class="salvo" id="ok-redes"></span></div>
+  </section>`;
+  bolinha(c, $('#logo-grande'));
+  $('#logo-grande').style.fontSize = '52px';
+  ligarCanal();
+  if (secao) { const alvo = $(`#k-${secao}`); if (alvo) setTimeout(() => alvo.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }
+}
+
+// O que o "Salvar tudo" salvou (fica na tela depois que o painel redesenha)
+let relatorioTudo = null;
+function htmlRelatorio(r) {
+  if (!r) return '';
+  const lista = (itens) => `<ul>${itens.map((x) => `<li><b style="display:inline">${esc(x.campo)}:</b> ${esc(x.valor || x.mensagem || '')}</li>`).join('')}</ul>`;
+  return `<div class="relatorio">
+    ${r.salvos.length ? `<div class="ok"><b>Salvei ${plural(r.salvos.length, 'resposta', 'respostas')}</b>${lista(r.salvos)}</div>` : ''}
+    ${r.padroes.length ? `<div class="padrao"><b>Ficaram em branco e entrou o padrão da Máquina</b>${lista(r.padroes)}</div>` : ''}
+    ${r.erros.length ? `<div class="erro"><b>Não entendi (o resto foi salvo): arrume aqui embaixo, no quadro de cada um</b>${lista(r.erros)}</div>` : ''}
+    ${r.branco.length ? `<div class="branco"><b>Em branco (ficou como estava)</b>${esc(r.branco.join(', '))}.</div>` : ''}
+  </div>`;
+}
+function ligarTudo() {
+  const modeloTxt = async () => { const r = await pedir('modelo-canal'); if (!r.ok) avisar(r.mensagem); return r.ok ? r : null; };
+  $('#copiar-modelo').onclick = async () => { const r = await modeloTxt(); if (r) copiar(r.texto); };
+  $('#baixar-modelo').onclick = async () => {
+    const r = await modeloTxt();
+    if (!r) return;
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([r.texto], { type: 'text/plain;charset=utf-8' }));
+    a.download = r.arquivo;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
+  $('#s-tudo').onclick = async () => {
+    const texto = $('#respostas').value;
+    if (!texto.trim()) { $('#respostas').focus(); return avisar('Cole o texto respondido primeiro'); }
+    const r = await pedir('respostas', { texto });
+    if (r.ok) { relatorioTudo = r; iniciarEscolha.forcar = true; }
+    if (await depoisDeSalvar('tudo', r, 'Salvo ✓')) setTimeout(() => { const el = $('#relatorio-tudo'); if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
+  };
+}
+
+function htmlCoresPessoa() {
+  const item = doCatalogo('personagens').find((x) => x.chave === escolha.pessoa);
+  if (!item) return escolha.pessoa === 'proprio' ? '<p class="suave">Esse personagem a IA fez só pro seu canal. Pra mudar ele, peça no chat.</p>' : '';
+  return `<span class="campo" style="margin:0"><span>Cores</span></span><div class="cores">${Object.keys(item.cores).map((k) => `
+    <label class="cor-item"><i style="background:${esc(escolha.cores[k])}"></i>${NOME_COR[k] || k}<input type="color" data-cor-pessoa="${k}" value="${esc(escolha.cores[k])}"></label>`).join('')}
+    <button class="botao mini claro" id="cores-padrao">Cores padrão</button></div>`;
+}
+function htmlVozExtra() {
+  const c = estado.canal, m = escolha.voz.motor;
+  const info = (itensDoConferir() || []).find((i) => i.chave === 'voz');
+  // A mesma linha do Comece aqui, sem o "em Meu canal" (já está aqui)
+  const detalhe = info && (info.detalhe || 'Funcionando.').replace(/\s*[^.]*Meu canal[^.]*\./g, '').replace(/\.$/, '') + (info.status === 'falta' && /chave/.test(info.detalhe) ? ': use o botão aqui embaixo.' : '.');
+  const linha = info && (c.bloco.voz || {}).motor === m ? `<p class="caixa ${info.status === 'ok' ? 'ok' : info.status === 'falta' ? 'erro' : 'espera'}" style="margin:0 0 16px">${esc(detalhe)}</p>` : '';
+  if (m === 'elevenlabs') return `${linha}<label class="campo"><span>Id da voz na ElevenLabs</span><small>Não sabe? Peça pra IA: <b>lista as vozes da minha conta</b>.</small><input type="text" id="voz-id" value="${esc(escolha.voz.id)}" placeholder="Ex.: IKne3meq5aSn9XLyUdCD" maxlength="120"></label>
+    <div class="acoes" style="margin:-4px 0 18px"><button class="botao mini claro" id="abrir-chave">Colar a chave da ElevenLabs</button><span class="suave"><small>Abre uma janelinha: a chave fica só no seu computador.</small></span></div>`;
+  if (m === 'voicestudio') return `${linha}<label class="campo"><span>Nome da voz no VoiceStudio</span><small>O nome que você deu pra voz lá no programa.</small><input type="text" id="voz-id" value="${esc(escolha.voz.id)}" placeholder="Ex.: Narrador" maxlength="120"></label>`;
+  return linha;
+}
+function pintarCor() {
+  const cor = escolha.cor || '#FFD23F', texto = corDoTexto(cor);
+  const capa = $('#mini-capa');
+  if (!capa) return;
+  $('em', capa).style.cssText = `background:${cor};color:${texto}`;
+  $('.seguir', capa).style.cssText = `background:${cor};color:${texto}`;
+  $('#cor-hex').textContent = escolha.cor || 'nenhuma ainda';
+  $$('.paleta button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.cor.toLowerCase() === (escolha.cor || '').toLowerCase())));
+}
+
+// Um quadro com mudança: o botão Salvar dele chama atenção e a tela não redesenha por cima
+function sujar(q) { sujos.add(q); const s = $(`#ok-${q}`); if (s) { s.textContent = ''; s.classList.remove('erro'); } }
+async function depoisDeSalvar(q, r, texto = 'Salvo ✓') {
+  const s = $(`#ok-${q}`);
+  if (!r.ok) { if (s) { s.textContent = r.mensagem; s.classList.add('erro'); } else avisar(r.mensagem); return false; }
+  sujos.delete(q);
+  conferido = null;
+  carregarConferir();
+  await recarregar(!sujos.size);
+  const s2 = $(`#ok-${q}`);
+  if (s2) s2.textContent = texto;
+  return true;
+}
+
+function ligarCanal() {
+  const c = estado.canal;
+  ligarTudo();
+  for (const q of $$('[data-quadro]', app)) q.addEventListener('input', () => sujar(q.dataset.quadro));
+  $('#f-nome').addEventListener('input', () => {
+    const n = $('#f-nome').value.trim();
+    $('#f-arroba').placeholder = n ? sugestaoArroba(n) : '@seucanal';
+    $('#f-assinatura').placeholder = n ? `E segue o ${n}.` : 'E segue o seu canal.';
+  });
+  $('#s-nome').onclick = async () => {
+    const nome = $('#f-nome').value.trim();
+    if (!nome) { $('#f-nome').focus(); return avisar('Escreva o nome do canal'); }
+    depoisDeSalvar('nome', await pedir('canal', { nome, arroba: $('#f-arroba').value.trim() || sugestaoArroba(nome), assinatura: $('#f-assinatura').value.trim() || `E segue o ${nome}.` }));
+  };
+  const campos = (q) => Object.fromEntries($$(`#k-${q} [data-campo]`).map((t) => [t.dataset.campo, t.value]));
+  $('#s-sobre').onclick = async () => depoisDeSalvar('sobre', await pedir('campos', { campos: campos('sobre') }));
+
+  // Personagem
+  const corPessoa = $('#cores-pessoa');
+  const pintarPessoa = () => {
+    if (corPessoa) corPessoa.innerHTML = htmlCoresPessoa();
+    $$('[data-pessoa]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.pessoa === escolha.pessoa)));
+    const p = $('#cores-padrao');
+    if (p) p.onclick = () => { escolha.cores = { ...doCatalogo('personagens').find((x) => x.chave === escolha.pessoa).cores }; sujar('personagem'); pintarPessoa(); };
+  };
+  pintarPessoa();
+  $$('[data-pessoa]').forEach((b) => (b.onclick = () => {
+    if (b.dataset.pessoa === escolha.pessoa) return;
+    escolha.pessoa = b.dataset.pessoa;
+    const item = doCatalogo('personagens').find((x) => x.chave === escolha.pessoa);
+    escolha.cores = item ? { ...item.cores } : {};
+    sujar('personagem');
+    pintarPessoa();
+  }));
+  if (corPessoa) corPessoa.addEventListener('input', (e) => {
+    const k = e.target.dataset.corPessoa;
+    if (!k) return;
+    escolha.cores[k] = e.target.value;
+    e.target.closest('.cor-item').querySelector('i').style.background = e.target.value;
+  });
+  $('#s-personagem').onclick = async () => {
+    const item = doCatalogo('personagens').find((x) => x.chave === escolha.pessoa);
+    let r = { ok: true };
+    if (item) r = await pedir('bloco', { personagem: { tipo: item.tipo, roupa: item.roupa, cores: escolha.cores } });
+    if (r.ok) r = await pedir('campos', { campos: campos('personagem') });
+    depoisDeSalvar('personagem', r);
+  };
+
+  // Cenário e hora
+  $$('[data-cenario]').forEach((b) => (b.onclick = () => {
+    escolha.cenario = b.dataset.cenario;
+    $$('[data-cenario]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    sujar('cenario');
+  }));
+  $$('[data-hora]').forEach((b) => (b.onclick = () => {
+    escolha.hora = b.dataset.hora;
+    $$('[data-hora]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    sujar('cenario');
+  }));
+  $('#s-cenario').onclick = async () => {
+    if (!escolha.cenario) return avisar('Escolha um cenário');
+    let r = await pedir('bloco', { cenario: escolha.cenario, hora: escolha.hora });
+    if (r.ok) r = await pedir('campos', { campos: campos('cenario') });
+    depoisDeSalvar('cenario', r);
+  };
+
+  // Voz
+  const pintarVoz = () => {
+    $('#voz-extra').innerHTML = htmlVozExtra();
+    $$('[data-motor]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.motor === escolha.voz.motor)));
+    const id = $('#voz-id');
+    if (id) id.oninput = () => { escolha.voz.id = id.value; };
+    const ch = $('#abrir-chave');
+    if (ch) ch.onclick = async () => { const r = await pedir('chave', {}); avisar(r.ok ? 'Abrindo a janelinha da chave...' : r.mensagem); };
+  };
+  pintarVoz();
+  $$('[data-motor]').forEach((b) => (b.onclick = () => {
+    if (escolha.voz.motor === b.dataset.motor) return;
+    const antes = c.bloco.voz || {};
+    escolha.voz = { motor: b.dataset.motor, id: antes.motor === b.dataset.motor ? antes.id || '' : '' };
+    sujar('voz');
+    pintarVoz();
+  }));
+  $('#s-voz').onclick = async () => {
+    if (!escolha.voz.motor) return avisar('Escolha de onde vem a voz');
+    let r = await pedir('bloco', { voz: escolha.voz });
+    if (r.ok) r = await pedir('campos', { campos: campos('voz') });
+    depoisDeSalvar('voz', r);
+  };
+
+  // Cor
+  pintarCor();
+  $$('.paleta button').forEach((b) => (b.onclick = () => { escolha.cor = b.dataset.cor.toLowerCase(); $('#cor-propria').value = escolha.cor; sujar('cor'); pintarCor(); }));
+  $('#cor-propria').oninput = (e) => { escolha.cor = e.target.value; sujar('cor'); pintarCor(); };
+  $('#s-cor').onclick = async () => {
+    if (!escolha.cor) return avisar('Escolha uma cor');
+    depoisDeSalvar('cor', await pedir('bloco', { cor: escolha.cor }));
+  };
+
+  // Descrições nas redes
+  $$('#k-redes [data-copiar]').forEach((b) => (b.onclick = () => copiar($(`#d-${b.dataset.copiar}`).value)));
+  $$('#k-redes textarea').forEach((t) => t.addEventListener('input', contar));
+  contar();
+  $('#s-desc').onclick = async () => {
+    const d = Object.fromEntries(Object.keys(c.limites).map((k) => [k, $(`#d-${k}`).value]));
+    const passou = Object.keys(d).filter((k) => [...d[k]].length > c.limites[k]);
+    depoisDeSalvar('redes', await pedir('descricoes', d), passou.length ? 'Salvo, mas passou do limite (em vermelho)' : 'Salvo ✓');
+  };
+
+  // Logo e capa
+  for (const tipo of ['logo', 'banner']) {
+    $(`#up-${tipo}`).onchange = async (e) => {
+      const f = e.target.files[0];
+      if (!f) return;
+      avisar('Preparando a imagem...');
+      try {
+        const img = await prepararImagem(f, tipo);
+        const r = await pedir('imagem', { tipo, dados: img.dados });
+        if (!r.ok) return avisar(r.mensagem);
+        avisar(img.pequena ? 'Salvo, mas a imagem é pequena: pode ficar borrada' : 'Salvo ✓');
+        conferido = null;
+        carregarConferir();
+        await recarregar(!sujos.size);
+      } catch { avisar('Não consegui abrir essa imagem. Use uma PNG ou JPG.'); }
+    };
+    const rm = $(`#rm-${tipo}`);
+    if (rm) rm.onclick = async () => {
+      if (!confirm(tipo === 'logo' ? 'Tirar o logo do canal?' : 'Tirar a capa do canal?')) return;
+      const r = await pedir('imagem', { tipo, dados: null });
+      if (!r.ok) return avisar(r.mensagem);
+      conferido = null;
+      carregarConferir();
+      await recarregar(!sujos.size);
+    };
+  }
+}
+function contar() {
+  for (const k of Object.keys(estado.canal.limites)) {
+    const n = [...($(`#d-${k}`).value || '')].length, lim = estado.canal.limites[k], el = $(`#conta-${k}`);
+    el.textContent = `${n.toLocaleString('pt-BR')} de ${lim.toLocaleString('pt-BR')}`;
+    el.classList.toggle('passou', n > lim);
+  }
+}
+// O logo sai quadrado (PNG, até 800 x 800) e a capa em 2560 x 1440 (JPG): corta as bordas do que sobrar
+function prepararImagem(arquivo, tipo) {
+  return new Promise((ok, erro) => {
+    const url = URL.createObjectURL(arquivo), img = new Image();
+    img.onerror = () => { URL.revokeObjectURL(url); erro(); };
+    img.onload = () => {
+      const w = img.naturalWidth, h = img.naturalHeight;
+      const [W, H] = tipo === 'logo' ? Array(2).fill(Math.min(800, w, h)) : [2560, 1440];
+      const alvo = W / H;
+      let sw = w, sh = h;
+      if (w / h > alvo) sw = h * alvo; else sh = w / alvo;
+      const c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      const g = c.getContext('2d');
+      g.imageSmoothingQuality = 'high';
+      if (tipo === 'banner') { g.fillStyle = '#fff'; g.fillRect(0, 0, W, H); }
+      g.drawImage(img, (w - sw) / 2, (h - sh) / 2, sw, sh, 0, 0, W, H);
+      URL.revokeObjectURL(url);
+      ok({ dados: c.toDataURL(tipo === 'logo' ? 'image/png' : 'image/jpeg', 0.9), pequena: tipo === 'logo' ? Math.min(w, h) < 300 : w < 2048 });
+    };
+    img.src = url;
+  });
+}
+
+// ---------- Vídeos ----------
+// As 4 etapas de um vídeo
+function etapas(v, curto) {
+  const e = v.etapas;
+  return `<ul class="etapas">
+    <li class="${e.roteiro ? 'feito' : ''}">${e.roteiro ? '✓ ' : ''}Roteiro</li>
+    <li class="${e.cenas ? 'feito' : ''}">${e.cenas ? '✓ ' : ''}Cenas</li>
+    <li class="${e.video === 'pronto' ? 'feito' : e.video === 'teste' ? 'teste' : ''}">${e.video === 'pronto' ? '✓ Vídeo' : e.video === 'teste' ? `Vídeo${curto ? '' : ' de teste'}` : 'Vídeo'}</li>
+    <li class="${e.texto ? 'feito' : ''}">${e.texto ? '✓ ' : ''}Texto${curto ? '' : ' de postar'}</li></ul>`;
+}
+function chamada(v) {
+  if (v.exemplo) return '<p class="adesivo">exemplo</p>';
+  if (v.mudar) return `<p class="adesivo mudar">${plural(v.mudar, 'cena', 'cenas')} pra mudar</p>`;
+  if (v.semOpiniao) return '<p class="adesivo">dê sua opinião!</p>';
+  return '';
+}
+function paginaVideos() {
+  const vs = estado.videos;
+  app.innerHTML = `
+  <header class="cabeca">
+    <p class="chamada">Tudo que a Máquina fez</p>
+    <h1>Vídeos</h1>
+    <p class="sub">Um card por vídeo. Clique pra ver o vídeo, as cenas, o título, a descrição e o comentário pra fixar.</p>
+  </header>
+  ${avisoConfigurar()}
+  <div class="dica">${icone('i-chat')}<div>
+    <p><b>Vídeo novo?</b> Abra uma <b>conversa nova</b> com a IA e diga <code>faz um vídeo sobre ...</code> (no Claude Code, <code>/novo-video ...</code>). Ele aparece aqui sozinho.</p>
+    <p>Por que conversa nova? A IA trabalha melhor com a memória limpa, e tudo do seu canal já fica guardado na pasta: ela lê de novo antes de cada vídeo.</p>
+  </div></div>
+  ${vs.length ? `<ul class="videos">${vs.map((v) => `<li>
+    <a class="cartao-video" href="#/video/${encodeURIComponent(v.id)}">
+      <span class="fita" aria-hidden="true"></span>${chamada(v)}
+      <div class="miniatura">${v.capa ? `<img src="${v.capa}" alt="" loading="lazy">` : 'sem capa ainda'}${v.duracao ? `<span class="duracao">${dur(v.duracao)}</span>` : ''}</div>
+      <h3>${esc(v.titulo)}</h3>
+      ${etapas(v, true)}
+      ${v.atualizado ? `<span class="quando">mexido em ${data(v.atualizado)}</span>` : ''}
+    </a></li>`).join('')}</ul>`
+    : `<div class="vazio-grande vidro">${icone('i-videos')}<h2>Nenhum vídeo ainda</h2><p>Abra uma conversa nova com a IA e peça o primeiro: <b>faz um vídeo sobre ...</b></p></div>`}`;
+}
+
+const SECOES = [['video', 'Vídeo'], ['postar', 'Texto de postar'], ['cenas', 'Cenas'], ['roteiro', 'Roteiro']];
+async function paginaVideo(id, aba) {
+  if (!video || video.id !== id) app.innerHTML = '<p class="carregando">Abrindo o vídeo...</p>';
+  const r = await pedir(`video?id=${encodeURIComponent(id)}`);
+  if (!r.ok) { app.innerHTML = `<a class="voltar" href="#/videos">← Vídeos</a><p class="caixa erro">Não achei esse vídeo. Ele pode ter sido apagado ou trocado de nome.</p>`; return; }
+  video = r.video;
+  const v = video, n = v.cenas ? v.cenas.lista.length : 0;
+  app.innerHTML = `
+    <a class="voltar" href="#/videos">← Vídeos</a>
+    <h1 style="font-size:clamp(32px, 2.6vw + 16px, 50px)">${esc(v.titulo)}</h1>
+    <div style="margin-top:14px">${etapas(v)}</div>
+    <nav class="secoes vidro" aria-label="Partes do vídeo">${SECOES.map(([k, t]) => `<button data-ir="${k}">${t}${k === 'cenas' && n ? `<i>${n}</i>` : ''}</button>`).join('')}</nav>
+    <div class="topo-video" id="s-video"><div id="v-tela"></div><div id="s-postar" style="scroll-margin-top:90px"></div></div>
+    <section class="secao-video" id="s-cenas"></section>
+    <section class="secao-video" id="s-roteiro"></section>`;
+  telaDoVideo(v);
+  textoDePostar(v);
+  secaoCenas(v);
+  secaoRoteiro(v);
+  // A parte do vídeo à vista fica marcada no menu de cima (o texto de postar fica do lado do vídeo: vale o "Vídeo")
+  const botoes = $$('.secoes button'), vistas = new Set();
+  const marcar = () => { const k = vistas.has('s-roteiro') ? 'roteiro' : vistas.has('s-cenas') ? 'cenas' : 'video'; botoes.forEach((b) => b.classList.toggle('ativo', b.dataset.ir === k)); };
+  botoes.forEach((b) => (b.onclick = () => { $(`#s-${b.dataset.ir}`).scrollIntoView({ behavior: 'smooth', block: 'start' }); history.replaceState(null, '', `#/video/${encodeURIComponent(v.id)}/${b.dataset.ir}`); }));
+  const vigia = new IntersectionObserver((es) => { es.forEach((e) => (e.isIntersecting ? vistas.add(e.target.id) : vistas.delete(e.target.id))); marcar(); }, { rootMargin: '-30% 0px -60% 0px' });
+  ['cenas', 'roteiro'].forEach((k) => vigia.observe($(`#s-${k}`)));
+  marcar();
+  if (aba && $(`#s-${aba}`)) setTimeout(() => $(`#s-${aba}`).scrollIntoView({ block: 'start' }), 30);
+}
+
+function telaDoVideo(v) {
+  const el = $('#v-tela');
+  const op = (v.opiniao && v.opiniao.video) || {};
+  const tela = v.video ? `<video controls playsinline preload="metadata" src="${v.video.url}" ${v.capaPng ? `poster="${v.capaPng}"` : ''}></video>`
+    : v.teste ? `<video controls playsinline preload="metadata" src="${v.teste}"></video>`
+    : v.exemplo ? '<div class="tela-vazia">O vídeo de exemplo não está na pasta. Importe ele de novo em <a href="#/inicio/exemplo">Comece aqui</a>.</div>'
+    : '<div class="tela-vazia">O vídeo aparece aqui quando a IA terminar.</div>';
+  el.innerHTML = `<div class="celular">${tela}</div>
+    ${!v.video && v.teste ? '<p class="caixa espera nota-teste">Esta é a versão de <b>teste</b>, com a voz do computador. O vídeo final aparece aqui quando a IA fizer com a voz do canal.</p>' : ''}
+    ${v.video ? `<div class="baixar"><a class="botao" href="${v.video.url}&baixar=1">${icone('i-baixar')}Baixar o vídeo</a>${v.capaPng ? `<a class="botao claro" href="${v.capaPng}&baixar=1">${icone('i-baixar')}Capa</a>` : ''}</div>
+    <p class="suave" style="text-align:center;margin-top:12px"><small>${v.duracao ? `${dur(v.duracao)} · ` : ''}feito em ${data(v.video.feito)}</small></p>
+    <section class="quadro vidro" style="margin-top:22px">
+      <h3>O que achou do vídeo?</h3>
+      <div class="estrelas" id="estrelas">${[1, 2, 3, 4, 5].map((n) => `<button data-nota="${n}" aria-label="Nota ${n}" class="${op.nota >= n ? 'acesa' : ''}">${icone('i-estrela')}</button>`).join('')}</div>
+      <textarea id="comentario" rows="3" placeholder="A cena que mais gostou, a que ficou estranha (pelo número), o que mudaria no próximo...">${esc(op.comentario || '')}</textarea>
+      <div class="acoes"><button class="botao" id="mandar-video">Mandar pra IA</button><span class="salvo" id="ok-video">${op.mandado ? `mandado em ${data(op.mandado)}` : ''}</span></div>
+      <p class="suave" style="margin:10px 0 0"><small>Depois de mandar, diga pra IA: <b>mandei a minha opinião do vídeo</b>. Ela usa isso pra acertar os próximos.</small></p>
+    </section>` : ''}
+    ${htmlCustos(v.custos)}
+    ${v.versoes.length ? `<details class="dobra" style="margin-top:18px"><summary>Versões anteriores (${v.versoes.length}) ↓</summary><ul class="lista-simples">${v.versoes.map((f) => `<li><a href="${f.url}" target="_blank">${esc(f.nome)}</a></li>`).join('')}</ul></details>` : ''}`;
+  if (!v.video) return;
+  let nota = op.nota || 0;
+  $('#estrelas').onclick = (e) => {
+    const b = e.target.closest('[data-nota]');
+    if (!b) return;
+    nota = Number(b.dataset.nota);
+    $$('#estrelas button').forEach((x) => x.classList.toggle('acesa', Number(x.dataset.nota) <= nota));
+    sujos.add('video');
+  };
+  $('#comentario').addEventListener('input', () => sujos.add('video'));
+  $('#mandar-video').onclick = async () => {
+    if (!nota) return avisar('Escolha uma nota de 1 a 5');
+    const r = await pedir('opiniao', { id: v.id, video: { nota, comentario: $('#comentario').value }, mandar: true });
+    if (!r.ok) return avisar(r.mensagem);
+    sujos.delete('video');
+    $('#ok-video').textContent = 'Mandado ✓';
+    if (estado.esperando) { acabou = true; faixas(); }
+  };
+}
+
+// Quanto o vídeo gastou (videos/<tema>/custos.json, do npm run custos e do render): os tokens da IA e os créditos da
+// ElevenLabs (só quando a voz é ela)
+function htmlCustos(c) {
+  if (!c || !((c.ia && c.ia.total) || c.elevenlabs)) return '';
+  const l = [];
+  if (c.ia && c.ia.total) {
+    const ps = [...new Set((c.ia.conversas || []).map((x) => x.programa))].join(' e ');
+    l.push(`<li><b>IA</b><span>${curto(c.ia.total)}${c.ia.total >= 1e6 ? ' de' : ''} tokens</span><small>${esc(ps)}${(c.ia.conversas || []).length > 1 ? `, em ${c.ia.conversas.length} conversas` : ''}: ${curto(c.ia.cache)} relidos da memória da conversa, ${curto(c.ia.entrada)} lidos de novo e ${curto(c.ia.saida)} escritos</small></li>`);
+  }
+  if (c.elevenlabs) l.push(`<li><b>ElevenLabs</b><span>${mil(c.elevenlabs.creditos)} créditos</span><small>${mil(c.elevenlabs.caracteres)} letras narradas${c.elevenlabs.sobraram != null ? ` · sobraram ${mil(c.elevenlabs.sobraram)} no plano` : ''}</small></li>`);
+  return `<section class="quadro vidro custos"><h3>Quanto este vídeo gastou</h3><ul>${l.join('')}</ul></section>`;
+}
+
+function textoDePostar(v) {
+  const el = $('#s-postar'), p = v.publicacao;
+  if (!p) {
+    el.innerHTML = `<section class="quadro vidro"><h2>Texto de postar</h2><p class="suave">A IA escreve sozinha quando o vídeo fica pronto: o título do YouTube, a descrição e o comentário pra fixar. Pra pedir agora, diga pra ela: <b>escreve o texto de postar</b>.</p></section>`;
+    return;
+  }
+  const bloco = (titulo, chave, conteudo, classe = 'texto-pronto') => conteudo ? `<div class="bloco-postar"><div class="rede-topo"><b>${titulo}</b><button class="botao mini claro" data-copiar="${chave}">${icone('i-copiar')}Copiar</button></div><div class="${classe}">${esc(conteudo)}</div></div>` : '';
+  el.innerHTML = `<section class="quadro vidro postar">
+    <p class="chamada" style="font-size:28px">Pronto pra postar!</p>
+    ${bloco('Título do YouTube', 'titulo', p.titulo, 'texto-pronto titulo-pronto')}
+    ${bloco('Outra opção de título', 'outra', p.outra)}
+    ${bloco('Descrição', 'descricao', p.descricao)}
+    ${bloco('Comentário pra fixar', 'comentario', p.comentario)}
+    ${v.capaPng ? `<div class="bloco-postar"><div class="rede-topo"><b>Capa</b><a class="botao mini claro" href="${v.capaPng}&baixar=1">${icone('i-baixar')}Baixar</a></div>
+      <p class="suave" style="margin:0"><small><b>YouTube Shorts:</b> não aceita capa enviada; escolha o 1º quadro do vídeo, que é a própria capa. <b>TikTok, Instagram e Kwai:</b> envie a capa.</small></p></div>` : ''}
+    <p class="suave" style="margin:0"><small>Quer outro texto? Peça pra IA: "faz outro título", "deixa a descrição mais curta".</small></p>
+  </section>`;
+  $$('[data-copiar]', el).forEach((b) => (b.onclick = () => copiar(p[b.dataset.copiar])));
+}
+
+function secaoRoteiro(v) {
+  const el = $('#s-roteiro');
+  const corpo = v.roteiroMd ? `<div class="quadro vidro md">${markdown(v.roteiroMd)}</div><p class="suave">Pra mudar o roteiro, peça pra IA: "troca a frase 3", "deixa o começo mais curioso".</p>`
+    : v.frases.length ? `<div class="quadro vidro md"><h3>O que a voz fala</h3><ol>${v.frases.map((f) => `<li>${esc(f.texto) || '<span class="suave">(fim)</span>'}</li>`).join('')}</ol></div>`
+    : '<div class="quadro vidro"><p class="suave" style="margin:0">Quando a IA escrever o roteiro, ele aparece aqui. A página atualiza sozinha.</p></div>';
+  el.innerHTML = `<h2>Roteiro</h2>${corpo}`;
+}
+
+// As cenas: uma imagem por frase, e a opinião de cada uma (videos/<tema>/opiniao.json)
+function iniciarRascunho(v) {
+  const feito = v.cenas ? v.cenas.feito : null;
+  if (rascunho && rascunho.id === v.id && rascunho.cenasDe === feito) return;
+  const op = v.opiniao || {};
+  const mesmo = !!v.cenas && op.cenasDe === feito;
+  rascunho = { id: v.id, cenasDe: feito, mapa: {}, geral: mesmo ? op.geral || '' : '', mandado: mesmo ? op.mandado || null : null };
+  if (mesmo) for (const c of op.cenas || []) rascunho.mapa[c.cena] = { opiniao: c.opiniao, mudar: c.mudar || '' };
+}
+function secaoCenas(v) {
+  const el = $('#s-cenas');
+  const n = v.cenas ? v.cenas.lista.length : 0;
+  if (!v.cenas) {
+    el.innerHTML = `<h2>Cenas</h2>${v.folha
+      ? `<p class="suave">Estas são as cenas, uma por frase. Pra dar a opinião de cena por cena aqui, peça pra IA: <b>roda a revisão das cenas de novo</b>.</p><div class="quadro vidro" style="padding:10px"><img src="${v.folha}" alt="Folha das cenas" style="width:100%;border-radius:12px;cursor:zoom-in" data-zoom="0"></div>`
+      : '<div class="quadro vidro"><p class="suave" style="margin:0">Quando a IA terminar de montar as cenas, elas aparecem aqui, uma imagem por frase, pra você dizer o que achou de cada uma. A página atualiza sozinha.</p></div>'}`;
+    if (v.folha) $('[data-zoom]', el).onclick = () => abrirZoom([{ src: v.folha, legenda: 'Folha das cenas' }], 0);
+    return;
+  }
+  iniciarRascunho(v);
+  const op = v.opiniao || {};
+  const anterior = (op.cenas || []).length && op.cenasDe !== v.cenas.feito ? op : null;
+  const lista = v.cenas.lista;
+  el.innerHTML = `<h2>Cenas <span class="mao">${n} imagens, uma por frase</span></h2>
+    <p class="suave">Na ordem do vídeo (cenas de ${data(v.cenas.feito)}). Em cada cena, diga se gostou ou o que mudar. Clique na imagem pra ver grande.</p>
+    ${anterior ? `<div class="caixa espera" style="margin:0 0 16px"><b>A IA refez as cenas depois da sua última opinião</b> (de ${data(anterior.atualizado)}). Confira de novo.
+      ${anterior.cenas.some((c) => c.opiniao === 'mudar') ? `<details style="margin-top:6px"><summary>O que você tinha pedido</summary><ul class="lista-simples">${anterior.cenas.filter((c) => c.opiniao === 'mudar').map((c) => `<li><b>Cena ${c.cena}:</b> ${esc(c.mudar || '(sem texto)')}</li>`).join('')}</ul></details>` : ''}</div>` : ''}
+    <div class="cenas">${lista.map((c, i) => `
+      <article class="cena" data-n="${c.n}">
+        <button class="foto" data-zoom="${i}" aria-label="Ver a cena ${c.n} grande">${c.img ? `<img src="${c.img}" alt="" loading="lazy">` : ''}<span class="num-cena">${c.n}</span></button>
+        <div class="cena-corpo">
+          <p class="frase">${c.texto ? esc(c.texto) : '<span class="suave">Fim: o cartão de seguir</span>'}</p>
+          <div class="votos"><button class="voto gostei" data-voto="gostei" aria-pressed="false">${icone('i-gostei')}Gostei</button><button class="voto mudar" data-voto="mudar" aria-pressed="false">${icone('i-mudar')}Mudar</button></div>
+          <textarea rows="3" placeholder="O que mudar nesta cena? Ex.: a ponte está pequena, mostra o rosto dele, mais devagar" hidden></textarea>
+        </div>
+      </article>`).join('')}</div>
+    <div class="envio vidro"><div class="envio-dentro">
+      <span class="progresso-cenas" id="progresso"></span>
+      <label><textarea id="geral" aria-label="No geral" placeholder="No geral (opcional): algo que vale pro vídeo todo? Ex.: tudo muito escuro, mais close no personagem">${esc(rascunho.geral)}</textarea></label>
+      <button class="botao claro" id="todas">${icone('i-gostei')}Gostei das que faltam</button>
+      <button class="botao" id="mandar">Mandar pra IA</button>
+    </div><div id="mandado"></div></div>`;
+  for (const art of $$('.cena', el)) pintarCena(art);
+  progressoCenas();
+  const grade = $('.cenas', el);
+  grade.addEventListener('click', (e) => {
+    const z = e.target.closest('[data-zoom]');
+    if (z) return abrirZoom(lista.map((c) => ({ src: c.img, legenda: `${c.n}. ${c.texto || 'Fim: o cartão de seguir'}` })), Number(z.dataset.zoom));
+    const b = e.target.closest('[data-voto]');
+    if (!b) return;
+    const art = b.closest('.cena'), num = art.dataset.n, o = rascunho.mapa[num] || (rascunho.mapa[num] = { opiniao: '', mudar: '' });
+    o.opiniao = o.opiniao === b.dataset.voto ? '' : b.dataset.voto;
+    pintarCena(art);
+    if (o.opiniao === 'mudar') $('textarea', art).focus();
+    mudou();
+  });
+  grade.addEventListener('input', (e) => {
+    if (e.target.tagName !== 'TEXTAREA') return;
+    const num = e.target.closest('.cena').dataset.n;
+    (rascunho.mapa[num] || (rascunho.mapa[num] = { opiniao: 'mudar', mudar: '' })).mudar = e.target.value;
+    mudou();
+  });
+  $('#geral').addEventListener('input', (e) => { rascunho.geral = e.target.value; mudou(); });
+  $('#todas').onclick = () => {
+    for (const c of lista) if (!(rascunho.mapa[c.n] && rascunho.mapa[c.n].opiniao)) rascunho.mapa[c.n] = { opiniao: 'gostei', mudar: '' };
+    $$('.cena', el).forEach(pintarCena);
+    mudou();
+  };
+  $('#mandar').onclick = mandarCenas;
+  mostrarMandado();
+}
+function pintarCena(art) {
+  const o = rascunho.mapa[art.dataset.n] || {};
+  art.classList.remove('gostei', 'mudar', 'faltando');
+  if (o.opiniao) art.classList.add(o.opiniao);
+  $$('[data-voto]', art).forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.voto === o.opiniao)));
+  const t = $('textarea', art);
+  t.hidden = o.opiniao !== 'mudar';
+  if (t.value !== (o.mudar || '')) t.value = o.mudar || '';
+}
+function progressoCenas() {
+  const total = video.cenas.lista.length, feitas = video.cenas.lista.filter((c) => rascunho.mapa[c.n] && rascunho.mapa[c.n].opiniao).length;
+  const mudar = Object.values(rascunho.mapa).filter((o) => o.opiniao === 'mudar').length;
+  $('#progresso').textContent = `${feitas} de ${total} cenas com opinião${mudar ? ` · ${mudar} pra mudar` : ''}${progressoCenas.salvo ? ' · salvo' : ''}`;
+}
+// Cada clique já fica salvo (a IA vê o rascunho); "Mandar pra IA" avisa que acabou
+function mudou() {
+  sujos.add('cenas');
+  progressoCenas.salvo = false;
+  rascunho.mandado = null;
+  progressoCenas();
+  mostrarMandado();
+  clearTimeout(mudou.t);
+  mudou.t = setTimeout(async () => { const r = await salvarCenas(false); progressoCenas.salvo = r.ok; sujos.delete('cenas'); if ($('#progresso')) progressoCenas(); }, 700);
+}
+function salvarCenas(mandar) {
+  clearTimeout(mudou.t);
+  const cenas = Object.entries(rascunho.mapa).filter(([, o]) => o.opiniao).map(([n, o]) => ({ cena: Number(n), opiniao: o.opiniao, mudar: o.mudar }));
+  return pedir('opiniao', { id: rascunho.id, cenas, geral: rascunho.geral, mandar });
+}
+async function mandarCenas() {
+  const lista = video.cenas.lista;
+  const falta = lista.find((c) => !(rascunho.mapa[c.n] && rascunho.mapa[c.n].opiniao));
+  const semTexto = lista.find((c) => rascunho.mapa[c.n] && rascunho.mapa[c.n].opiniao === 'mudar' && !rascunho.mapa[c.n].mudar.trim());
+  const alvo = falta || semTexto;
+  if (alvo) {
+    const art = $(`.cena[data-n="${alvo.n}"]`);
+    art.classList.add('faltando');
+    art.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if (semTexto && !falta) $('textarea', art).focus();
+    return avisar(falta ? `Falta a sua opinião na cena ${falta.n}` : `Escreva o que mudar na cena ${semTexto.n}`);
+  }
+  const r = await salvarCenas(true);
+  if (!r.ok) return avisar(r.mensagem);
+  sujos.delete('cenas');
+  rascunho.mandado = new Date().toISOString();
+  if (estado.esperando) { acabou = true; faixas(); }
+  mostrarMandado();
+}
+function mostrarMandado() {
+  const el = $('#mandado');
+  if (!el) return;
+  const mudar = Object.values(rascunho.mapa).filter((o) => o.opiniao === 'mudar').length;
+  el.innerHTML = rascunho.mandado ? `<p class="caixa ok">Mandado em ${data(rascunho.mandado)}! Agora volte pra conversa com a IA e diga: <b>mandei a opinião das cenas</b>.
+    ${mudar ? 'Ela arruma as cenas marcadas e as cenas novas aparecem aqui sozinhas.' : 'Você gostou de todas: ela já pode fazer o vídeo completo.'}</p>` : '';
+}
+
+// ---------- Modelos 3D ----------
+const TEXTO_CATEGORIA = {
+  cenarios: 'O lugar inteiro do vídeo, com céu, luz e o que se mexe. Peça: "faz no cenário praia".',
+  personagens: 'Quem apresenta o vídeo. O do canal você escolhe em Meu canal.',
+  bichos: 'Bichos prontos, com caras e jeitos de se mexer.',
+  objetos: 'Peças prontas do motor pra explicar o tema.',
+  modelos: 'Modelos 3D prontos, dos pacotes. O que veio de pacote extra tem a etiqueta dele.'
+};
+let filtro = { categoria: '', busca: '' };
+const semAcento = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+function paginaModelos() {
+  const m = estado.modelos;
+  const semFoto = m.itens.filter((i) => !i.foto).length;
+  app.innerHTML = `
+  <header class="cabeca">
+    <p class="chamada">Tudo que a Máquina sabe desenhar</p>
+    <h1>Modelos <span class="circula">3D${rabisco('circulo', 9)}</span></h1>
+    <p class="sub">Pra usar num vídeo, é só pedir no chat: <b>"faz no cenário praia"</b>, <b>"põe o gato no vídeo"</b>. Clique num modelo pra ver grande e copiar o pedido.</p>
+  </header>
+  ${m.fotografando ? `<div class="fotografando vidro">${'<svg class="gira" viewBox="0 0 26 26"><circle cx="13" cy="13" r="10"/></svg>'}<span>Tirando as fotos dos modelos novos... elas aparecem aqui sozinhas.</span></div>`
+    : semFoto ? `<div class="fotografando vidro"><span style="flex:1">${plural(semFoto, 'modelo está', 'modelos estão')} sem foto.</span><button class="botao mini" id="tirar-fotos">Tirar as fotos</button></div>` : ''}
+  <div class="filtros vidro" role="toolbar" aria-label="Filtrar modelos">
+    <button data-filtro="" aria-pressed="${!filtro.categoria}">Todos <span>${m.itens.length}</span></button>
+    ${m.categorias.map((c) => { const n = m.itens.filter((i) => i.categoria === c.id).length; return n ? `<button data-filtro="${c.id}" aria-pressed="${filtro.categoria === c.id}">${c.titulo} <span>${n}</span></button>` : ''; }).join('')}
+    <input type="text" id="busca" placeholder="Procurar: gato, praia, foguete..." value="${esc(filtro.busca)}" aria-label="Procurar modelo">
+  </div>
+  <div id="lista-modelos"></div>
+  <section class="quadro vidro" id="c-subir">${htmlSubir(false)}</section>`;
+  listaModelos();
+  ligarSubir();
+  $$('[data-filtro]').forEach((b) => (b.onclick = () => {
+    filtro.categoria = b.dataset.filtro;
+    $$('[data-filtro]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    listaModelos();
+  }));
+  $('#busca').oninput = (e) => { filtro.busca = e.target.value; listaModelos(); };
+  const tf = $('#tirar-fotos');
+  if (tf) tf.onclick = async () => { const r = await pedir('fotos', {}); if (!r.ok) return avisar(r.mensagem); avisar('Tirando as fotos...'); await recarregar(true); };
+}
+function listaModelos() {
+  const m = estado.modelos, q = semAcento(filtro.busca.trim());
+  const passa = (i) => (!filtro.categoria || i.categoria === filtro.categoria) && (!q || semAcento(`${i.nome} ${i.chave} ${i.extra || ''}`).includes(q));
+  const blocos = m.categorias.map((c) => ({ ...c, itens: m.itens.filter((i) => i.categoria === c.id && passa(i)) })).filter((c) => c.itens.length);
+  $('#lista-modelos').innerHTML = blocos.length ? blocos.map((c) => `
+    <section class="categoria">
+      <h2>${c.titulo} <span class="mao">${c.itens.length}</span></h2>
+      <p>${TEXTO_CATEGORIA[c.id] || ''}</p>
+      <ul class="modelos ${c.id === 'cenarios' ? 'altos' : ''}">${c.itens.map((i) => `<li>
+        <button class="modelo" data-modelo="${esc(i.id)}">
+          ${i.extra ? `<span class="adesivo">${esc(i.extra)}</span>` : ''}
+          ${i.foto ? `<img src="${i.foto}" alt="" loading="lazy">` : `<div class="sem-foto">${icone('i-modelos')}sem foto ainda</div>`}
+          <b>${esc(i.nome)}</b><span class="pedir">${esc(i.chave)}</span>
+        </button></li>`).join('')}</ul>
+    </section>`).join('') : `<div class="vazio-grande vidro">${icone('i-modelos')}<h2>Nada com esse nome</h2><p>Tente outra palavra, ou peça pra IA: ela também sabe montar coisas que não estão aqui.</p></div>`;
+  $$('[data-modelo]').forEach((b) => (b.onclick = () => abrirFicha(b.dataset.modelo)));
+}
+function abrirFicha(id) {
+  const i = estado.modelos.itens.find((x) => x.id === id);
+  if (!i) return;
+  const pedido = i.pedir || `usa ${i.nome.toLowerCase()} no vídeo`;
+  abrirZoom([{ src: i.foto, ficha: `<p class="chamada" style="font-size:26px">${esc((estado.modelos.categorias.find((c) => c.id === i.categoria) || {}).titulo || '')}</p>
+    <h2>${esc(i.nome)}</h2>
+    ${i.extra ? `<p class="suave">Do pacote <b>${esc(i.extra)}</b>.</p>` : ''}
+    <p style="margin:14px 0 6px"><b>Pra usar, peça no chat:</b></p>
+    <div class="prompt" style="margin:0"><span>"${esc(pedido)}"</span><button class="botao mini claro" data-copiar-ficha>${icone('i-copiar')}Copiar</button></div>
+    <p class="suave" style="margin:16px 0 0"><small>Pra IA, no cena.js: <code>${esc(i.uso || '')}</code></small></p>` }], 0);
+  const b = $('[data-copiar-ficha]');
+  if (b) b.onclick = () => copiar(pedido);
+}
+
+// ---------- A imagem grande (e a ficha do modelo) ----------
+const zoom = { lista: [], i: 0 };
+function abrirZoom(lista, i) {
+  zoom.lista = lista.filter((x) => x.src || x.ficha); zoom.i = Math.max(0, Math.min(i, zoom.lista.length - 1));
+  if (!zoom.lista.length) return;
+  verZoom();
+  $('#zoom').classList.add('aberto');
+}
+function verZoom() {
+  const z = zoom.lista[zoom.i], img = $('#zoom .grande'), ficha = $('#zoom .ficha');
+  img.hidden = !z.src;
+  if (z.src) img.src = z.src;
+  ficha.hidden = !z.ficha;
+  ficha.innerHTML = z.ficha || '';
+  $('#zoom .legenda-zoom').textContent = z.legenda || '';
+  $('#zoom .ant').hidden = $('#zoom .prox').hidden = zoom.lista.length < 2;
+}
+const passarZoom = (d) => { zoom.i = (zoom.i + d + zoom.lista.length) % zoom.lista.length; verZoom(); };
+const fecharZoom = () => $('#zoom').classList.remove('aberto');
+$('#zoom .fechar').onclick = fecharZoom;
+$('#zoom .ant').onclick = (e) => { e.stopPropagation(); passarZoom(-1); };
+$('#zoom .prox').onclick = (e) => { e.stopPropagation(); passarZoom(1); };
+$('#zoom').onclick = (e) => { if (e.target.id === 'zoom') fecharZoom(); };
+document.addEventListener('keydown', (e) => {
+  if (!$('#zoom').classList.contains('aberto')) return;
+  if (e.key === 'Escape') fecharZoom();
+  if (e.key === 'ArrowLeft') passarZoom(-1);
+  if (e.key === 'ArrowRight') passarZoom(1);
+});
+document.addEventListener('click', (e) => { const z = e.target.closest('#zoom .ficha a'); if (z) fecharZoom(); });
+
+// ---------- Markdown simples (o roteiro) ----------
+function inline(t) {
+  return esc(t)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+    .replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>')
+    .replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?!\*)/g, '$1<i>$2</i>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '$1');
+}
+function markdown(md) {
+  const L = String(md).replace(/\r/g, '').split('\n'), item = /^\s*([-*+]|\d+[.)])\s+/;
+  let h = '', i = 0;
+  while (i < L.length) {
+    const l = L[i];
+    let m;
+    if (!l.trim()) { i++; continue; }
+    if ((m = l.match(/^(#{1,4})\s+(.*)$/))) { const n = m[1].length + 1; h += `<h${n}>${inline(m[2])}</h${n}>`; i++; continue; }
+    if (/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(l)) { h += '<hr>'; i++; continue; }
+    if (l.trim().startsWith('|')) {
+      const linhas = [];
+      while (i < L.length && L[i].trim().startsWith('|')) linhas.push(L[i++]);
+      const celulas = (x) => x.trim().replace(/^\||\|$/g, '').split('|').map((c) => inline(c.trim()));
+      const sep = linhas.length > 1 && /^\s*\|?[\s:|-]+\|?\s*$/.test(linhas[1]);
+      const cab = sep ? `<thead><tr>${celulas(linhas[0]).map((c) => `<th>${c}</th>`).join('')}</tr></thead>` : '';
+      h += `<div class="tabela"><table>${cab}<tbody>${linhas.slice(sep ? 2 : 0).map((x) => `<tr>${celulas(x).map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      continue;
+    }
+    if (l.startsWith('>')) {
+      const q = [];
+      while (i < L.length && L[i].startsWith('>')) q.push(L[i++].replace(/^>\s?/, ''));
+      h += `<blockquote>${q.map(inline).join('<br>')}</blockquote>`;
+      continue;
+    }
+    if (item.test(l)) {
+      const ordem = /^\s*\d+[.)]\s+/.test(l), inicio = ordem ? parseInt(l, 10) || 1 : 1, itens = [];
+      while (i < L.length && item.test(L[i])) {
+        itens.push(L[i++].replace(item, ''));
+        while (i < L.length && /^\s{2,}\S/.test(L[i]) && !item.test(L[i])) itens[itens.length - 1] += ' ' + L[i++].trim();
+      }
+      h += ordem ? `<ol start="${inicio}">` : '<ul>';
+      h += itens.map((x) => `<li>${inline(x)}</li>`).join('') + (ordem ? '</ol>' : '</ul>');
+      continue;
+    }
+    const par = [];
+    while (i < L.length && L[i].trim() && !/^(#{1,4}\s|>|\s*\|)/.test(L[i]) && !item.test(L[i])) par.push(L[i++]);
+    h += `<p>${par.map(inline).join('<br>')}</p>`;
+  }
+  return h;
+}
+
+// ---------- Potencializar a máquina (os extras vendidos à parte; motor/potencializar.js) ----------
+// Cada produto: o link de compra, onde o arquivo fica na área de membros, o quadro pra trazer o arquivo (o .zip, a pasta
+// dele ou o PDF, o de hoje ou o que veio pelo Google Drive) e, depois de instalado, como usar
+let extraMsg = null; // { rota, tipo, html }: o resultado da última importação, na tela do produto
+let idiomaGringo = 'en';
+const SOBRE_EXTRA = {
+  roteiros: 'Trinta roteiros escritos e conferidos pra você transformar em vídeo na sua Máquina, e 100 temas com gancho pra quando eles acabarem.',
+  gringo: 'Os modelos de canal em inglês e em espanhol e os pedidos prontos pra fazer os seus vídeos no outro idioma, com a narração, a legenda e o título de lá.',
+  checklist: 'O que conferir em todo vídeo antes de postar (gancho, capa, título e ritmo) e uma tarefa pra cada um dos seus primeiros 30 dias de canal.',
+  atualizacoes: 'Toda versão nova da Máquina chega no seu acesso, sem pagar de novo e sem mensalidade. A versão nova traz o seu canal, os seus vídeos e os seus extras.'
+};
+const temExtra = (p) => p.id !== 'atualizacoes' && p.instalado;
+const pedidoPronto = (texto, longo) => `<div class="prompt${longo ? ' longo' : ''}"><span>${esc(texto)}</span><button class="botao mini" data-pedido="${esc(texto)}">${icone('i-copiar')}Copiar</button></div>`;
+// Os pedidos prontos (data-pedido) de qualquer tela: um ouvinte só, na página inteira (o data-copiar das outras telas
+// tem o clique dele)
+document.addEventListener('click', (e) => { const b = e.target.closest && e.target.closest('[data-pedido]'); if (b) copiar(b.dataset.pedido); });
+const ligarCopiar = () => {};
+
+function paginaPotencializar(id) {
+  const P = estado.potencializar;
+  if (!P) { app.innerHTML = '<p class="caixa erro">Não consegui ler os extras. Peça pra IA: "abre o painel".</p>'; return; }
+  const p = id && P.produtos.find((x) => x.id === id);
+  if (p) return paginaExtra(p);
+  app.innerHTML = `
+  <header class="cabeca">
+    <p class="chamada">Deixe a sua Máquina mais forte</p>
+    <h1>Potencializar a <span class="circula">máquina${rabisco('circulo', 7)}</span></h1>
+    <p class="sub">Quatro extras que se encaixam na sua Máquina. Já comprou algum? Traga o arquivo pra cá: cada coisa entra no lugar certo sozinha. Ainda não tem? Cada um tem o link pra comprar.</p>
+  </header>
+  <div class="produtos">${P.produtos.map(cartaoExtra).join('')}</div>
+  <h2>Já comprou? Traga pra cá em 3 passos</h2>
+  <ol class="passos">
+    <li class="vidro" style="--r:-1deg"><h3>Abra a área de membros</h3><p>Entre pelo e-mail de acesso que a Cakto mandou quando você comprou. Não achou? Procure por <b>Cakto</b> na caixa de entrada e no spam.</p></li>
+    <li class="vidro" style="--r:.8deg"><h3>Baixe o arquivo</h3><p>Abra a aula do produto e baixe o arquivo que fica embaixo do vídeo.</p></li>
+    <li class="vidro" style="--r:-.6deg"><h3>Solte aqui embaixo</h3><p>Arraste o arquivo pro quadro. A Máquina descobre qual é o produto e põe cada coisa no lugar.</p></li>
+  </ol>
+  <section class="quadro vidro" id="c-extra">${htmlZonaExtra('')}</section>`;
+  ligarZonaExtra('');
+}
+
+function cartaoExtra(p, i) {
+  const P = estado.potencializar, tem = temExtra(p);
+  const selo = p.id === 'atualizacoes' ? `<span class="selo versao">sua versão: ${esc(P.versao)}</span>`
+    : tem ? '<span class="selo tem">✓ na sua Máquina</span>' : '<span class="selo">ainda não tem</span>';
+  const botoes = tem ? `<a class="botao" href="#/potencializar/${p.id}">Como usar →</a>`
+    : `<a class="botao" href="${esc(p.checkout)}" target="_blank" rel="noopener">Quero esse</a><a class="botao claro" href="#/potencializar/${p.id}">${p.id === 'atualizacoes' ? 'Como atualizar →' : 'Já comprei →'}</a>`;
+  return `<article class="produto vidro" style="--r:${['-.7deg', '.6deg', '-.4deg', '.8deg'][i % 4]}">
+    <div class="produto-topo">${icone(`p-${p.id}`)}<div><h3>${esc(p.nome)}</h3>${selo}</div></div>
+    <p>${SOBRE_EXTRA[p.id]}</p>
+    <div class="acoes">${botoes}</div>
+  </article>`;
+}
+
+function paginaExtra(p) {
+  const tem = temExtra(p);
+  const comprar = `<section class="quadro vidro comprar">
+      <p><b>Ainda não tem?</b> ${p.id === 'atualizacoes' ? 'Com ele, toda versão nova chega no seu acesso, sem pagar de novo.' : 'Compre pelo botão e depois volte nesta tela pra trazer o arquivo.'}</p>
+      <a class="botao" href="${esc(p.checkout)}" target="_blank" rel="noopener">Comprar o ${esc(p.nome)}</a></section>`;
+  const usar = { roteiros: usarRoteiros, gringo: usarGringo, checklist: usarChecklist, atualizacoes: usarAtualizacoes }[p.id];
+  const msg = extraMsg && extraMsg.rota === location.hash ? `<p class="caixa ${extraMsg.tipo} aviso-bloco">${extraMsg.html}</p>` : '';
+  app.innerHTML = `
+  <a class="voltar" href="#/potencializar">← Potencializar a máquina</a>
+  <header class="cabeca">
+    <p class="chamada">${p.id === 'atualizacoes' ? 'Sempre na versão mais nova' : tem ? 'Já está na sua Máquina' : 'Extra da Máquina'}</p>
+    <h1>${esc(p.nome)}</h1>
+    <p class="sub">${SOBRE_EXTRA[p.id]}</p>
+  </header>
+  ${msg}
+  ${p.id === 'atualizacoes' ? usar(p) + comprar + htmlPegarExtra(p, true) : tem ? usar(p) + htmlPegarExtra(p, true) : comprar + htmlPegarExtra(p, false)}`;
+  ligarZonaExtra(p.id);
+  ligarCopiar(app);
+  $$('[data-idioma]').forEach((b) => (b.onclick = () => { idiomaGringo = b.dataset.idioma; const y = window.scrollY; mostrar(); window.scrollTo(0, y); }));
+  const a = $('#aplicar-canal');
+  if (a) a.onclick = async () => {
+    a.disabled = true;
+    const r = await pedir('aplicar-canal', {});
+    if (!r.ok) { a.disabled = false; return avisar(r.mensagem); }
+    extraMsg = { rota: location.hash, tipo: 'ok', html: `Pronto! ${plural(r.n, 'roteiro está', 'roteiros estão')} com o seu canal agora.${r.prontos ? ` ${plural(r.prontos, 'roteiro que já virou vídeo ficou como estava', 'roteiros que já viraram vídeo ficaram como estavam')}.` : ''}` };
+    await recarregar(true);
+    window.scrollTo(0, 0);
+  };
+}
+
+// Onde achar o arquivo na área de membros e o quadro pra soltar (recolhido quando o produto já está instalado)
+function htmlPegarExtra(p, recolhido) {
+  const zip = p.arquivo.endsWith('.zip');
+  const titulo = p.id === 'atualizacoes' ? 'Guardar o guia em PDF aqui' : recolhido ? 'Trazer o arquivo de novo' : 'Já comprou? Traga pra cá';
+  const corpo = `<ol class="passos-tudo">
+      <li><b>Abra a área de membros da Cakto</b>Pelo e-mail de acesso que chegou quando você comprou. Não achou? Procure por <b>Cakto</b> na caixa de entrada e no spam.</li>
+      <li><b>Vá na seção "${esc(p.secao)}"</b>E abra a aula <b>${esc(p.aula)}</b>.</li>
+      <li><b>Baixe o arquivo ${esc(p.arquivo)} e solte aqui embaixo</b>${zip ? 'Ele fica embaixo do vídeo da aula. Se o computador abrir o arquivo sozinho e ele virar uma pasta, solte a pasta: funciona igual.' : 'Ele fica embaixo do vídeo da aula. Aqui, ele fica guardado pra você abrir quando quiser.'}</li>
+    </ol>
+    <p class="suave">Comprou no começo e recebeu pelo Google Drive? Funciona igual: solte o arquivo do Drive (ou a pasta inteira dele).</p>
+    ${htmlZonaExtra(p.id)}`;
+  return recolhido
+    ? `<details class="quadro vidro tudo" id="c-extra"><summary>${icone('caixote')}<h2>${titulo}</h2><span class="mao">abrir ↓</span></summary><div style="margin-top:16px">${corpo}</div></details>`
+    : `<section class="quadro vidro" id="c-extra"><h2>${titulo}</h2>${corpo}</section>`;
+}
+
+function usarRoteiros(p) {
+  const P = estado.potencializar;
+  const titulo = (id) => (estado.videos.find((v) => v.id === id) || {}).titulo || id;
+  const feitos = p.roteiros.filter((r) => r.video).length;
+  const ex = (p.roteiros.find((r) => !r.video) || p.roteiros[0]).id;
+  const rapido = (id) => `Faz o vídeo de videos/${id}: o roteiro já está pronto (comandos/extras-30-roteiros.md).`;
+  const canal = !P.canalPronto
+    ? '<p class="caixa espera">Os roteiros ainda estão com o personagem e a voz padrão. Configure o seu canal em <a href="#/canal">Meu canal</a> (o nome, o personagem e a voz) e volte aqui pra pôr o seu canal neles.</p>'
+    : !p.canalAplicado
+      ? '<p class="caixa espera">O seu canal está configurado, mas os roteiros ainda estão com o personagem e a voz padrão. <button class="botao mini" id="aplicar-canal">Usar o meu canal nos roteiros</button></p>'
+      : '<p class="caixa ok">Os roteiros estão com o personagem, a voz, o cenário, a cor e o @ do seu canal. Mudou alguma coisa em Meu canal? <button class="botao mini claro" id="aplicar-canal">Usar o meu canal de novo</button></p>';
+  return `<section class="quadro vidro">
+    <h2>Como fazer o vídeo de um roteiro</h2>
+    <p class="sub-quadro">${plural(p.roteiros.length, 'roteiro está', 'roteiros estão')} na sua Máquina, na pasta <b>videos/</b> e em <a href="#/videos">Vídeos</a>${feitos ? ` (${plural(feitos, 'já virou vídeo', 'já viraram vídeo')})` : ''}.</p>
+    ${canal}
+    ${avisoConfigurar()}
+    <ol class="passos-tudo">
+      <li><b>Escolha um roteiro da lista aqui embaixo</b>Um por dia é um bom ritmo pra começar.</li>
+      <li><b>Copie o pedido e cole numa conversa nova da sua IA</b>
+        <span class="suave">Rápido: a Máquina monta a cena sozinha a partir do roteiro.</span>${pedidoPronto(rapido(ex))}
+        <span class="suave">Caprichado: a IA cria uma cena sob medida. Leva mais tempo e fica mais bonito.</span>${pedidoPronto(`Faz o vídeo de videos/${ex} com cena própria, caprichado (comandos/extras-30-roteiros.md, passo 3).`)}</li>
+      <li><b>Assista em Vídeos</b>Quando ficar pronto, o vídeo aparece em <a href="#/videos">Vídeos</a>, com a capa e o texto pra postar.</li>
+    </ol>
+    <ul class="lista-roteiros">${p.roteiros.map((r) => `<li class="${r.video ? 'feito' : ''}"><span class="n-mao">${esc(r.id.slice(0, 2))}</span><a href="#/video/${encodeURIComponent(r.id)}">${esc(titulo(r.id))}</a>${r.video ? '<span class="selo tem">vídeo pronto</span>' : `<button class="botao mini claro" data-pedido="${esc(rapido(r.id))}">${icone('i-copiar')}Pedido</button>`}</li>`).join('')}</ul>
+  </section>
+  ${p.temas.length ? `<section class="quadro vidro"><h2>Os ${p.temas.length} temas</h2>
+    <p class="sub-quadro">Pra quando acabarem os 30. Escolha um, copie o pedido e cole numa conversa nova da sua IA: ela escreve o roteiro e faz o vídeo.</p>
+    <ol class="temas">${p.temas.map((t) => `<li><span class="n-mao">${t.n}</span><div><b>${esc(t.tema)}</b><span class="suave">${esc(t.gancho)}</span></div><button class="botao mini claro" data-pedido="${esc(`Faz um vídeo sobre ${t.tema}. Gancho: "${t.gancho}"`)}">${icone('i-copiar')}Pedido</button></li>`).join('')}</ol>
+  </section>` : ''}`;
+}
+
+function usarGringo(p) {
+  const P = estado.potencializar;
+  const l = p.modelos[idiomaGringo] ? idiomaGringo : p.modelos.en ? 'en' : 'es';
+  const nome = l === 'en' ? 'inglês' : 'espanhol', fala = l === 'en' ? 'inglês americano' : 'espanhol neutro latino-americano';
+  const copia = `${P.pasta}-${l}`;
+  const configurar = `Esta é a cópia da minha Máquina em ${nome}. Me ajuda a configurar o canal em ${nome} (comandos/extras-canal-gringo.md, passo 3).`;
+  const adaptar = `Me ajuda a fazer em ${nome} o vídeo [tema], que eu já fiz em português na pasta ${P.pasta} (comandos/extras-canal-gringo.md, passo 5).`;
+  return `<section class="quadro vidro">
+    <h2>Como fazer o seu canal em outro idioma</h2>
+    <p class="sub-quadro">Cada idioma fica numa pasta própria da Máquina, com o seu canal, a sua pauta e os seus vídeos. O canal em português continua aqui, do jeito que está.</p>
+    <div class="segmentos">${['en', 'es'].filter((x) => p.modelos[x]).map((x) => `<button aria-pressed="${x === l}" data-idioma="${x}">${x === 'en' ? 'Inglês' : 'Espanhol'}</button>`).join('')}</div>
+    <ol class="passos-tudo">
+      <li><b>Faça uma cópia da Máquina pro ${nome}</b>Feche a IA. Abra a pasta onde está a sua Máquina, copie a pasta <b>${esc(P.pasta)}</b> e cole ali do lado (no Mac: botão direito e "Duplicar"). Mude o nome da cópia pra <b>${esc(copia)}</b>.</li>
+      <li><b>Abra a cópia na sua IA e mande este pedido</b>Ela te pergunta o nome do canal, o @ e a frase do fim, e arruma o resto.${pedidoPronto(configurar, true)}</li>
+      <li><b>Faça o primeiro vídeo em ${nome}</b>Ainda na cópia, numa conversa nova:${pedidoPronto(`Faz um vídeo novo em ${nome} sobre como funciona o zíper.`)}</li>
+      <li><b>Quer aproveitar um vídeo que já fez em português?</b>Troque o [tema] pelo nome do vídeo:${pedidoPronto(adaptar, true)}</li>
+    </ol>
+    <details class="dobra"><summary>Mais pedidos prontos</summary>
+      ${pedidoPronto(`Me dá 10 títulos de busca em ${nome} pro tema [tema], do jeito que uma criança curiosa perguntaria, com o detalhe que intriga. Até 60 caracteres, sem hashtag e sem emoji. Marque os 3 melhores.`, true)}
+      ${pedidoPronto(`O tema [tema] funciona pra um público ${l === 'en' ? 'dos EUA' : 'da América Latina'}? Esse objeto é comum lá? Se não for, me sugira 3 temas parecidos que funcionem.`, true)}
+    </details>
+    <details class="dobra"><summary>Ver o modelo do canal em ${nome}</summary><pre class="texto-pronto">${esc(p.modelos[l])}</pre></details>
+    ${p.guia ? `<div class="acoes"><a class="botao claro" href="${p.guia}" target="_blank" rel="noopener">Abrir o guia em PDF</a></div>` : ''}
+  </section>`;
+}
+
+function usarChecklist(p) {
+  return `<section class="quadro vidro">
+    <h2>Como usar</h2>
+    <ol class="passos-tudo">
+      ${p.pdf ? `<li><b>Abra o checklist</b>Ele abre numa aba do navegador. Deixe aberto do lado na hora de postar.<div class="acoes"><a class="botao" href="${p.pdf}" target="_blank" rel="noopener">Abrir o checklist</a></div></li>` : ''}
+      <li><b>Antes de postar, peça pra IA conferir o vídeo</b>Ela passa o vídeo pelo checklist e diz só o que falta arrumar.${pedidoPronto('Confere o meu último vídeo com o checklist antes de eu postar (comandos/extras-checklist.md).')}${p.texto ? '' : '<span class="suave">Se a sua IA disser que não consegue ler o PDF, traga também o arquivo checklist-viral-e-plano-de-30-dias.md, que fica na mesma aula da área de membros.</span>'}</li>
+      <li><b>Siga o plano de 30 dias</b>Uma tarefa por dia, a partir do primeiro dia do canal.${pedidoPronto('Em que dia do plano de 30 dias eu estou? Me diz a tarefa de hoje (comandos/extras-checklist.md).')}</li>
+    </ol>
+  </section>`;
+}
+
+function usarAtualizacoes(p) {
+  const P = estado.potencializar;
+  return `<section class="quadro vidro">
+    <h2>Como passar pra versão nova</h2>
+    <p class="sub-quadro">A sua Máquina está na versão <b>${esc(P.versao)}</b>. Quando sair uma versão nova, ela aparece na área de membros. Atualizar leva uns minutos e não apaga nada.</p>
+    <ol class="passos-tudo">
+      <li><b>Baixe o .zip da versão nova</b>Na área de membros da Cakto, na seção <b>Atualizações Para Sempre</b> (ou em <b>Já tinha a Máquina? Atualize</b>).</li>
+      <li><b>Extraia numa pasta nova</b>Não extraia por cima desta: a pasta nova fica do lado, e esta continua como está.</li>
+      <li><b>Abra o painel da pasta nova</b>Dois cliques no <b>ABRIR-PAINEL</b> de lá (ou peça pra IA, com a pasta nova aberta: <b>abre o painel</b>).</li>
+      <li><b>Traga tudo desta pasta</b>No painel novo, em Comece aqui, abra <b>Já tinha a Máquina?</b> e clique em <b>Procurar a pasta antiga</b>. O seu canal, os seus vídeos e os extras desta tela vêm junto.</li>
+    </ol>
+    ${p.guia ? `<div class="acoes"><a class="botao claro" href="${p.guia}" target="_blank" rel="noopener">Abrir o guia em PDF</a></div>` : ''}
+  </section>${htmlNovidades()}`;
+}
+
+// O que mudou em cada versão (o NOVIDADES.md da pasta), com a mais nova aberta
+function htmlNovidades() {
+  const n = estado.novidades || [];
+  return n.length ? `<section class="quadro vidro">
+    <h2>O que mudou em cada versão</h2>
+    <p class="sub-quadro">A mais nova fica em cima.</p>
+    ${n.map((v, i) => `<details class="pergunta"${i ? '' : ' open'}><summary>${esc(v.titulo)}</summary>
+      <div class="resposta"><ul class="novidades">${v.itens.map((t) => `<li>${esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')}</li>`).join('')}</ul></div></details>`).join('')}
+  </section>` : '';
+}
+
+// O quadro de soltar: o arquivo (o .zip ou o PDF), a pasta do zip aberto ou vários arquivos juntos
+function htmlZonaExtra(produto) {
+  const p = produto && estado.potencializar.produtos.find((x) => x.id === produto);
+  const pdf = p && p.arquivo.endsWith('.pdf');
+  return `<div class="soltar" id="soltar-extra">
+      ${icone('caixote', 'caixote')}<b>${p ? `Solte aqui o ${esc(p.arquivo)}` : 'Solte aqui o arquivo que você baixou'}</b>
+      <span class="suave">${pdf ? 'o arquivo da aula' : 'o arquivo que você baixou (ou a pasta dele)'}</span>
+      <div class="acoes"><label class="botao">Escolher o arquivo<input type="file" accept=".zip,.pdf,application/zip,application/pdf" id="up-extra" hidden></label>
+        ${pdf ? '' : '<label class="botao claro">Escolher a pasta<input type="file" id="up-extra-pasta" webkitdirectory hidden></label>'}</div>
+    </div>
+    <div id="extra-msg"></div>`;
+}
+function textoDoExtra(feitos) {
+  return feitos.map((f) => {
+    if (f.produto === 'roteiros') {
+      if (!f.novos) return `Os ${f.jaTinha} roteiros já estavam na sua Máquina e ficaram como estavam.`;
+      return `Pronto! ${plural(f.novos, 'roteiro entrou', 'roteiros entraram')} em <a href="#/videos">Vídeos</a>${f.temas ? ', e os 100 temas estão aqui embaixo' : ''}.${f.jaTinha ? ` ${plural(f.jaTinha, 'já estava lá e ficou como estava', 'já estavam lá e ficaram como estavam')}.` : ''} ${f.comCanal ? 'Já com o personagem, a voz, o cenário, a cor e o @ do seu canal.' : 'Falta pôr o seu canal neles: veja o aviso amarelo aqui embaixo.'}`;
+    }
+    if (f.produto === 'gringo') return `Pronto! Os modelos do Canal Gringo em ${f.modelos.map((l) => (l === 'en' ? 'inglês' : 'espanhol')).join(' e ')} estão na sua Máquina. O passo a passo está aqui embaixo.`;
+    if (f.produto === 'checklist') return 'Pronto! O Checklist Viral + Plano de 30 Dias está guardado na sua Máquina: abra pelo botão aqui embaixo.';
+    const p = estado.potencializar.produtos.find((x) => x.id === f.produto);
+    return `O guia em PDF do ${esc(p ? p.nome : f.produto)} está guardado aqui.`;
+  }).join('<br>');
+}
+// Pasta arrastada: os arquivos de dentro, com o caminho de cada um
+async function juntarPasta(entrada, prefixo, lista) {
+  if (entrada.isFile) { lista.push({ caminho: prefixo + entrada.name, file: await new Promise((ok, erro) => entrada.file(ok, erro)) }); return; }
+  const leitor = entrada.createReader();
+  for (let lote = await new Promise((ok, erro) => leitor.readEntries(ok, erro)); lote.length; lote = await new Promise((ok, erro) => leitor.readEntries(ok, erro))) {
+    for (const x of lote) await juntarPasta(x, `${prefixo}${entrada.name}/`, lista);
+  }
+}
+function ligarZonaExtra(produto) {
+  const zona = $('#soltar-extra');
+  if (!zona) return;
+  const msg = (html, tipo) => { $('#extra-msg').innerHTML = html ? `<p class="caixa ${tipo}">${html}</p>` : ''; };
+  const enviar = (etapa, corpo, extra = '') => fetch(`/api/extra/${etapa}?t=${T}&produto=${encodeURIComponent(produto)}${extra}`, { method: 'POST', headers: { 'X-Painel': T, 'Content-Type': 'application/octet-stream' }, body: corpo })
+    .then((r) => r.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' }));
+  async function trazer(arquivo, pasta) {
+    sujos.add('extra');
+    msg('Trazendo pra sua Máquina... (uns segundos)', 'espera');
+    let r = null;
+    if (arquivo) r = await enviar('um', arquivo, `&nome=${encodeURIComponent(arquivo.name)}`);
+    else {
+      // Só o que serve (os roteiros, os modelos de canal, os PDFs e os zips): as capas de prévia ficam de fora
+      const uteis = pasta.filter((x) => /(roteiro\.(json|md)|100-temas\.md|canal\.md|prompts\.md|\.pdf|\.zip)$/i.test(x.caminho));
+      if (!uteis.length) r = { ok: false, mensagem: 'Nessa pasta não achei nenhum arquivo dos extras. Confira se é a pasta que veio do zip da área de membros.' };
+      else {
+        await enviar('comecar', '');
+        for (let i = 0; i < uteis.length && !r; i++) {
+          if (uteis.length > 8) msg(`Trazendo pra sua Máquina... ${i + 1} de ${uteis.length} arquivos`, 'espera');
+          const x = await enviar('arquivo', uteis[i].file, `&caminho=${encodeURIComponent(uteis[i].caminho)}`);
+          if (!x.ok) r = x;
+        }
+        r = r || await enviar('fim', '');
+      }
+    }
+    sujos.delete('extra');
+    if (r.versao) vigiar.ultima = r.versao;
+    if (!r.ok) return msg(esc(r.mensagem || 'Não deu certo. Tente de novo.'), 'erro');
+    // Vai pra tela do produto que entrou (ou fica nesta, se entrou mais de um), com o que aconteceu no topo
+    const vai = r.feitos.length === 1 ? r.feitos[0].produto : produto;
+    const rota = vai ? `#/potencializar/${vai}` : '#/potencializar';
+    extraMsg = { rota, tipo: 'ok', html: textoDoExtra(r.feitos) };
+    await recarregar(false);
+    if (location.hash !== rota) location.replace(rota); else { await mostrar(); window.scrollTo(0, 0); }
+  }
+  ['dragenter', 'dragover'].forEach((ev) => zona.addEventListener(ev, (e) => { e.preventDefault(); zona.classList.add('em-cima'); }));
+  ['dragleave', 'drop'].forEach((ev) => zona.addEventListener(ev, () => zona.classList.remove('em-cima')));
+  zona.addEventListener('drop', async (e) => {
+    e.preventDefault();
+    const entradas = [...e.dataTransfer.items].map((i) => i.webkitGetAsEntry && i.webkitGetAsEntry()).filter(Boolean);
+    const arquivos = [...e.dataTransfer.files];
+    if (entradas.length === 1 && entradas[0].isFile) return trazer(arquivos[0]);
+    const lista = [];
+    for (const x of entradas) await juntarPasta(x, '', lista);
+    trazer(null, lista);
+  });
+  $('#up-extra').onchange = (e) => { if (e.target.files[0]) trazer(e.target.files[0]); };
+  const pasta = $('#up-extra-pasta');
+  if (pasta) pasta.onchange = (e) => { if (e.target.files.length) trazer(null, [...e.target.files].map((file) => ({ caminho: file.webkitRelativePath || file.name, file }))); };
+}
+
+// ---------- Antes do primeiro vídeo: o canal configurado ----------
+// O canal (os textos e o visual) e a voz: sem isso, a Máquina não faz vídeo (o render para e avisa)
+const canalPronto = () => !!(estado.canal.configurado && estado.canal.bloco && estado.canal.bloco.voz && estado.canal.bloco.voz.motor);
+function avisoConfigurar() {
+  if (canalPronto()) return '';
+  return `<div class="caixa espera aviso-bloco"><b>Antes do primeiro vídeo, termine de configurar o seu canal.</b> A Máquina só faz vídeo depois disso: ela precisa saber o nome do canal, o personagem e a voz. Veja o que falta em <a href="#/inicio">Comece aqui</a> e mande pra sua IA:${pedidoPronto('Me ajuda a terminar de configurar o meu canal.')}</div>`;
+}
+
+// ---------- Ajuda: as perguntas de sempre, por assunto, e as boas práticas ----------
+// [pergunta, resposta, pedido pronto pra IA (ou null), [botão, tela] (ou null)]
+const AJUDA = [
+  ['comecar', 'Pra começar', [
+    ['O que é a Máquina?', 'É um programa que faz vídeos curtos animados em 3D, no seu computador. Você conversa com uma IA, ela escreve o roteiro e a Máquina faz o vídeo: a animação, a voz, a legenda e a capa.', 'Me explica, bem simples, como a Máquina funciona.'],
+    ['Por onde eu começo?', 'Abra a pasta da Máquina na sua IA e mande a palavra <b>instalar</b>. Ela faz tudo com você, uma pergunta de cada vez. Leva uns 15 minutos.', 'instalar'],
+    ['Por que ainda não consigo fazer vídeo?', 'A Máquina só faz vídeo depois que o seu canal está configurado: o nome, o personagem e a voz. Em Comece aqui, você vê o que falta.', 'Me ajuda a terminar de configurar o meu canal.', ['Ver o que falta', '#/inicio']],
+    ['Dá pra usar no celular?', 'Não. A Máquina funciona só no computador (Windows, Mac ou Linux). Depois, o vídeo pronto você passa pro celular e posta de lá.', 'Como eu passo o vídeo pronto pro meu celular?'],
+    ['Preciso saber mexer no computador?', 'Não. Quem mexe nos arquivos é a IA. Você só conversa com ela, como no WhatsApp.', 'Me ajuda a fazer o meu primeiro vídeo.'],
+    ['Meu computador é fraco. Funciona?', 'Funciona na maioria dos computadores. Num computador mais fraco, o vídeo só demora mais pra ficar pronto.', 'Confere se o meu computador dá conta da Máquina.'],
+    ['A Máquina já vem com vídeos prontos?', 'Não. A Máquina é a ferramenta que faz os <b>seus</b> vídeos, no seu computador, com a sua IA. Vem só um vídeo de exemplo, pra você ver como fica.', 'Me ajuda a fazer o meu primeiro vídeo.', ['Ver o vídeo de exemplo', '#/video/exemplo']]
+  ]],
+  ['ia', 'A IA', [
+    ['Qual IA eu uso?', 'A melhor é o <b>Claude Code</b>. Também funciona com IA grátis, como o ChatGPT e o Gemini: o vídeo fica mais simples, mas funciona.', 'Qual IA é melhor pra mim? Eu tenho [ChatGPT / Gemini / outra].'],
+    ['Preciso pagar uma IA?', 'Não. Dá pra usar uma IA grátis. Com uma IA paga, os vídeos ficam mais caprichados.', 'Me ensina a usar a Máquina com uma IA grátis.'],
+    ['Como eu falo com a IA?', 'Como você fala com um amigo: com detalhe e com sinceridade. Não gostou de algo? Diga o quê e por quê. Quanto mais você conta, melhor fica.', 'Não gostei da cena 3: o personagem ficou parado. Arruma pra mim.'],
+    ['Não entendi o que a IA falou.', 'Peça pra ela explicar de novo, mais simples. Ela não se cansa e não se incomoda.', 'Não entendi. Me explica de um jeito bem simples, sem palavras difíceis.'],
+    ['Preciso abrir uma conversa nova pra cada vídeo?', 'Sim. Uma conversa nova pra cada vídeo: a IA lê o seu canal de novo e o vídeo sai melhor. Nada se perde, tudo fica guardado na pasta.', 'Faz um vídeo sobre como funciona a geladeira.'],
+    ['A IA esqueceu o que eu falei.', 'Fale de novo e peça pra ela anotar. Ela guarda no seu canal e não esquece mais.', 'Anota isso pra não esquecer: eu prefiro [o que você prefere].'],
+    ['A IA travou ou parou no meio.', 'Mande ela continuar. Se não der, abra uma conversa nova e conte onde parou.', 'Continua de onde parou, por favor.']
+  ]],
+  ['voz', 'A voz', [
+    ['Qual voz eu uso?', '<b>ElevenLabs</b>: a melhor, com plano grátis pra testar. <b>VoiceStudio</b>: grátis, roda no seu computador. <b>Voz do computador</b>: robótica, só pra testar.', 'Me ajuda a escolher a voz do meu canal.'],
+    ['A voz ficou robótica.', 'Essa é a voz de teste do computador. Escolha a voz do canal e faça o vídeo de novo.', 'A voz ficou robótica. Me ajuda a trocar pela voz boa.'],
+    ['Acabaram os créditos da voz.', 'Dá pra esperar o plano renovar, pagar um plano ou usar a voz grátis do VoiceStudio. O que já foi falado fica guardado e não gasta de novo.', 'Acabaram os créditos da voz. Quais são as minhas opções?'],
+    ['Posso ganhar dinheiro usando a voz grátis?', 'Pra ganhar dinheiro com os vídeos, a voz precisa permitir. Na ElevenLabs, isso é nos planos pagos (a partir de uns 5 dólares por mês). A voz grátis é pra testar e começar.', 'Qual voz eu posso usar pra ganhar dinheiro com os vídeos?'],
+    ['Como eu troco a voz?', 'No painel, em Meu canal, ou pedindo pra IA.', 'Quero trocar a voz do meu canal.', ['Abrir Meu canal', '#/canal']]
+  ]],
+  ['videos', 'Fazer vídeos', [
+    ['Como eu peço um vídeo?', 'Abra uma conversa nova com a IA e mande: <b>faz um vídeo sobre</b> e o assunto.', 'Faz um vídeo sobre como funciona o chuveiro elétrico.'],
+    ['Quanto tempo leva?', 'Uns minutos pra IA montar e mais uns minutos pro computador fazer o vídeo. Num computador mais forte, é mais rápido.', null],
+    ['Não gostei de uma cena.', 'Em Vídeos, abra o vídeo, clique em <b>Mudar</b> na cena e escreva o que quer. Depois, clique em <b>Mandar pra IA</b>. Ou fale direto pra IA.', 'A cena 4 ficou estranha. Arruma pra mim.'],
+    ['As cenas do meu vídeo ficaram fracas.', 'Antes do vídeo, a IA escreve cada cena em 10 linhas: o que aparece, o que se mexe, o personagem, a câmera e os sons. Se ela escreveu só uma linha por cena, peça de novo. Cena bem contada vira vídeo bonito.', 'As cenas estão curtas. Refaz a ficha de cada cena com as 10 linhas, bem detalhada, sem pular nenhuma.'],
+    ['O personagem fica parado.', 'Peça duas coisas pra ele fazer em cada cena: uma no começo e outra no meio.', 'Na cena [número], o personagem ficou parado. Dá duas ações pra ele: uma no começo e outra no meio.'],
+    ['A câmera não mostra a coisa certa.', 'Diga o número da cena e o que tinha que aparecer. A IA põe isso no meio da tela.', 'Na cena [número], a câmera não mostra [o que tinha que aparecer]. Põe no meio da tela, inteiro e mais perto.'],
+    ['Quero mudar uma coisa no vídeo pronto.', 'É só pedir pra IA, do jeito que você falaria. O que não mudou não gasta voz de novo.', 'Deixa a panela vermelha e fala mais devagar.'],
+    ['Posso trocar o personagem ou a cor?', 'Pode. No painel, em Meu canal, ou pedindo pra IA.', 'Quero trocar o personagem do meu canal.', ['Abrir Meu canal', '#/canal']],
+    ['Dá pra fazer vídeo comprido, deitado?', 'Não. A Máquina faz vídeo curto, em pé, de 1 a 3 minutos: pro YouTube Shorts, Reels, TikTok e Kwai.', null],
+    ['Onde fica o vídeo pronto?', 'No painel, em Vídeos. Lá você assiste, baixa o vídeo e a capa e copia o texto de postar.', null, ['Abrir Vídeos', '#/videos']],
+    ['Quantos vídeos eu posso fazer?', 'Quantos quiser. O limite é só o da sua IA e da sua voz, se forem as grátis.', null]
+  ]],
+  ['painel', 'O painel', [
+    ['Como eu abro o painel?', 'Dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da Máquina. Ou peça pra IA. Dica: salve o painel nos favoritos do navegador.', 'abre o painel'],
+    ['O painel parou de responder.', 'Ele desliga sozinho depois de umas horas, ou quando o computador reinicia. É só abrir de novo, do mesmo jeito.', 'abre o painel'],
+    ['Pra que serve o painel?', 'É onde você vê tudo: o seu canal, os vídeos, as cenas pra aprovar e os extras. Pra mudar alguma coisa no vídeo, peça na conversa com a IA.', null],
+    ['No Mac apareceu um aviso de segurança.', 'Clique com o botão direito no ABRIR-PAINEL e escolha <b>Abrir</b>. Ou peça pra IA arrumar.', 'Apareceu um aviso de segurança ao abrir o painel. Me ajuda a resolver.']
+  ]],
+  ['postar', 'Postar', [
+    ['Como eu posto o vídeo?', 'Baixe o vídeo em Vídeos. No TikTok, no Instagram e no Kwai, use a capa que vem junto. No YouTube Shorts, escolha o primeiro quadro do vídeo como capa. O título e a descrição têm botão de copiar.', 'Me ajuda a postar o meu vídeo no [YouTube / TikTok / Instagram].'],
+    ['Qual o tamanho bom de vídeo?', 'O primeiro, uns 60 segundos. Depois, mais de 1 minuto: é o que conta pra ganhar dinheiro em várias redes.', null],
+    ['Os vídeos são meus?', 'São. Você faz e você posta. Só não pode revender ou passar a Máquina pra outra pessoa.', null],
+    ['Posso fazer vídeo em inglês ou espanhol?', 'Pode, com o extra Canal Gringo.', null, ['Ver o Canal Gringo', '#/potencializar/gringo']]
+  ]],
+  ['extras', 'Os extras', [
+    ['O que são os extras?', 'São produtos que deixam a Máquina mais forte: 30 roteiros prontos, o canal em inglês e espanhol, o checklist antes de postar e as versões novas.', null, ['Ver os extras', '#/potencializar']],
+    ['Comprei um extra. Como eu uso?', 'Baixe o arquivo na área de membros e solte em Potencializar a máquina. Cada extra tem o passo a passo lá.', 'Comprei um extra. Me ajuda a trazer pra Máquina.', ['Abrir Potencializar', '#/potencializar']],
+    ['Comprei antes e recebi pelo Google Drive.', 'Funciona igual: solte o arquivo do Drive em Potencializar a máquina.', null, ['Abrir Potencializar', '#/potencializar']]
+  ]],
+  ['atualizar', 'Versão nova', [
+    ['Saiu uma versão nova. Como eu atualizo?', 'Baixe a versão nova na área de membros e abra numa pasta nova, do lado da antiga. Nunca por cima. Depois, peça pra IA trazer o seu canal.', 'Atualizei a Máquina. Me ajuda a trazer o meu canal.'],
+    ['Vou perder o meu canal?', 'Não. A versão nova traz o seu canal, os seus vídeos e os seus extras. A pasta antiga fica do jeito que está.', null],
+    ['O que mudou em cada versão?', 'Está em Potencializar a máquina, Atualizações Para Sempre, no fim da tela. A versão mais nova fica em cima.', 'O que tem de novo na minha versão da Máquina?', ['Ver o que mudou', '#/potencializar/atualizacoes']]
+  ]],
+  ['erro', 'Quando dá erro', [
+    ['Apareceu uma mensagem de erro.', 'Copie a mensagem e mande pra IA. Ela conhece a Máquina e resolve. Não precisa entender o erro.', 'Deu esse erro. Me ajuda a resolver: [cole a mensagem aqui]'],
+    ['Deu erro na instalação.', 'Peça pra IA rodar a instalação de novo. Ela confere tudo e diz o que falta.', 'deu erro, roda o instalar de novo'],
+    ['Apareceu "O VÍDEO NÃO FOI FEITO".', 'Falta terminar de configurar o seu canal. A IA te ajuda, uma pergunta de cada vez.', 'Me ajuda a terminar de configurar o meu canal.'],
+    ['O vídeo ficou estranho.', 'Diga pra IA o que ficou estranho, com o número da cena. Ela arruma.', 'O vídeo ficou estranho na cena [número]: [o que aconteceu]. Arruma pra mim.']
+  ]],
+  ['compra', 'Compra e acesso', [
+    ['Onde eu baixo a Máquina e os extras?', 'Na área de membros da Cakto. O acesso chega no e-mail que você usou pra comprar. Olhe também no lixo eletrônico (spam).', null],
+    ['Não recebi o acesso ou tenho um problema com a compra.', 'Procure no e-mail por <b>Cakto</b>, também no spam. Não achou, ou é outro problema de compra? Escreva pra <b>desconstruindouniverso@gmail.com</b>.', null]
+  ]]
+];
+const BOAS = [
+  ['Uma conversa nova pra cada vídeo', 'A IA lê o seu canal de novo e o vídeo sai melhor.'],
+  ['Fale com a IA como fala com um amigo', 'Com detalhe e com sinceridade. Ela entende melhor assim.'],
+  ['Não entendeu? Peça de novo', 'Mande: "explica de um jeito simples". Ela não se cansa.'],
+  ['Travou? Peça ajuda pra IA', 'Mande: "Me ajuda a fazer isso". Ela te leva passo a passo.'],
+  ['Deu erro? Copie e mande pra IA', 'Não precisa entender o erro: ela entende.'],
+  ['Diga o que achou de cada cena', 'Gostei ou Mudar. A IA aprende o seu gosto e acerta mais.'],
+  ['Leia as cenas antes do vídeo', 'A IA escreve cada cena em 10 linhas. Mudar ali é mais fácil do que depois.'],
+  ['Uma coisa de cada vez', 'Peça uma mudança, confira, e só depois peça a próxima.'],
+  ['Não mexa nos arquivos com as mãos', 'Quem mexe na pasta da Máquina é a IA. Você só pede.'],
+  ['Salve o painel nos favoritos', 'Assim ele fica sempre a um clique.'],
+  ['Depois de postar, conte como foi', 'Diga pra IA quantas pessoas viram. Os próximos vídeos ficam melhores.']
+];
+const semAcentoAjuda = (t) => String(t).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+let temaAjuda = 'todos';
+function paginaAjuda() {
+  app.innerHTML = `
+  <header class="cabeca">
+    <p class="chamada">Calma, tem jeito pra tudo</p>
+    <h1>Como podemos <span class="sublinha">ajudar?${rabisco('sublinhado', 6)}</span></h1>
+    <p class="sub">Procure a sua dúvida. Quase tudo se resolve pedindo pra sua IA: cada resposta já tem o pedido pronto pra você copiar e mandar.</p>
+  </header>
+  <label class="busca-ajuda"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>
+    <input type="text" id="busca-ajuda" placeholder="Digite a sua dúvida aqui" autocomplete="off"></label>
+  <div class="segmentos ajuda-temas">${[['todos', 'Tudo'], ...AJUDA.map(([id, nome]) => [id, nome])].map(([id, nome]) => `<button aria-pressed="${temaAjuda === id}" data-tema="${id}">${esc(nome)}</button>`).join('')}</div>
+  <div id="perguntas">${AJUDA.map(([id, nome, itens]) => `<section class="quadro vidro tema-ajuda" data-tema="${id}">
+    <h2>${esc(nome)}</h2>
+    ${itens.map(([p, r, pedido, ir]) => `<details class="pergunta" data-busca="${esc(semAcentoAjuda(`${p} ${r.replace(/<[^>]+>/g, '')} ${pedido || ''}`))}"><summary>${esc(p)}</summary>
+      <div class="resposta"><p>${r}</p>${pedido ? `<p class="pede">Peça pra sua IA:</p>${pedidoPronto(pedido)}` : ''}${ir ? `<div class="acoes"><a class="botao mini claro" href="${ir[1]}">${esc(ir[0])} →</a></div>` : ''}</div></details>`).join('')}
+  </section>`).join('')}<p class="nada-achado" hidden>Não achei. Tente outra palavra, ou pergunte direto pra sua IA: ela sabe tudo da Máquina.</p></div>
+  <h2>Boas práticas</h2>
+  <p class="sub-quadro">O jeito de se virar sozinho, sem esperar ninguém.</p>
+  <ol class="dicas-boas">${BOAS.map(([b, s], i) => `<li class="vidro" style="--r:${['-.6deg', '.5deg', '-.3deg', '.7deg'][i % 4]}"><b>${esc(b)}</b><span>${esc(s)}</span></li>`).join('')}</ol>
+  <section class="quadro vidro">
+    <h2>Ainda não resolveu?</h2>
+    <p class="sub-quadro">Primeiro, conte pra sua IA o que aconteceu, do seu jeito. Ela resolve quase tudo.</p>
+    ${pedidoPronto('Me ajuda a resolver isso. O que aconteceu foi: [conte aqui, do seu jeito]')}
+    <p class="suave" style="margin-top:16px">Problema com a compra ou com o acesso à área de membros, ou a IA tentou e não resolveu? Escreva pra <b>desconstruindouniverso@gmail.com</b>, contando o que aconteceu.</p>
+  </section>`;
+  ligarCopiar(app);
+  const busca = $('#busca-ajuda');
+  const filtrar = () => {
+    const palavras = semAcentoAjuda(busca.value).split(/\s+/).filter(Boolean);
+    let achou = 0;
+    for (const s of $$('.tema-ajuda')) {
+      let noTema = 0;
+      for (const d of $$('.pergunta', s)) {
+        const ok = (temaAjuda === 'todos' || s.dataset.tema === temaAjuda) && palavras.every((w) => d.dataset.busca.includes(w));
+        d.hidden = !ok;
+        if (ok) noTema++;
+        if (palavras.length) d.open = ok && noTema <= 3;
+      }
+      s.hidden = !noTema;
+      achou += noTema;
+    }
+    $('.nada-achado').hidden = achou > 0;
+  };
+  busca.oninput = filtrar;
+  $$('[data-tema]', $('.ajuda-temas')).forEach((b) => (b.onclick = () => {
+    temaAjuda = b.dataset.tema;
+    $$('[data-tema]', $('.ajuda-temas')).forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    filtrar();
+  }));
+  filtrar();
+}
+
+// ---------- Atualiza sozinho ----------
+async function recarregar(redesenhar = true) {
+  const e = await pedir('estado');
+  if (!e.ok) return;
+  estado = e;
+  vigiar.ultima = e.versao;
+  lado();
+  faixas();
+  if (redesenhar) { const y = window.scrollY; await mostrar(); window.scrollTo(0, y); }
+}
+// A IA pediu esta tela (npm run painel com o painel já na tela): troca aqui mesmo, sem aba nova. Com algo sem salvar
+// ou um vídeo tocando, só avisa na faixa (a pessoa clica em "Ver agora")
+async function irPara(rota, agora = false) {
+  if (!agora && ocupado()) { faixas.irPara = rota || location.hash; faixas(); return; }
+  await recarregar(false);
+  if (rota && location.hash !== rota) location.replace(rota); else await mostrar();
+  avisar('A IA abriu esta tela pra você');
+}
+
+async function vigiar() {
+  if (!acabou && aposentada !== 'velha') {
+    // A cada pergunta, a aba conta pra Máquina se está na tela (assim o npm run painel não abre aba nova à toa)
+    const r = await pedir(`versao?aba=${ABA}&visivel=${document.visibilityState === 'visible' ? 1 : 0}`);
+    if (r.ir != null) await irPara(r.ir);
+    if (!r.versao) falhas++;
+    else {
+      const novo = r.versao !== vigiar.ultima;
+      if (falhas) { falhas = 0; faixas(); }
+      vigiar.ultima = r.versao;
+      if (novo) {
+        if (ocupado()) { faixas.novidade = true; await recarregar(false); }
+        else await recarregar(true);
+      }
+    }
+    if (falhas >= 2) faixas();
+  }
+  setTimeout(vigiar, 3000);
+}
+
+// ---------- Uma aba só ----------
+// Quando a IA abre o painel numa aba nova, a velha se fecha sozinha (se tiver coisa sem salvar, fica, com um aviso). O
+// navegador só deixa a página fechar a aba que tem uma página só no histórico: por isso os links do painel trocam de
+// tela sem criar página nova no histórico (o voltar do navegador não volta de tela; o menu do lado faz isso)
+document.addEventListener('click', (e) => {
+  const a = e.target.closest && e.target.closest('a[href^="#/"]');
+  if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target) return;
+  e.preventDefault();
+  location.replace(a.getAttribute('href'));
+});
+const outrasAbas = 'BroadcastChannel' in window ? new BroadcastChannel('preguica3d-painel') : null;
+if (outrasAbas) {
+  outrasAbas.onmessage = ({ data: m }) => {
+    if (!m || aposentada === 'velha') return;
+    if (m.tipo === 'cheguei' && m.nasceu > NASCEU) {
+      if (ocupado()) { aposentada = 'ocupada'; faixas(); outrasAbas.postMessage({ tipo: 'fiquei' }); return; }
+      aposentada = 'velha';
+      window.close();
+      setTimeout(faixas, 300); // o navegador não deixou fechar: a faixa avisa
+    } else if (m.tipo === 'fiquei') { faixas.outraAba = true; faixas(); }
+  };
+  outrasAbas.postMessage({ tipo: 'cheguei', nasceu: NASCEU });
+}
+// A aba que acabou de aparecer na tela avisa na hora (sem esperar a próxima pergunta de 3 s)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && aposentada !== 'velha') pedir(`versao?aba=${ABA}&visivel=1`).then((r) => { if (r.ir != null) irPara(r.ir); });
+});
+
+(async () => {
+  const e = await pedir('estado');
+  if (!e.ok) { app.innerHTML = `<p class="caixa erro">${esc(e.mensagem)}</p>`; return; }
+  estado = e;
+  vigiar.ultima = e.versao;
+  lado();
+  faixas();
+  await mostrar();
+  carregarConferir();
+  vigiar(); // já conta pra Máquina que esta aba está na tela
+})();
+</script>
+</body>
+</html>

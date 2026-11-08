@@ -1,0 +1,30 @@
+{
+  "titulo": "Guarda-chuva",
+  "capa": "Como o guarda-chuva\nsegura a *chuva*?",
+  "cor": "#ff7a59",
+  "arroba": "@pordentrodascoisas",
+  "estilo": "redondo",
+  "fps": 60,
+  "voz": {"motor": "teste"},
+  "alvoPpm": 190,
+  "frases": [
+    {"texto": "Como um pano tão fino segura um temporal inteiro?", "plano": "gancho", "mostra": ["guarda-chuva", "personagem"], "gancho": true},
+    {"texto": "Se você precisa atravessar o quintal na chuva, põe um pano na cabeça e chega encharcado do mesmo jeito.", "plano": "encharcado", "mostra": ["pano", "personagem"]},
+    {"texto": "Mas o pano comum é cheio de furinhos, e a água passa direto.", "plano": "furinhos", "mostra": ["pano"], "jogo": "falha"},
+    {"texto": "Então você usa um tecido de fios bem fechadinhos, com uma camada que faz a gota escorrer.", "plano": "tecido", "mostra": ["tecido", "personagem"], "jogo": "conserta", "rebobina": 0.6},
+    {"texto": "Esse é o *tecido impermeável*.", "plano": "tecido_rotulo", "mostra": ["tecido"]},
+    {"texto": "Mas solto, ele murcha e a água empoça em cima da sua cabeça.", "plano": "murcha", "mostra": ["tecido", "personagem"], "jogo": "falha"},
+    {"texto": "Então você estica ele num esqueleto de hastes de metal, presas num cabo.", "plano": "varetas", "mostra": ["varetas", "haste"], "jogo": "corrige"},
+    {"texto": "Essas são as *varetas*.", "plano": "varetas_rotulo", "mostra": ["varetas"]},
+    {"texto": "Mas aberto o tempo todo, ele não passa nem na porta.", "plano": "porta", "mostra": ["guarda-chuva", "personagem"], "jogo": "falha"},
+    {"texto": "Então você põe no cabo uma pecinha que desliza: sobe, abre tudo, e uma molinha prende lá em cima.", "plano": "trava", "mostra": ["trava", "personagem"], "jogo": "corrige"},
+    {"texto": "Essa é a *trava*.", "plano": "trava_rotulo", "mostra": ["trava"]},
+    {"texto": "É por isso que ele faz aquele clique quando abre.", "plano": "clique", "mostra": ["guarda-chuva", "personagem"]},
+    {"texto": "Por fora, é só um pano esticado num cabo.", "plano": "por_fora", "mostra": ["guarda-chuva", "personagem"]},
+    {"texto": "Por dentro, é um tecido que a água não atravessa, varetas que esticam tudo e uma molinha que segura até o vento chegar.", "plano": "por_dentro", "mostra": ["tecido", "varetas"]},
+    {"texto": "E segue o canal pra ver o próximo.", "plano": "segue", "mostra": ["personagem"]}
+  ],
+  "cauda": {"segundos": 1.6, "plano": "cartao"},
+  "trilha": {"arquivo": "trilha", "ganho": 0.22},
+  "efeitos": {"abaixa": true}
+}

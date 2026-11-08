@@ -1,0 +1,37 @@
+{
+  "name": "preguica3d",
+  "version": "2.3.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENCA.md",
+  "description": "Máquina Preguiça 3D: vídeos curtos animados em 3D a partir de um tema",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "instalar": "node motor/instalar.js",
+    "conferir": "node motor/conferir.js",
+    "preparar": "node motor/instalar.js",
+    "video": "node motor/render.js",
+    "colar": "node motor/colar.js",
+    "testar-voz": "node motor/testar-voz.js",
+    "chave": "node motor/chave.js",
+    "vozes": "node motor/vozes.js",
+    "quadros": "node motor/quadros.js",
+    "voicestudio": "node motor/voicestudio.js",
+    "painel": "node motor/painel.js",
+    "cenarios": "node motor/ver-cenarios.js",
+    "modelos": "node motor/ver-modelos.js",
+    "canal": "node motor/canal.js",
+    "custos": "node motor/custos.js",
+    "importar": "node motor/importar.js",
+    "extras": "node motor/potencializar.js",
+    "render": "node motor/render.js",
+    "sons": "node motor/sintetizar-sons.js"
+  },
+  "dependencies": {
+    "ffmpeg-static": "5.2.0",
+    "ffprobe-static": "3.1.0",
+    "playwright": "1.64.1",
+    "three": "0.160.0"
+  }
+}

@@ -1,0 +1,706 @@
+{
+  "comoLer": "Tudo que a Máquina sabe desenhar, com a foto (referencias/modelos/<foto>), como pedir pra IA e o código do cena.js. Gerado por npm run modelos: não editar à mão.",
+  "feito": "2026-10-31T15:31:28.907Z",
+  "itens": [
+    {
+      "id": "cenarios/construcao",
+      "categoria": "cenarios",
+      "chave": "construcao",
+      "nome": "Canteiro de obras",
+      "uso": "K.cenario('construcao')",
+      "cenario": "construcao",
+      "pedir": "faz no cenário canteiro de obras",
+      "foto": "cenarios-construcao.jpg"
+    },
+    {
+      "id": "cenarios/natureza",
+      "categoria": "cenarios",
+      "chave": "natureza",
+      "nome": "Natureza",
+      "uso": "K.cenario('natureza')",
+      "cenario": "natureza",
+      "pedir": "faz no cenário natureza",
+      "foto": "cenarios-natureza.jpg"
+    },
+    {
+      "id": "cenarios/cidade",
+      "categoria": "cenarios",
+      "chave": "cidade",
+      "nome": "Cidade",
+      "uso": "K.cenario('cidade')",
+      "cenario": "cidade",
+      "pedir": "faz no cenário cidade",
+      "foto": "cenarios-cidade.jpg"
+    },
+    {
+      "id": "cenarios/casa",
+      "categoria": "cenarios",
+      "chave": "casa",
+      "nome": "Casa",
+      "uso": "K.cenario('casa')",
+      "cenario": "casa",
+      "pedir": "faz no cenário casa",
+      "foto": "cenarios-casa.jpg"
+    },
+    {
+      "id": "cenarios/cozinha",
+      "categoria": "cenarios",
+      "chave": "cozinha",
+      "nome": "Cozinha",
+      "uso": "K.cenario('cozinha')",
+      "cenario": "cozinha",
+      "pedir": "faz no cenário cozinha",
+      "foto": "cenarios-cozinha.jpg"
+    },
+    {
+      "id": "cenarios/sala",
+      "categoria": "cenarios",
+      "chave": "sala",
+      "nome": "Sala",
+      "uso": "K.cenario('sala')",
+      "cenario": "sala",
+      "pedir": "faz no cenário sala",
+      "foto": "cenarios-sala.jpg"
+    },
+    {
+      "id": "cenarios/praia",
+      "categoria": "cenarios",
+      "chave": "praia",
+      "nome": "Praia",
+      "uso": "K.cenario('praia')",
+      "cenario": "praia",
+      "pedir": "faz no cenário praia",
+      "foto": "cenarios-praia.jpg"
+    },
+    {
+      "id": "cenarios/fundo_do_mar",
+      "categoria": "cenarios",
+      "chave": "fundo_do_mar",
+      "nome": "Fundo do mar",
+      "uso": "K.cenario('fundo_do_mar')",
+      "cenario": "fundo_do_mar",
+      "pedir": "faz no cenário fundo do mar",
+      "foto": "cenarios-fundo_do_mar.jpg"
+    },
+    {
+      "id": "cenarios/espaco",
+      "categoria": "cenarios",
+      "chave": "espaco",
+      "nome": "Espaço",
+      "uso": "K.cenario('espaco')",
+      "cenario": "espaco",
+      "pedir": "faz no cenário espaço",
+      "foto": "cenarios-espaco.jpg"
+    },
+    {
+      "id": "cenarios/lua",
+      "categoria": "cenarios",
+      "chave": "lua",
+      "nome": "Lua",
+      "uso": "K.cenario('lua')",
+      "cenario": "lua",
+      "pedir": "faz no cenário lua",
+      "foto": "cenarios-lua.jpg"
+    },
+    {
+      "id": "cenarios/fazenda",
+      "categoria": "cenarios",
+      "chave": "fazenda",
+      "nome": "Fazenda",
+      "uso": "K.cenario('fazenda')",
+      "cenario": "fazenda",
+      "pedir": "faz no cenário fazenda",
+      "foto": "cenarios-fazenda.jpg"
+    },
+    {
+      "id": "cenarios/floresta",
+      "categoria": "cenarios",
+      "chave": "floresta",
+      "nome": "Floresta",
+      "uso": "K.cenario('floresta')",
+      "cenario": "floresta",
+      "pedir": "faz no cenário floresta",
+      "foto": "cenarios-floresta.jpg"
+    },
+    {
+      "id": "cenarios/deserto",
+      "categoria": "cenarios",
+      "chave": "deserto",
+      "nome": "Deserto",
+      "uso": "K.cenario('deserto')",
+      "cenario": "deserto",
+      "pedir": "faz no cenário deserto",
+      "foto": "cenarios-deserto.jpg"
+    },
+    {
+      "id": "cenarios/consultorio",
+      "categoria": "cenarios",
+      "chave": "consultorio",
+      "nome": "Consultório",
+      "uso": "K.cenario('consultorio')",
+      "cenario": "consultorio",
+      "pedir": "faz no cenário consultório",
+      "foto": "cenarios-consultorio.jpg"
+    },
+    {
+      "id": "cenarios/oficina",
+      "categoria": "cenarios",
+      "chave": "oficina",
+      "nome": "Oficina",
+      "uso": "K.cenario('oficina')",
+      "cenario": "oficina",
+      "pedir": "faz no cenário oficina",
+      "foto": "cenarios-oficina.jpg"
+    },
+    {
+      "id": "cenarios/escritorio",
+      "categoria": "cenarios",
+      "chave": "escritorio",
+      "nome": "Escritório",
+      "uso": "K.cenario('escritorio')",
+      "cenario": "escritorio",
+      "pedir": "faz no cenário escritório",
+      "foto": "cenarios-escritorio.jpg"
+    },
+    {
+      "id": "cenarios/estudio",
+      "categoria": "cenarios",
+      "chave": "estudio",
+      "nome": "Estúdio",
+      "uso": "K.cenario('estudio')",
+      "cenario": "estudio",
+      "pedir": "faz no cenário estúdio",
+      "foto": "cenarios-estudio.jpg"
+    },
+    {
+      "id": "personagens/menino",
+      "categoria": "personagens",
+      "chave": "menino",
+      "nome": "Menino",
+      "uso": "K.boneco({})",
+      "tipo": "menino",
+      "roupa": "camiseta",
+      "cores": {
+        "camiseta": "#f2c94c",
+        "bermuda": "#2a4a92",
+        "tenis": "#3a7be0",
+        "cabelo": "#3a2418",
+        "pele": "#e6b48a"
+      },
+      "pedir": "o personagem é menino",
+      "foto": "personagens-menino.jpg"
+    },
+    {
+      "id": "personagens/menino-moletom",
+      "categoria": "personagens",
+      "chave": "menino-moletom",
+      "nome": "Menino de moletom",
+      "uso": "K.boneco({\"roupa\":\"moletom\"})",
+      "tipo": "menino",
+      "roupa": "moletom",
+      "cores": {
+        "moletom": "#f5c518",
+        "punho": "#d9a514",
+        "calca": "#1e2b4f",
+        "mochila": "#3a3f4a",
+        "cabelo": "#3a2418",
+        "pele": "#e6b48a"
+      },
+      "pedir": "o personagem é menino de moletom",
+      "foto": "personagens-menino-moletom.jpg"
+    },
+    {
+      "id": "personagens/menina",
+      "categoria": "personagens",
+      "chave": "menina",
+      "nome": "Menina",
+      "uso": "K.boneco({\"tipo\":\"menina\"})",
+      "tipo": "menina",
+      "roupa": null,
+      "cores": {
+        "vestido": "#d8343a",
+        "cabeloMenina": "#4a2616",
+        "pele": "#e6b48a"
+      },
+      "pedir": "o personagem é menina",
+      "foto": "personagens-menina.jpg"
+    },
+    {
+      "id": "personagens/doutor",
+      "categoria": "personagens",
+      "chave": "doutor",
+      "nome": "Doutor",
+      "uso": "K.boneco({\"tipo\":\"doutor\"})",
+      "tipo": "doutor",
+      "roupa": null,
+      "cores": {
+        "jaleco": "#f4f7f6",
+        "camisa": "#12355b",
+        "gravata": "#2ec4b6",
+        "calca": "#6b7280",
+        "sapato": "#6b3f22",
+        "cabelo": "#ececec",
+        "pele": "#e6b48a"
+      },
+      "pedir": "o personagem é doutor",
+      "foto": "personagens-doutor.jpg"
+    },
+    {
+      "id": "personagens/operario",
+      "categoria": "personagens",
+      "chave": "operario",
+      "nome": "Operário",
+      "uso": "K.boneco({\"tipo\":\"operario\"})",
+      "tipo": "operario",
+      "roupa": null,
+      "cores": {
+        "camiseta": "#f27c22",
+        "colete": "#f5d20a",
+        "calca": "#31577e",
+        "bota": "#2a221c",
+        "capacete": "#f5c518",
+        "cabelo": "#2b1b16",
+        "barba": "#2b1b16",
+        "pele": "#c98f62"
+      },
+      "pedir": "o personagem é operário",
+      "foto": "personagens-operario.jpg"
+    },
+    {
+      "id": "bichos/gato",
+      "categoria": "bichos",
+      "chave": "gato",
+      "nome": "Gato",
+      "uso": "K.gato()",
+      "pedir": "põe o gato no vídeo",
+      "foto": "bichos-gato.jpg"
+    },
+    {
+      "id": "bichos/cachorro",
+      "categoria": "bichos",
+      "chave": "cachorro",
+      "nome": "Cachorro",
+      "uso": "K.cachorro()",
+      "pedir": "põe o cachorro no vídeo",
+      "foto": "bichos-cachorro.jpg"
+    },
+    {
+      "id": "bichos/ornitorrinco",
+      "categoria": "bichos",
+      "chave": "ornitorrinco",
+      "nome": "Ornitorrinco",
+      "uso": "K.ornitorrinco()",
+      "pedir": "põe o ornitorrinco no vídeo",
+      "foto": "bichos-ornitorrinco.jpg"
+    },
+    {
+      "id": "bichos/camaleao",
+      "categoria": "bichos",
+      "chave": "camaleao",
+      "nome": "Camaleão",
+      "uso": "K.camaleao()",
+      "pedir": "põe o camaleão no vídeo",
+      "foto": "bichos-camaleao.jpg"
+    },
+    {
+      "id": "bichos/mosquita",
+      "categoria": "bichos",
+      "chave": "mosquita",
+      "nome": "Mosquito",
+      "uso": "K.mosquita()",
+      "pedir": "põe o mosquito no vídeo",
+      "foto": "bichos-mosquita.jpg"
+    },
+    {
+      "id": "bichos/mosca",
+      "categoria": "bichos",
+      "chave": "mosca",
+      "nome": "Mosca",
+      "uso": "K.mosca()",
+      "pedir": "põe a mosca no vídeo",
+      "foto": "bichos-mosca.jpg"
+    },
+    {
+      "id": "objetos/computador",
+      "categoria": "objetos",
+      "chave": "computador",
+      "nome": "Computador",
+      "uso": "K.computador()",
+      "pedir": "põe o computador no vídeo",
+      "foto": "objetos-computador.jpg"
+    },
+    {
+      "id": "objetos/celular",
+      "categoria": "objetos",
+      "chave": "celular",
+      "nome": "Celular",
+      "uso": "K.celular()",
+      "pedir": "põe o celular no vídeo",
+      "foto": "objetos-celular.jpg"
+    },
+    {
+      "id": "objetos/carro",
+      "categoria": "objetos",
+      "chave": "carro",
+      "nome": "Carro",
+      "uso": "K.carro()",
+      "pedir": "põe o carro no vídeo",
+      "foto": "objetos-carro.jpg"
+    },
+    {
+      "id": "objetos/casa",
+      "categoria": "objetos",
+      "chave": "casa",
+      "nome": "Casa",
+      "uso": "K.casa()",
+      "pedir": "põe a casa no vídeo",
+      "artigo": "a",
+      "foto": "objetos-casa.jpg"
+    },
+    {
+      "id": "objetos/predio",
+      "categoria": "objetos",
+      "chave": "predio",
+      "nome": "Prédio",
+      "uso": "K.predio(10)",
+      "pedir": "põe o prédio no vídeo",
+      "foto": "objetos-predio.jpg"
+    },
+    {
+      "id": "objetos/arvore",
+      "categoria": "objetos",
+      "chave": "arvore",
+      "nome": "Árvore",
+      "uso": "K.arvore(x, z, tamanho)",
+      "pedir": "põe a árvore no vídeo",
+      "artigo": "a",
+      "foto": "objetos-arvore.jpg"
+    },
+    {
+      "id": "objetos/coqueiro",
+      "categoria": "objetos",
+      "chave": "coqueiro",
+      "nome": "Coqueiro",
+      "uso": "K.coqueiro(pos)",
+      "pedir": "põe o coqueiro no vídeo",
+      "foto": "objetos-coqueiro.jpg"
+    },
+    {
+      "id": "objetos/bicicleta",
+      "categoria": "objetos",
+      "chave": "bicicleta",
+      "nome": "Bicicleta",
+      "uso": "K.bicicleta()",
+      "pedir": "põe a bicicleta no vídeo",
+      "artigo": "a",
+      "foto": "objetos-bicicleta.jpg"
+    },
+    {
+      "id": "objetos/navio",
+      "categoria": "objetos",
+      "chave": "navio",
+      "nome": "Navio",
+      "uso": "K.navio()",
+      "pedir": "põe o navio no vídeo",
+      "foto": "objetos-navio.jpg"
+    },
+    {
+      "id": "objetos/peixe",
+      "categoria": "objetos",
+      "chave": "peixe",
+      "nome": "Peixe",
+      "uso": "K.peixe()",
+      "pedir": "põe o peixe no vídeo",
+      "foto": "objetos-peixe.jpg"
+    },
+    {
+      "id": "objetos/tubarao",
+      "categoria": "objetos",
+      "chave": "tubarao",
+      "nome": "Tubarão",
+      "uso": "K.tubarao()",
+      "pedir": "põe o tubarão no vídeo",
+      "foto": "objetos-tubarao.jpg"
+    },
+    {
+      "id": "objetos/foguete",
+      "categoria": "objetos",
+      "chave": "foguete",
+      "nome": "Foguete",
+      "uso": "K.foguete()",
+      "pedir": "põe o foguete no vídeo",
+      "foto": "objetos-foguete.jpg"
+    },
+    {
+      "id": "objetos/modulo-lunar",
+      "categoria": "objetos",
+      "chave": "modulo-lunar",
+      "nome": "Módulo lunar",
+      "uso": "K.moduloLunar()",
+      "pedir": "põe o módulo lunar no vídeo",
+      "foto": "objetos-modulo-lunar.jpg"
+    },
+    {
+      "id": "objetos/capsula",
+      "categoria": "objetos",
+      "chave": "capsula",
+      "nome": "Cápsula espacial",
+      "uso": "K.capsula()",
+      "pedir": "põe a cápsula espacial no vídeo",
+      "artigo": "a",
+      "foto": "objetos-capsula.jpg"
+    },
+    {
+      "id": "objetos/satelite",
+      "categoria": "objetos",
+      "chave": "satelite",
+      "nome": "Satélite",
+      "uso": "K.satelite()",
+      "pedir": "põe o satélite no vídeo",
+      "foto": "objetos-satelite.jpg"
+    },
+    {
+      "id": "objetos/terra",
+      "categoria": "objetos",
+      "chave": "terra",
+      "nome": "Planeta Terra",
+      "uso": "K.planeta('terra')",
+      "pedir": "põe o planeta terra no vídeo",
+      "foto": "objetos-terra.jpg"
+    },
+    {
+      "id": "objetos/lua",
+      "categoria": "objetos",
+      "chave": "lua",
+      "nome": "Lua",
+      "uso": "K.planeta('lua')",
+      "pedir": "põe a lua no vídeo",
+      "artigo": "a",
+      "foto": "objetos-lua.jpg"
+    },
+    {
+      "id": "objetos/paraquedas",
+      "categoria": "objetos",
+      "chave": "paraquedas",
+      "nome": "Paraquedas",
+      "uso": "K.paraquedas()",
+      "pedir": "põe o paraquedas no vídeo",
+      "foto": "objetos-paraquedas.jpg"
+    },
+    {
+      "id": "objetos/balao",
+      "categoria": "objetos",
+      "chave": "balao",
+      "nome": "Balão",
+      "uso": "K.balao()",
+      "pedir": "põe o balão no vídeo",
+      "foto": "objetos-balao.jpg"
+    },
+    {
+      "id": "objetos/torneira",
+      "categoria": "objetos",
+      "chave": "torneira",
+      "nome": "Torneira",
+      "uso": "K.torneira(pos)",
+      "pedir": "põe a torneira no vídeo",
+      "artigo": "a",
+      "foto": "objetos-torneira.jpg"
+    },
+    {
+      "id": "objetos/balde",
+      "categoria": "objetos",
+      "chave": "balde",
+      "nome": "Balde",
+      "uso": "K.balde()",
+      "pedir": "põe o balde no vídeo",
+      "foto": "objetos-balde.jpg"
+    },
+    {
+      "id": "objetos/regador",
+      "categoria": "objetos",
+      "chave": "regador",
+      "nome": "Regador",
+      "uso": "K.regador()",
+      "pedir": "põe o regador no vídeo",
+      "foto": "objetos-regador.jpg"
+    },
+    {
+      "id": "objetos/flor",
+      "categoria": "objetos",
+      "chave": "flor",
+      "nome": "Flor no vaso",
+      "uso": "K.flor()",
+      "pedir": "põe a flor no vaso no vídeo",
+      "artigo": "a",
+      "foto": "objetos-flor.jpg"
+    },
+    {
+      "id": "objetos/tambor",
+      "categoria": "objetos",
+      "chave": "tambor",
+      "nome": "Tambor",
+      "uso": "K.tambor()",
+      "pedir": "põe o tambor no vídeo",
+      "foto": "objetos-tambor.jpg"
+    },
+    {
+      "id": "objetos/fogo",
+      "categoria": "objetos",
+      "chave": "fogo",
+      "nome": "Fogo",
+      "uso": "K.fogo()",
+      "pedir": "põe o fogo no vídeo",
+      "foto": "objetos-fogo.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/building-garage",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/building-garage",
+      "nome": "Garagem",
+      "uso": "K.modelo('kenney-cidade/building-garage', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/building-garage",
+      "foto": "modelos-kenney-cidade--building-garage.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/building-small-a",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/building-small-a",
+      "nome": "Casinha 1",
+      "uso": "K.modelo('kenney-cidade/building-small-a', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/building-small-a",
+      "foto": "modelos-kenney-cidade--building-small-a.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/building-small-b",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/building-small-b",
+      "nome": "Casinha 2",
+      "uso": "K.modelo('kenney-cidade/building-small-b', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/building-small-b",
+      "foto": "modelos-kenney-cidade--building-small-b.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/building-small-c",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/building-small-c",
+      "nome": "Casinha 3",
+      "uso": "K.modelo('kenney-cidade/building-small-c', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/building-small-c",
+      "foto": "modelos-kenney-cidade--building-small-c.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/building-small-d",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/building-small-d",
+      "nome": "Casinha 4",
+      "uso": "K.modelo('kenney-cidade/building-small-d', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/building-small-d",
+      "foto": "modelos-kenney-cidade--building-small-d.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/grass",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/grass",
+      "nome": "Lote de grama",
+      "uso": "K.modelo('kenney-cidade/grass', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/grass",
+      "foto": "modelos-kenney-cidade--grass.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/grass-trees",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/grass-trees",
+      "nome": "Grama com árvores",
+      "uso": "K.modelo('kenney-cidade/grass-trees', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/grass-trees",
+      "foto": "modelos-kenney-cidade--grass-trees.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/grass-trees-tall",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/grass-trees-tall",
+      "nome": "Grama com árvores altas",
+      "uso": "K.modelo('kenney-cidade/grass-trees-tall', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/grass-trees-tall",
+      "foto": "modelos-kenney-cidade--grass-trees-tall.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/pavement",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/pavement",
+      "nome": "Calçada",
+      "uso": "K.modelo('kenney-cidade/pavement', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/pavement",
+      "foto": "modelos-kenney-cidade--pavement.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/pavement-fountain",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/pavement-fountain",
+      "nome": "Praça com chafariz",
+      "uso": "K.modelo('kenney-cidade/pavement-fountain', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/pavement-fountain",
+      "foto": "modelos-kenney-cidade--pavement-fountain.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/road-corner",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/road-corner",
+      "nome": "Esquina",
+      "uso": "K.modelo('kenney-cidade/road-corner', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/road-corner",
+      "foto": "modelos-kenney-cidade--road-corner.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/road-intersection",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/road-intersection",
+      "nome": "Cruzamento",
+      "uso": "K.modelo('kenney-cidade/road-intersection', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/road-intersection",
+      "foto": "modelos-kenney-cidade--road-intersection.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/road-split",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/road-split",
+      "nome": "Rua em T",
+      "uso": "K.modelo('kenney-cidade/road-split', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/road-split",
+      "foto": "modelos-kenney-cidade--road-split.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/road-straight",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/road-straight",
+      "nome": "Rua reta",
+      "uso": "K.modelo('kenney-cidade/road-straight', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/road-straight",
+      "foto": "modelos-kenney-cidade--road-straight.jpg"
+    },
+    {
+      "id": "modelos/kenney-cidade/road-straight-lightposts",
+      "categoria": "modelos",
+      "chave": "kenney-cidade/road-straight-lightposts",
+      "nome": "Rua com postes",
+      "uso": "K.modelo('kenney-cidade/road-straight-lightposts', { escala: 5 })",
+      "pacote": "kenney-cidade",
+      "pedir": "usa o modelo kenney-cidade/road-straight-lightposts",
+      "foto": "modelos-kenney-cidade--road-straight-lightposts.jpg"
+    }
+  ]
+}

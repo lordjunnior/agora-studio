@@ -1,0 +1,27 @@
+{
+  "titulo": "Árvore bebendo água",
+  "capa": "Como a árvore\nbebe *água*?",
+  "cor": "#2fb54a",
+  "arroba": "@pordentrodascoisas",
+  "estilo": "redondo",
+  "fps": 60,
+  "voz": {"motor": "teste"},
+  "alvoPpm": 190,
+  "frases": [
+    {"texto": "Como uma árvore puxa água até lá em cima sem bomba nenhuma?", "plano": "gancho", "mostra": ["arvore", "personagem"], "gancho": true},
+    {"texto": "Se você deixa um vaso de planta sem água no sol, as folhas murcham no mesmo dia.", "plano": "murcha", "mostra": ["vaso", "personagem"]},
+    {"texto": "Mas a água da chuva escorre e fica lá embaixo, na terra.", "plano": "chao", "mostra": ["tronco", "personagem"], "jogo": "falha"},
+    {"texto": "Então a árvore espalha raízes finas, que bebem a água do solo.", "plano": "raizes", "mostra": ["raizes", "personagem"], "jogo": "conserta", "rebobina": 0.6},
+    {"texto": "Essas são as *raízes*.", "plano": "raizes_rotulo", "mostra": ["raizes"]},
+    {"texto": "Mas a gravidade puxa a água pra baixo, e o tronco é alto.", "plano": "gravidade", "mostra": ["tronco"], "jogo": "falha"},
+    {"texto": "Então o tronco tem canudinhos finíssimos, e cada folha que solta vapor puxa a água pra cima.", "plano": "canudos", "mostra": ["canudos", "personagem"], "jogo": "corrige"},
+    {"texto": "Esses canudinhos são o *xilema*.", "plano": "xilema_rotulo", "mostra": ["canudos"]},
+    {"texto": "É por isso que uma árvore grande puxa uns 400 litros de água num dia.", "plano": "litros", "mostra": ["arvore", "personagem"]},
+    {"texto": "Por fora, é só uma árvore parada.", "plano": "por_fora", "mostra": ["arvore", "personagem"]},
+    {"texto": "Por dentro, são raízes bebendo, canudinhos subindo e folhas soltando vapor o dia inteiro.", "plano": "por_dentro", "mostra": ["tronco", "copa"]},
+    {"texto": "E segue o canal pra ver o próximo.", "plano": "segue", "mostra": ["personagem"]}
+  ],
+  "cauda": {"segundos": 1.6, "plano": "cartao"},
+  "trilha": {"arquivo": "trilha", "ganho": 0.22},
+  "efeitos": {"abaixa": true}
+}

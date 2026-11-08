@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run:*)",
+      "Bash(npm install)",
+      "Bash(node --version)",
+      "Bash(node motor/instalar.js:*)",
+      "Bash(node motor/conferir.js:*)",
+      "Bash(node motor/render.js:*)",
+      "Bash(node motor/chave.js:*)",
+      "Bash(node motor/vozes.js:*)",
+      "Bash(node motor/testar-voz.js:*)",
+      "Bash(node motor/colar.js:*)",
+      "Bash(node motor/quadros.js:*)",
+      "Bash(node motor/voicestudio.js:*)",
+      "Bash(node motor/painel.js:*)",
+      "Bash(node motor/canal.js:*)",
+      "Bash(node motor/ver-modelos.js:*)",
+      "Bash(node motor/custos.js:*)",
+      "Bash(node motor/importar.js:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v node >/dev/null 2>&1 && node \"$CLAUDE_PROJECT_DIR/motor/painel.js\" --link || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v node >/dev/null 2>&1 && node \"$CLAUDE_PROJECT_DIR/motor/custos.js\" --auto || true",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

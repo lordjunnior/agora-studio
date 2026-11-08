@@ -1,0 +1,26 @@
+node_modules/
+.env
+.env.local
+.env.txt
+.env.local.txt
+env.txt
+*.mp4
+videos/*/narracao/
+videos/*/narracao.wav
+videos/*/timeline.json
+videos/*/previa-*.jpg
+videos/*/testes/
+videos/*/versoes/
+referencias/*/testes/
+referencias/*/narracao/
+referencias/*/timeline.json
+canal/testes-de-voz/
+.DS_Store
+canal/referencias/
+# O canal de quem usa (nasce de motor/canal-em-branco/ na primeira vez): nunca vai no zip nem no git
+canal/*.md
+canal/logo.*
+canal/banner.*
+canal/pecas/*.js
+canal/respostas*.txt
+canal/importado-*/

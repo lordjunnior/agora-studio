@@ -1,0 +1,346 @@
+{
+"motor/abrir-painel.js": [
+"4455679b933c9302",
+"5a97fb1656c70e9f"
+],
+"motor/bichos.js": [
+"32c13d209f9bc64f"
+],
+"motor/canal-arquivos.js": [
+"6171d42b3d92ef27"
+],
+"motor/canal-em-branco/aprendizados.md": [
+"43c04d76eed896d9"
+],
+"motor/canal-em-branco/canal.md": [
+"ed2569b66ddf3366"
+],
+"motor/canal-em-branco/historico.md": [
+"03ba1a2127bddbaa"
+],
+"motor/canal-em-branco/identidade.md": [
+"14ecd3daf1e2927c"
+],
+"motor/canal-em-branco/pauta.md": [
+"ffe68471f05804e5"
+],
+"motor/canal-em-branco/perfil.md": [
+"0154c2727b753970"
+],
+"motor/canal.js": [
+"6150e7f40c59f199"
+],
+"motor/cenarios.js": [
+"ce157dbc1a2c1c7a",
+"e1b12ae8524d881d"
+],
+"motor/cenas-modelo/montagem.js": [
+"0a4d13f929f310fa",
+"33ef6c644597dc72",
+"3624138f4f85094c",
+"57393237f1e13ef0",
+"5b0926728493dd94",
+"98c01a71ea1e9825",
+"a804da8b1eebdbaa"
+],
+"motor/chave.js": [
+"25abe936704a18a4",
+"bf7892ad440ad35b",
+"db4c2c17a70a1b82"
+],
+"motor/colar.js": [
+"171f2c21e41998e6",
+"3f7829c76d918335",
+"7b57401f622ebcd0",
+"d1ce8314bee88737"
+],
+"motor/conferir.js": [
+"11f6c37753a075f5",
+"195816b423c09dc5",
+"2b8bf80d1c33b583",
+"9bf5dd0ac77ec1cb",
+"a53144c57085c1b0",
+"f7f6451ac7d04911"
+],
+"motor/custos.js": [
+"c9584c03daf6bca7"
+],
+"motor/importar.js": [
+"ad47f8c6570e34be",
+"fcf55f607a2363ba"
+],
+"motor/instalar.js": [
+"3b31907e41176b8f",
+"67c37e5a9dbbf3ef"
+],
+"motor/kit.js": [
+"1c12ac9003d60066",
+"5e8e5441007d5765",
+"82cdd3c73e7f025e",
+"c1e0f31f36e7e656",
+"fce9aa1410c377b1"
+],
+"motor/modelos/ORIGEM.md": [
+"0e26fc88ba3b3ffc"
+],
+"motor/modelos/kenney-cidade.js": [
+"933a5a974ccc585c"
+],
+"motor/navegador.js": [
+"a1acf097756b756c"
+],
+"motor/painel.html": [
+"37dee5a2b3cb7595",
+"644bb6435eac7bf3",
+"88acf55ddb64e16d"
+],
+"motor/painel.js": [
+"8ab040d5cc471753",
+"b56bba0888604bed",
+"f39157f0ea742eef"
+],
+"motor/potencializar.js": [
+"61f05f43dcc0f13e"
+],
+"motor/quadros.js": [
+"ae2c9835a9445f47"
+],
+"motor/render.js": [
+"1f12fe6a94668351",
+"88d16497c0668aee",
+"8c7b0461f347e9d9",
+"aab9b62b17cdac77",
+"cbdd7b6e2a26bab3",
+"db6564097aeefe52",
+"e6bb3d1d28541255",
+"fcfdaec291be5991"
+],
+"motor/sintetizar-sons.js": [
+"00f02497fec58166"
+],
+"motor/sons/ORIGEM.md": [
+"78c3c6940c327d16"
+],
+"motor/sons/agua.wav": [
+"c19a6f952c2315a5"
+],
+"motor/sons/apito.wav": [
+"57732f18a4583f08"
+],
+"motor/sons/avanca.wav": [
+"d5d7edcf6bb5a2c9"
+],
+"motor/sons/baque-1.ogg": [
+"b2b75f013ecb675c"
+],
+"motor/sons/baque-2.ogg": [
+"c61b666955b1efc2"
+],
+"motor/sons/baque-3.ogg": [
+"0b8df7ffc157a0fe"
+],
+"motor/sons/bip.wav": [
+"57129dea2f9da9c2"
+],
+"motor/sons/bolhas.wav": [
+"16acc00b3bb124f7"
+],
+"motor/sons/bomba.wav": [
+"51e93941e58ca3d1"
+],
+"motor/sons/brilho.wav": [
+"54a9b2be7059ac70"
+],
+"motor/sons/buzina.wav": [
+"34d28474894d681c"
+],
+"motor/sons/certo.ogg": [
+"778f174aeb2eb8c2"
+],
+"motor/sons/clique-1.ogg": [
+"6463c9badbc913b6"
+],
+"motor/sons/clique-2.ogg": [
+"c3337913b1b58c70"
+],
+"motor/sons/congela.wav": [
+"3f698c3287dc8cdf"
+],
+"motor/sons/desconstrucao.wav": [
+"fb21016d22af6f4b"
+],
+"motor/sons/desliga.wav": [
+"61757eba3b973335"
+],
+"motor/sons/ding.wav": [
+"2a0e4c34b2913675"
+],
+"motor/sons/errado.ogg": [
+"35f5a9de6ec528f0"
+],
+"motor/sons/esguicho.wav": [
+"bee9d8314bc37585"
+],
+"motor/sons/estalo.wav": [
+"9b97d94fc4a01e9f"
+],
+"motor/sons/estrondo.wav": [
+"977aa7e39fb68657"
+],
+"motor/sons/etiqueta.ogg": [
+"c0f735670be0a38a"
+],
+"motor/sons/festa.ogg": [
+"c125e1913403c2b1"
+],
+"motor/sons/final.ogg": [
+"3231cf364a61736f"
+],
+"motor/sons/fissao.wav": [
+"fe0a11e8ff6da78e"
+],
+"motor/sons/fogo.wav": [
+"fa779b0231630e5c"
+],
+"motor/sons/foguete.wav": [
+"665d81b5f544ee5e"
+],
+"motor/sons/liga.wav": [
+"471e261a45278df0"
+],
+"motor/sons/madeira-1.ogg": [
+"894be07d2029526c"
+],
+"motor/sons/madeira-2.ogg": [
+"cddbb1b87ab7ad72"
+],
+"motor/sons/madeira-3.ogg": [
+"25c33c00e35a6d39"
+],
+"motor/sons/metal-1.ogg": [
+"af145ddb661aeeff"
+],
+"motor/sons/metal-2.ogg": [
+"d86571ae1b4a9d20"
+],
+"motor/sons/metal-3.ogg": [
+"a79b511bbf7ec790"
+],
+"motor/sons/mosquito.wav": [
+"e2afa22fc335bf54"
+],
+"motor/sons/ondas.wav": [
+"887a450c3eda6d32"
+],
+"motor/sons/paraquedas.wav": [
+"992b078b6429229d"
+],
+"motor/sons/passo-1.ogg": [
+"c087600e0cf894a5"
+],
+"motor/sons/passo-2.ogg": [
+"2a5515acedf71303"
+],
+"motor/sons/passo-3.ogg": [
+"955c4d6011700381"
+],
+"motor/sons/passo-4.ogg": [
+"ae41046908fcfb95"
+],
+"motor/sons/passo-5.ogg": [
+"c3041dfec8152fcb"
+],
+"motor/sons/pedra-1.ogg": [
+"97ce13f67b7b9029"
+],
+"motor/sons/pedra-2.ogg": [
+"a0ccab4e4c2b6ad1"
+],
+"motor/sons/pedra-3.ogg": [
+"5851515150e03e6f"
+],
+"motor/sons/pingo.wav": [
+"5472fe8312caa572"
+],
+"motor/sons/racha-1.ogg": [
+"2b2a669e55d2ca26"
+],
+"motor/sons/racha-2.ogg": [
+"3a5285db9ae01d4b"
+],
+"motor/sons/racha-3.ogg": [
+"7c3d0938e9c52981"
+],
+"motor/sons/range-1.ogg": [
+"095eb25efd7ca901"
+],
+"motor/sons/range-2.ogg": [
+"54fbb1ea2db9220d"
+],
+"motor/sons/rebobina.wav": [
+"143dabe6983f6be7"
+],
+"motor/sons/respingo.wav": [
+"72f434520743f2df"
+],
+"motor/sons/rotulo.ogg": [
+"9ae0dbf96622ad52"
+],
+"motor/sons/tampa-1.ogg": [
+"5443292c0e7dfd66"
+],
+"motor/sons/tampa-2.ogg": [
+"ee9a5c63c5503926"
+],
+"motor/sons/tampa-3.ogg": [
+"1e8494eaddf0c8e1"
+],
+"motor/sons/torneira.ogg": [
+"0283795c7691cfbf"
+],
+"motor/sons/trava.ogg": [
+"90c2e0a0e26b18c5"
+],
+"motor/sons/trilha.wav": [
+"2c1c6deb5e3d88be"
+],
+"motor/sons/turbina.wav": [
+"c1bb62ac3e8b58fc"
+],
+"motor/sons/vapor.wav": [
+"e920bb775edd008e"
+],
+"motor/sons/whoosh.wav": [
+"3397d1b65009eca5"
+],
+"motor/sons/zap.wav": [
+"14acfd86e99b00b4"
+],
+"motor/sons/zumbido.wav": [
+"9a7e94b5825ef0e9"
+],
+"motor/testar-voz.js": [
+"72c6f8e1ba57e3ba",
+"80a044d3859bff3f",
+"869f67381189b796"
+],
+"motor/ver-cenarios.js": [
+"13c4c714a6996560"
+],
+"motor/ver-modelos.js": [
+"15deed193182b1ce"
+],
+"motor/voicestudio.js": [
+"bcd6d8fc770b6b51"
+],
+"motor/voz.js": [
+"32c032383188cc41",
+"9a275b9d4f4b0f47"
+],
+"motor/vozes.js": [
+"df9400871c838442"
+],
+"motor/zip.js": [
+"7aa96a1b5d30b143"
+]
+}

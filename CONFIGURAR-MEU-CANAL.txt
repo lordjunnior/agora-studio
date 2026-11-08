@@ -1,0 +1,218 @@
+################################################################
+  CONFIGURAR MEU CANAL · Máquina Preguiça 3D
+################################################################
+
+PRA IA (faça só isto, nesta ordem):
+1. Rode este comando no terminal, dentro da pasta da Máquina:
+      npm run canal
+   No Windows, se o npm der erro, use: npm.cmd run canal
+   Ele lê estas respostas sozinho e salva tudo no canal.
+2. Se o comando pedir, crie o arquivo canal/respostas.txt com
+   este texto inteiro, sem mudar nada, e rode o comando de novo.
+3. Mande pra pessoa a mensagem que o comando mostrar no fim.
+Não escreva as respostas nos arquivos você mesmo, não invente
+resposta e não mude mais nada.
+
+PRA VOCÊ (antes de colar na IA):
+- Escreva cada resposta depois de "Resposta:". Pode usar mais
+  de uma linha.
+- Nas perguntas com números, responda só o número.
+- Não sabe? Deixe em branco. Onde tem "Em branco:", vale o
+  padrão da Máquina; o resto dá pra completar depois, no painel.
+- A CHAVE da ElevenLabs não vai aqui (nunca cole ela na IA).
+- Terminou? Salve, selecione tudo (Ctrl+A ou Cmd+A), copie e
+  cole na conversa com a IA.
+- A sua IA só conversa e não roda comando? Cole no painel, em
+  Meu canal, no quadro "Preencher tudo de uma vez".
+
+=========================== O CANAL ============================
+
+[1] NOME DO CANAL
+Exemplo: Motor Curioso
+Resposta:
+
+[2] @ NAS REDES
+O mesmo no YouTube, no TikTok e no Instagram.
+Exemplo: @motorcurioso
+Em branco: o nome do canal, sem espaço
+Resposta:
+
+[3] DO QUE O CANAL FALA
+A Máquina brilha com "como funciona" e "como foi feito".
+Exemplo: como funcionam os carros por dentro: motor, freio,
+   pneu, câmbio
+Resposta:
+
+[4] QUEM ASSISTE
+Exemplo: gente curiosa que gosta de carro, de 15 a 40 anos
+Resposta:
+
+====================== O JEITO DOS VÍDEOS ======================
+
+[5] JEITO DE FALAR
+Exemplo: conversado e engraçado, como quem explica pra um amigo
+Em branco: conversado, como quem explica pra um amigo; frases
+   curtas e palavras simples
+Resposta:
+
+[6] O QUE EVITAR
+Exemplo: palavrão, jargão técnico sem explicar
+Em branco: palavrão, jargão técnico sem explicar, promessa que o
+   vídeo não cumpre
+Resposta:
+
+[7] ESTILO DO VÍDEO
+Exemplo: sério, como um documentário
+Em branco: conversado e rápido, com um pouco de humor
+Resposta:
+
+[8] MARCA REGISTRADA
+O que todo vídeo seu tem e o dos outros não.
+Exemplo: todo vídeo começa com o personagem quebrando a peça do
+   tema
+Em branco: todo vídeo começa com uma pergunta curiosa e monta a
+   coisa do zero, peça por peça
+Resposta:
+
+[9] ESTILO DA CAPA
+Exemplo: a pergunta em cima, o personagem com cara de susto e a
+   peça bem grande
+Em branco: a pergunta do vídeo em cima, o personagem com cara
+   exagerada e o objeto do tema mostrando o detalhe mais
+   estranho
+Resposta:
+
+[10] ASSINATURA DO FIM
+A frase que a voz fala no fim de todo vídeo.
+Exemplo: E segue o Motor Curioso.
+Em branco: "E segue o [nome do canal]."
+Resposta:
+
+[11] FECHAMENTO
+A frase que fecha a explicação, antes da chamada.
+Exemplo: Por fora, é só um pneu. Por dentro, é borracha, aço e
+   ar.
+Em branco: o "Por fora... Por dentro..." da Máquina
+Resposta:
+
+[12] CHAMADA DO FIM
+O pedido curto do fim (comentar, seguir).
+Exemplo: Qual peça a gente desmonta no próximo? Comenta aí.
+Em branco: "Qual coisa a gente desmonta no próximo? Comenta aí."
+Resposta:
+
+[13] HASHTAGS
+Até 5, as que vão em todo vídeo (a do tema de cada vídeo entra
+   sozinha).
+Exemplo: #carros #comofunciona #curiosidades
+Em branco: #comofunciona #curiosidades e o @ do canal
+Resposta:
+
+=========================== O VISUAL ===========================
+
+[14] VISUAL
+   1 = Caprichado e redondo (recomendado)
+   2 = Simples e facetado (o vídeo fica pronto mais rápido)
+Em branco: 1
+Resposta:
+
+[15] PERSONAGEM
+Quem aparece em todo vídeo. As fotos estão no painel, em Modelos
+   3D.
+   1 = Menino de camiseta
+   2 = Menino de moletom
+   3 = Menina de vestido
+   4 = Doutor (bom pra canal de saúde)
+   5 = Operário (bom pra canal de obra)
+Resposta:
+
+[16] COR DA ROUPA
+Um nome de cor (azul, verde escuro, coral...) ou um código como
+   #ff7a59.
+Exemplo: azul
+Resposta:
+
+[17] COR DO CABELO
+preto, castanho, castanho claro, loiro, ruivo, grisalho ou
+   branco.
+Resposta:
+
+[18] COR DA PELE
+clara, média, parda, morena ou negra.
+Resposta:
+
+[19] COMO É O PERSONAGEM
+O jeito dele, com as suas palavras.
+Exemplo: curioso e meio atrapalhado; leva susto com tudo
+Em branco: a Máquina descreve pelas escolhas acima
+Resposta:
+
+[20] CENÁRIO
+O lugar de todo vídeo quando o tema não pede outro. As fotos
+   estão no painel, em Modelos 3D.
+   1 = Canteiro de obras
+   2 = Natureza (campo e montanhas)
+   3 = Cidade
+   4 = Casa (frente com quintal)
+   5 = Cozinha
+   6 = Sala
+   7 = Praia
+   8 = Fundo do mar
+   9 = Espaço
+   10 = Lua
+   11 = Fazenda
+   12 = Floresta
+   13 = Deserto
+   14 = Consultório
+   15 = Oficina
+   16 = Escritório
+   17 = Estúdio (fundo liso)
+Resposta:
+
+[21] HORA
+   1 = Dia
+   2 = Fim de tarde
+   3 = Noite
+Em branco: 1
+Resposta:
+
+======================== A VOZ E A COR =========================
+
+[22] DE ONDE VEM A VOZ
+   1 = ElevenLabs (a mais natural; grátis pra testar, paga pra monetizar)
+   2 = VoiceStudio (grátis, roda no seu computador)
+   3 = Voz do computador (robótica: só pra testar)
+Resposta:
+
+[23] NOME OU ID DA VOZ
+ElevenLabs: o id da voz (não sabe? deixe em branco, a IA acha).
+   VoiceStudio: o nome que você deu pra voz lá. A CHAVE da
+   ElevenLabs não vai aqui.
+Resposta:
+
+[24] COMO É A VOZ
+Exemplo: narrador homem, animado e claro
+Em branco: voz clara e animada, em português do Brasil
+Resposta:
+
+[25] COR DO CANAL
+Vai na palavra em destaque da capa e no botão "Seguir" do fim.
+   Um nome de cor ou um código como #ff7a59.
+Exemplo: laranja
+Resposta:
+
+==== AS REDES (pode deixar em branco: a IA escreve depois) =====
+
+[26] DESCRIÇÃO NO YOUTUBE
+Até 1.000 letras.
+Resposta:
+
+[27] BIO NO TIKTOK
+Até 80 letras.
+Resposta:
+
+[28] BIO NO INSTAGRAM
+Até 150 letras.
+Resposta:
+
+############################# FIM ##############################
