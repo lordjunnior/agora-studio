@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import type { AgoraProject } from "./types";
-import { projectDurationInFrames, validateAgoraProject } from "./types";
+import { validateAgoraProject } from "./types";
 import { Cidade, Espaco } from "../exemplo/Exemplo";
 import { TimelineText } from "./TimelineText";
 import { TimelineMedia } from "./TimelineMedia";
@@ -21,7 +21,6 @@ export const ProjetoComposition: React.FC<Props> = ({ project }) => {
 
   const assets = new Map(validatedProject.assets.map((asset) => [asset.id, asset]));
   let cursor = 0;
-  const totalFrames = projectDurationInFrames(validatedProject);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#000" }}>
