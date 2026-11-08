@@ -52,7 +52,7 @@ Disponível para muxing, normalização, mixagem e operações de pós-processam
 
 **Implementado e validado:** leitura do projeto JSON, validação estrutural, cálculo da duração total, seleção de cenas registradas, composição vertical, trilhas de música e efeitos, legendas com temporização de palavras, overlays textuais e renderização MP4.
 
-**Ainda não integrado ao adaptador:** sincronização de narração com transcrição real, importação geral de mídia pelo manifesto, edição visual da linha do tempo, persistência e reabertura pela interface.
+**Editor visual — primeira versão:** o pacote `editor/` consome o mesmo contrato tipado e a composição Remotion. Inclui monitor de prévia com Remotion Player, trilhas temporais, seleção e reposicionamento de clipes, inspetor de propriedades, criação de trilhas vazias e importação/exportação de documentos JSON. A compilação de produção foi validada.\n\n**Ainda em desenvolvimento:** persistência automática e reabertura por projeto no servidor, upload de mídia pelo navegador, undo/redo, trim por alças, waveform, keyframes, multi-seleção e fila de renderização integrada à interface.
 
 ## Compatibilidade
 
