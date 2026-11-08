@@ -64,3 +64,9 @@ O projeto de composição declara React 18.3.1, Remotion 4.0.540, Three.js 0.171
 - Recriar imediatamente todos os personagens e ambientes.
 - Substituir a biblioteca 3D antes de inventariar e testar seus recursos.
 - Declarar integração completa antes de conectar mídia, persistência e interface.
+
+## Ponte de narração sincronizada
+
+`projeto/src/project/narrationAdapter.ts` contém `buildNarrationTracks()`, um adaptador tipado para converter a timeline legada de frases e palavras (tempos absolutos em segundos) em trilhas `voice` e `caption` do contrato ÁGORA. A conversão usa o FPS do projeto, transforma os tempos em frames relativos à frase e valida limites, durações e caminhos de áudio. Os segmentos de áudio são fornecidos explicitamente como manifesto (`assetId`, `src`, início e duração); o adaptador não inventa arquivos, não sintetiza voz e não presume onde os áudios estão armazenados.
+
+Estado: adaptador implementado e verificado pelo TypeScript. A ligação automática entre a geração de narração, os arquivos em cache e o carregamento de projetos ainda não está concluída. O motor atual da ElevenLabs já salva alinhamento por caractere e deriva tempos por palavra; a próxima integração deve expor esses resultados e os arquivos de áudio por frase num manifesto real antes de montar e renderizar o projeto.
