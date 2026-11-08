@@ -33,6 +33,7 @@ export const AgoraEditor: React.FC = () => {
   const duration = projectDurationInFrames(project);
   const fps = project.profile.fps;
   const seconds = duration / fps;
+  const timelineWidth = Math.max(100, seconds * 54 * zoom);
   const selectedTrack = project.tracks.find((track) => track.id === selected.trackId) ?? project.tracks[0];
   const selectedItem = selectedTrack?.items?.find((item) => item.id === selected.itemId);
   const ticks = useMemo(() => {
@@ -190,7 +191,7 @@ export const AgoraEditor: React.FC = () => {
     <section className="timeline-panel">
       <div className="timeline-toolbar"><strong>TIMELINE</strong><span>{formatTime(duration, fps)} · {duration} frames</span><span className="toolbar-spacer" /><button onClick={() => setZoom((value) => Math.max(0.5, value - 0.25))}>−</button><span>{Math.round(zoom * 100)}%</span><button onClick={() => setZoom((value) => Math.min(3, value + 0.25))}>+</button></div>
       <div className="timeline-scroll">
-        <div className="timeline-inner" style={{ width: `${Math.max(100, seconds * 54 * zoom)}px` }}>
+        <div className="timeline-inner" style={{ width: `${timelineWidth}px` }}>
           <div className="ruler-row"><div className="track-label">TEMPO</div><div className="ruler" onClick={(event) => { const rect = event.currentTarget.getBoundingClientRect(); seek(((event.clientX - rect.left) / rect.width) * duration); }}>
             {ticks.map((frame) => <span key={frame} style={{ left: `${(frame / duration) * 100}%` }}>{formatTime(frame, fps)}</span>)}
           </div></div>
@@ -205,7 +206,7 @@ export const AgoraEditor: React.FC = () => {
               </div>)}
             </div>
           </div>)}
-          <div className="playhead" style={{ left: `calc(150px + ${(currentFrame / duration) * 100}% )` }}><i /></div>
+          <div className="playhead" style={{ left: `${150 + (currentFrame / duration) * (timelineWidth - 150)}px` }}><i /></div>
         </div>
       </div>
     </section>
