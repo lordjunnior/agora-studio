@@ -133,6 +133,8 @@ export const AgoraEditor: React.FC = () => {
       const parsed = JSON.parse(await file.text()) as AgoraProject;
       validateAgoraProject(parsed);
       setProject(parsed);
+      setPast([]);
+      setFuture([]);
       setCurrentFrame(0);
       setSelected({ trackId: parsed.tracks[0]?.id ?? "" });
       setNotice("Projeto importado com sucesso");
