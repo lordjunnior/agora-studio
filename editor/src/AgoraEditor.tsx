@@ -153,7 +153,7 @@ export const AgoraEditor: React.FC = () => {
             compositionWidth={project.profile.width} compositionHeight={project.profile.height} fps={fps}
             style={{ height: "100%", width: "auto", maxWidth: "100%", aspectRatio: `${project.profile.width}/${project.profile.height}` }}
             controls={false} clickToPlay={false} spaceKeyToPlayOrPause={false}
-            onFrameUpdate={(frame) => setCurrentFrame(frame)}
+            onFrameUpdate={(frame: number) => setCurrentFrame(frame)}
             onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} />
         </div>
         <div className="transport">
