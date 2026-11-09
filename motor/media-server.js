@@ -51,6 +51,16 @@ const server = http.createServer(async (req, res) => {
   }
   if (req.method === "GET" && url.pathname === "/health") return json(res, 200, { ok: true, service: "agora-media" });
   if (req.method === "GET" && url.pathname === "/api/media") return json(res, 200, readLibrary());
+  if (req.method === "DELETE" && url.pathname.startsWith("/api/media/")) {
+    const assetId = decodeURIComponent(url.pathname.slice("/api/media/".length));
+    if (!assetId || assetId.includes("/")) return json(res, 400, { error: "Identificador de mídia inválido." });
+    const library = readLibrary();
+    const index = library.assets.findIndex((asset) => asset.id === assetId);
+    if (index < 0) return json(res, 404, { error: "Mídia não encontrada na biblioteca." });
+    library.assets.splice(index, 1);
+    saveLibrary(library);
+    return json(res, 200, { ok: true, assetId, filePreserved: true });
+  }
   if (req.method === "POST" && url.pathname === "/api/media/upload") {
     const originalName = safeName(decodeURIComponent(String(req.headers["x-file-name"] || "arquivo")));
     const extension = path.extname(originalName).toLowerCase();
