@@ -72,6 +72,8 @@ export const AgoraEditor: React.FC = () => {
   const importRef = useRef<HTMLInputElement>(null);
   const mediaImportRef = useRef<HTMLInputElement>(null);
   const [libraryAssets, setLibraryAssets] = useState<AgoraAsset[]>([]);
+  const [librarySearch, setLibrarySearch] = useState("");
+  const [libraryFilter, setLibraryFilter] = useState<"all" | "image" | "video" | "audio">("all");
   const [audioTrackType, setAudioTrackType] = useState<"voice" | "music" | "sfx">("voice");
   const [uploading, setUploading] = useState(false);
   const [renderJobs, setRenderJobs] = useState<RenderJob[]>([]);
@@ -83,6 +85,11 @@ export const AgoraEditor: React.FC = () => {
   const timelineWidth = Math.max(100, seconds * 54 * zoom);
   const selectedTrack = project.tracks.find((track) => track.id === selected.trackId) ?? project.tracks[0];
   const selectedItem = selectedTrack?.items?.find((item) => item.id === selected.itemId);
+  const filteredLibraryAssets = libraryAssets.filter((asset) => {
+    const matchesType = libraryFilter === "all" || asset.type === libraryFilter;
+    const matchesName = (asset.name ?? asset.id).toLocaleLowerCase().includes(librarySearch.trim().toLocaleLowerCase());
+    return matchesType && matchesName;
+  });
   const ticks = useMemo(() => {
     const step = Math.max(30, Math.round((fps * 5) / 30) * 30);
     return Array.from({ length: Math.ceil(duration / step) + 1 }, (_, index) => index * step).filter((frame) => frame <= duration);
@@ -285,6 +292,20 @@ export const AgoraEditor: React.FC = () => {
     insertAssetIntoTimeline(asset, seconds);
   };
 
+  const removeLibraryAsset = async (asset: AgoraAsset) => {
+    const name = asset.name ?? asset.id;
+    if (!window.confirm(`Remover "${name}" da biblioteca? O arquivo físico será preservado e projetos existentes continuarão funcionando.`)) return;
+    try {
+      const response = await fetch(`/api/media/${encodeURIComponent(asset.id)}`, { method: "DELETE" });
+      const result = await response.json() as { ok?: boolean; error?: string };
+      if (!response.ok || !result.ok) throw new Error(result.error || "Não foi possível remover o ativo.");
+      setLibraryAssets((items) => items.filter((entry) => entry.id !== asset.id));
+      setNotice("Ativo removido da biblioteca. Arquivo físico preservado.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Falha ao remover ativo da biblioteca.");
+    }
+  };
+
   const startRender = async () => {
     setRenderSubmitting(true);
     setRenderPanelOpen(true);
@@ -370,12 +391,22 @@ export const AgoraEditor: React.FC = () => {
         </div>
         <div className="panel-heading library-heading"><span>BIBLIOTECA LOCAL</span><span className="muted">{libraryAssets.length} arquivos</span></div>
         <div className="library-audio-target"><label>Destino dos áudios<select value={audioTrackType} onChange={(event) => setAudioTrackType(event.target.value as "voice" | "music" | "sfx")}><option value="voice">Narração</option><option value="music">Música</option><option value="sfx">Efeitos</option></select></label></div>
+        <div className="library-controls">
+          <input aria-label="Buscar na biblioteca" value={librarySearch} onChange={(event) => setLibrarySearch(event.target.value)} placeholder="Buscar mídia..." />
+          <select aria-label="Filtrar tipo de mídia" value={libraryFilter} onChange={(event) => setLibraryFilter(event.target.value as "all" | "image" | "video" | "audio")}>
+            <option value="all">Todos</option><option value="image">Imagens</option><option value="video">Vídeos</option><option value="audio">Áudios</option>
+          </select>
+        </div>
         <div className="asset-list library-list">
-          {libraryAssets.map((asset) => <button className="asset-row" key={asset.id} onClick={() => void addLibraryAsset(asset)} title="Inserir na timeline">
-            <span className={`asset-icon ${asset.type}`}>{asset.type === "audio" ? "AU" : asset.type === "video" ? "VI" : "IM"}</span>
-            <span><strong>{asset.name ?? asset.id}</strong><small>{asset.size ? `${(asset.size / 1048576).toFixed(1)} MB · ` : ""}{asset.durationSeconds ? `${asset.durationSeconds.toFixed(1)} s · ` : ""}{asset.type.toUpperCase()} · inserir na timeline</small></span>
-          </button>)}
+          {filteredLibraryAssets.map((asset) => <div className="library-asset-row" key={asset.id}>
+            <button className="asset-row" onClick={() => void addLibraryAsset(asset)} title="Inserir na timeline">
+              <span className={`asset-icon ${asset.type}`}>{asset.type === "audio" ? "AU" : asset.type === "video" ? "VI" : "IM"}</span>
+              <span><strong>{asset.name ?? asset.id}</strong><small>{asset.size ? `${(asset.size / 1048576).toFixed(1)} MB · ` : ""}{asset.durationSeconds ? `${asset.durationSeconds.toFixed(1)} s · ` : ""}{asset.type.toUpperCase()} · inserir na timeline</small></span>
+            </button>
+            <button className="library-remove" onClick={() => void removeLibraryAsset(asset)} title="Remover da biblioteca" aria-label={`Remover ${asset.name ?? asset.id} da biblioteca`}>×</button>
+          </div>)}
           {libraryAssets.length === 0 && <p className="empty">Importe imagens, vídeos ou áudios para criar sua biblioteca permanente.</p>}
+          {libraryAssets.length > 0 && filteredLibraryAssets.length === 0 && <p className="empty">Nenhum arquivo corresponde à busca ou ao filtro.</p>}
         </div>
         <div className="panel-heading tools-heading">ADICIONAR TRILHA</div>
         <div className="track-tools">
