@@ -11,3 +11,19 @@
 .library-asset-row .asset-row>span:last-child{min-width:0}
 .library-remove{flex:none;width:23px;height:23px;border:1px solid transparent;border-radius:3px;background:transparent;color:#9c8d7c;font-size:17px;line-height:1;cursor:pointer}
 .library-remove:hover{border-color:#754b43;background:#34231f;color:#e2a091}
+
+.media-thumbnail{position:relative;flex:none;width:52px;height:34px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid #454238;border-radius:3px;background:#22221e;color:#c7b58f}
+.image-thumbnail img,.video-thumbnail video{display:block;width:100%;height:100%;object-fit:cover}
+.video-thumbnail video{opacity:0;transition:opacity .15s}
+.video-thumbnail.ready video{opacity:1}
+.thumbnail-fallback,.thumbnail-play{position:absolute;display:grid;place-items:center;font-size:11px;color:#d6c6a5}
+.thumbnail-play{right:4px;bottom:3px;width:14px;height:14px;border-radius:50%;background:#11110fbd;font-size:7px}
+.audio-thumbnail{padding:4px 5px;background:#24231f}
+.waveform-bars,.waveform-placeholder{width:100%;height:100%;display:grid;grid-template-columns:repeat(48,minmax(0,1fr));align-items:center;gap:1px}
+.waveform-bars i,.waveform-placeholder i{display:block;min-height:2px;border-radius:1px;background:#d1a45f}
+.waveform-placeholder i{background:#71634b;opacity:.65}
+.audio-mark{position:absolute;right:2px;bottom:1px;padding:0 2px;background:#171714;color:#d6b77d;font-size:6px;line-height:9px;letter-spacing:.04em}
+.generic-thumbnail{font-size:9px;font-weight:700}
+.library-list .asset-row{gap:8px}
+.library-list .asset-row>span:last-child{flex:1;min-width:0}
+.library-list .asset-row strong,.library-list .asset-row small{max-width:100%}

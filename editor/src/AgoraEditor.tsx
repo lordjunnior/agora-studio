@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Player } from "@remotion/player";
+import { MediaThumbnail } from "./MediaThumbnail";
 import type { AgoraAsset, AgoraProject, AgoraTrack, AgoraTrackItem } from "../../projeto/src/project/types";
 import { projectDurationInFrames, validateAgoraProject } from "../../projeto/src/project/types";
 import { ProjetoComposition } from "../../projeto/src/project/ProjectComposition";
@@ -400,7 +401,7 @@ export const AgoraEditor: React.FC = () => {
         <div className="asset-list library-list">
           {filteredLibraryAssets.map((asset) => <div className="library-asset-row" key={asset.id}>
             <button className="asset-row" onClick={() => void addLibraryAsset(asset)} title="Inserir na timeline">
-              <span className={`asset-icon ${asset.type}`}>{asset.type === "audio" ? "AU" : asset.type === "video" ? "VI" : "IM"}</span>
+              <MediaThumbnail asset={asset} />
               <span><strong>{asset.name ?? asset.id}</strong><small>{asset.size ? `${(asset.size / 1048576).toFixed(1)} MB · ` : ""}{asset.durationSeconds ? `${asset.durationSeconds.toFixed(1)} s · ` : ""}{asset.type.toUpperCase()} · inserir na timeline</small></span>
             </button>
             <button className="library-remove" onClick={() => void removeLibraryAsset(asset)} title="Remover da biblioteca" aria-label={`Remover ${asset.name ?? asset.id} da biblioteca`}>×</button>
