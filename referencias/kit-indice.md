@@ -104,7 +104,7 @@
 ## Boneco
 
 - `K.bonecos` (linha 2148): Todos os personagens da cena: o kit volta cada um ao neutro no começo do quadro (b.reset) e a revisão confere
-- `K.boneco(op = {})` (linha 2157): op.tipo: 'menino' (padrão, mascote) | 'menina' (vestido vermelho) | 'doutor' (médico velhinho: jaleco, óculos, bigode branco e estetoscópio) | 'operario' (adulto de obra: camiseta laranja, colete refletivo, calça jeans, bota, barba e o capacete sempre na cabeça; op.barba: false tira a barba). Cores próprias em op.cores, como nos outros op.roupa: 'moletom' = roupa do logo (moletom amarelo com capuz, mochila, calça azul-noite, tênis branco)
+- `K.boneco(op = {})` (linha 2157): op.tipo: 'menino' (personagem padrão) | 'menina' (vestido vermelho) | 'doutor' (médico velhinho: jaleco, óculos, bigode branco e estetoscópio) | 'operario' (adulto de obra: camiseta laranja, colete refletivo, calça jeans, bota, barba e o capacete sempre na cabeça; op.barba: false tira a barba). Cores próprias em op.cores, como nos outros op.roupa: 'moletom' aplica o conjunto correspondente, com cores personalizáveis
   - boneco: `b.humor(h)` (linha 2479): humor: 'feliz' | 'triste' | 'surpreso' | 'bravo' | 'nojo' | 'assustado'
   - boneco: `b.pose(esq, dir)` (linha 2493): pose: braços como { x, z, c } por lado (-1 = esquerda da tela quando de frente, 1 = direita)
   - boneco: `b.pernasEm(e, d)` (linha 2499)

@@ -12,7 +12,7 @@ e conferidas: não mude nenhuma palavra.**
 Rode `npm run extras` e leia a linha do 30 Roteiros:
 
 - **"30 roteiros em videos/ ... com o canal":** tudo certo. Vá pro passo 2.
-- **"não está nesta pasta":** traga o `30-roteiros.zip` (seção "Trazer o arquivo pra Máquina" de
+- **"não está nesta pasta":** traga o `30-roteiros.zip` (seção "Trazer o arquivo pra ÁGORA" de
   `comandos/extras.md`) e rode `npm run extras` de novo.
 - **"AINDA SEM O CANAL":** os roteiros estão com o personagem e a voz padrão. Faça assim:
   1. Rode `npm run conferir`. Se o canal não estiver PRONTO, termine a configuração primeiro (`comandos/instalar.md`,
@@ -30,7 +30,7 @@ A pessoa diz algo como "faz o vídeo de videos/02-descarga", "faz o roteiro 2" o
 1. Ache a pasta na lista do fim. "Roteiro 2" é `videos/02-descarga`.
 2. Avise a pessoa: "Vou fazer o vídeo. Leva uns minutos."
 3. Rode: `node motor/render.js videos/02-descarga`
-   - A pasta não tem `cena.js`: está certo, esses roteiros são assim (a Máquina monta as cenas sozinha).
+   - A pasta não tem `cena.js`: está certo, esses roteiros são assim (a ÁGORA monta as cenas sozinha).
    - Se aparecer `O VÍDEO NÃO FOI FEITO: falta terminar de configurar`: termine a configuração
      (`comandos/instalar.md`, só o que falta), rode `npm run extras -- --canal` e tente de novo.
    - Se o vídeo saiu em `testes/video-voz-teste.mp4` em vez de `video.mp4`: falta a voz do canal. Resolva a voz
@@ -38,7 +38,7 @@ A pessoa diz algo como "faz o vídeo de videos/02-descarga", "faz o roteiro 2" o
 4. No fim tem que aparecer `pronto: .../video.mp4`.
 5. Faça a entrega completa, como manda o passo 5 de `comandos/novo-video.md` (o texto de postar com
    `comandos/publicar.md`, os custos e o link do painel).
-6. No jeito rápido, a Máquina escolhe as cenas sozinha. Ofereça o caprichado: `Quer as cenas feitas só pra esse
+6. No jeito rápido, a ÁGORA escolhe as cenas sozinha. Ofereça o caprichado: `Quer as cenas feitas só pra esse
    vídeo, mais bonitas? Pode responder: "Faz mais bonito"`.
 
 ## Passo 3. O jeito caprichado (uma cena só pra esse roteiro)

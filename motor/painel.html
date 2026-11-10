@@ -9,9 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@500..700&family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,0..100,0..1;1,9..144,300..900,0..100,0..1&display=swap">
-<!-- A página do painel (motor/painel.js serve ela no navegador da pessoa). O visual é o da página de vendas da Máquina
-     (papel, tinta, amarelo, a Fraunces e a letra de mão Caveat), com vidro fosco no menu e nos quadros. Tudo aqui:
-     estilo, telas e o que cada botão faz -->
+<!-- Painel operacional da ÁGORA. A identidade visual definitiva será definida na etapa de redesign. -->
 <style>
 :root {
   --papel: #F3EBDC;
@@ -461,7 +459,7 @@ textarea { resize: vertical; min-height: 50px; }
 #toast { position: fixed; z-index: 60; left: 50%; bottom: 26px; padding: 11px 20px; background: var(--tinta); color: var(--papel); border-radius: 14px 10px 16px 12px; box-shadow: 3px 4px 0 var(--amarelo); font-weight: 800; opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(20px); transition: .22s; }
 #toast.ver { opacity: 1; transform: translateX(-50%); }
 
-/* ---------- Potencializar a máquina ---------- */
+/* ---------- Recursos da ÁGORA ---------- */
 .produtos { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 26px; margin: 0 0 40px; }
 .produto { display: flex; flex-direction: column; gap: 12px; padding: 20px 22px 22px; transform: rotate(var(--r, 0deg)); }
 .produto-topo { display: flex; align-items: center; gap: 14px; }
@@ -472,8 +470,8 @@ textarea { resize: vertical; min-height: 50px; }
 .selo { display: inline-block; padding: 2px 10px 3px; background: rgba(255, 255, 255, .6); border: 2px solid var(--linha); border-radius: 10px 7px 11px 8px; color: var(--tinta-2); font-size: 13.5px; font-weight: 900; line-height: 1.2; white-space: nowrap; transform: rotate(-2deg); }
 .selo.tem { background: #DDF1E2; border-color: var(--verde); color: #1C6B3C; }
 .selo.versao { background: var(--amarelo); border-color: var(--tinta); color: var(--tinta); }
-.comprar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
-.comprar p { flex: 1; min-width: 240px; margin: 0; }
+.importacao-info { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.importacao-info p { flex: 1; min-width: 240px; margin: 0; }
 .passos-tudo .prompt { margin-top: 8px; }
 .passos-tudo li > .suave { display: block; margin-top: 8px; font-size: 15px; }
 .prompt.longo span { white-space: pre-wrap; font-size: 15.5px; line-height: 1.5; }
@@ -684,7 +682,7 @@ textarea { resize: vertical; min-height: 50px; }
     <a href="#/videos" data-pag="videos"><svg aria-hidden="true"><use href="#i-videos"/></svg>Vídeos<span class="num" id="num-videos"></span></a>
     <a href="http://127.0.0.1:5174" target="_blank" rel="noopener noreferrer" aria-label="Abrir o editor visual da ÁGORA em outra aba"><svg aria-hidden="true"><use href="#i-videos"/></svg>Editor visual</a>
     <a href="#/modelos" data-pag="modelos"><svg aria-hidden="true"><use href="#i-modelos"/></svg>Modelos 3D<span class="num" id="num-modelos"></span></a>
-    <a href="#/potencializar" data-pag="potencializar"><svg aria-hidden="true"><use href="#i-potencializar"/></svg><span>Potencializar<span class="so-largo"> a máquina</span></span></a>
+    <a href="#/potencializar" data-pag="potencializar"><svg aria-hidden="true"><use href="#i-potencializar"/></svg><span>Recursos<span class="so-largo"> da ÁGORA</span></span></a>
     <a href="#/ajuda" data-pag="ajuda"><svg aria-hidden="true"><use href="#i-ajuda"/></svg>Ajuda</a>
   </nav>
   <div class="lado-pe">
@@ -728,7 +726,7 @@ const sujos = new Set(); // os quadros com mudança ainda não salva (a tela nã
 const ABA = Math.random().toString(36).slice(2, 10), NASCEU = Date.now(); // esta aba (ver "Uma aba só", no fim)
 let aposentada = null; // 'velha' (o painel abriu em outra aba e esta não pôde fechar) ou 'ocupada' (ficou: tem coisa sem salvar)
 
-// ---------- Conversa com a Máquina ----------
+// ---------- Conversa com a ÁGORA ----------
 async function pedir(rota, corpo) {
   try {
     const r = await fetch(`/api/${rota}${rota.includes('?') ? '&' : '?'}t=${T}`, corpo === undefined ? { cache: 'no-store' }
@@ -738,7 +736,7 @@ async function pedir(rota, corpo) {
     if (j.versao && corpo !== undefined) vigiar.ultima = j.versao;
     return { ...j, ok: r.ok && j.ok !== false, mensagem: j.mensagem || (r.ok ? '' : 'Não deu certo. Tente de novo.') };
   } catch {
-    return { ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' };
+    return { ok: false, mensagem: 'O painel perdeu a ligação com a ÁGORA. Peça pra IA: "abre o painel".' };
   }
 }
 function avisar(texto) {
@@ -831,7 +829,7 @@ function lado() {
 }
 function faixas() {
   const a = [];
-  if (falhas >= 2 && !acabou) a.push(`<div class="faixa vidro erro"><span>O painel perdeu a ligação com a Máquina (ele fecha depois de umas horas, ou quando o computador reinicia). Pra abrir de novo: dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da Máquina, ou peça pra IA: <b>abre o painel</b>.</span></div>`);
+  if (falhas >= 2 && !acabou) a.push(`<div class="faixa vidro erro"><span>O painel perdeu a ligação com a ÁGORA (ele fecha depois de umas horas, ou quando o computador reinicia). Pra abrir de novo: dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da ÁGORA, ou peça pra IA: <b>abre o painel</b>.</span></div>`);
   else if (acabou) a.push(`<div class="faixa vidro ok"><span>Pronto, a IA já recebeu. Pode voltar pra conversa com ela.</span></div>`);
   else if (estado && estado.esperando) a.push(`<div class="faixa vidro espera"><span>A IA está esperando você aqui. Quando acabar, clique em <b>Terminei</b> (ou, nas cenas, em <b>Mandar pra IA</b>).</span><button class="botao escuro mini" id="terminei">Terminei, voltar pra conversa</button></div>`);
   if (faixas.novidade && !acabou) a.push(`<div class="faixa vidro espera"><span>A IA mudou alguma coisa por aqui.</span><button class="botao mini" id="ver-novidade">Atualizar</button></div>`);
@@ -930,13 +928,13 @@ function progresso() {
 }
 function htmlStatus() {
   if (!conferido) {
-    return `<h2>Como está a sua Máquina</h2><p class="sub-quadro">Conferindo o que já está instalado e configurado (uns segundos)...</p>
+    return `<h2>Como está a sua ÁGORA</h2><p class="sub-quadro">Conferindo o que já está instalado e configurado (uns segundos)...</p>
       <ul class="status">${Array(8).fill('<li><div class="esqueleto"></div></li>').join('')}</ul>`;
   }
-  if (conferido.erro) return `<h2>Como está a sua Máquina</h2><p class="caixa erro">Não consegui conferir agora. Peça pra IA: <b>confere se está tudo instalado</b>.</p>`;
+  if (conferido.erro) return `<h2>Como está a sua ÁGORA</h2><p class="caixa erro">Não consegui conferir agora. Peça pra IA: <b>confere se está tudo instalado</b>.</p>`;
   const p = progresso();
   const titulo = p.faltam ? `Falta${p.faltam > 1 ? 'm' : ''} ${plural(p.faltam, 'coisa', 'coisas')} pro primeiro vídeo` : p.feitos === p.total ? 'Tudo pronto, até os detalhes!' : 'Pronto pra fazer vídeos!';
-  return `<h2>Como está a sua Máquina</h2>
+  return `<h2>Como está a sua ÁGORA</h2>
     <div class="progresso">
       <p class="porcento"><span class="circula">${p.pct}<small>%</small>${rabisco('circulo', 6)}</span></p>
       <div class="texto"><b>${titulo}</b><span class="suave">${p.feitos} de ${p.total} itens prontos${p.faltam ? '. Os marcados em vermelho são os que faltam.' : p.feitos < p.total ? '. O resto é opcional.' : '.'}</span>
@@ -976,7 +974,7 @@ async function carregarConferir(limpar) {
 function paginaInicio(secao) {
   app.innerHTML = `
   <header class="cabeca">
-    <p class="chamada">Oi! Essa é a sua Máquina.</p>
+    <p class="chamada">Oi! Essa é a sua ÁGORA.</p>
     <h1>Comece <span class="circula">aqui${rabisco('circulo', 4)}</span></h1>
     <p class="sub">A ÁGORA transforma um pedido seu num vídeo curto animado em 3D: roteiro, cenas, narração, legenda, capa e o texto pra postar.</p>
   </header>
@@ -987,14 +985,14 @@ function paginaInicio(secao) {
   </ol>
   <div class="post-it">
     <span class="mao">Importante:</span>
-    <p><b>Este site é só a parte visual.</b> Ele mostra o que a Máquina fez e facilita algumas configurações, como o logo, a capa e a voz do canal.</p>
+    <p><b>Este site é só a parte visual.</b> Ele mostra o que a ÁGORA fez e facilita algumas configurações, como o logo, a capa e a voz do canal.</p>
     <p>Qualquer mudança no vídeo, no roteiro ou nas cenas, você pede no <b>chat da IA</b>. O que muda lá aparece aqui sozinho.</p>
-    <p>Pra abrir este painel de novo: peça pra IA <b>abre o painel</b>, ou dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da Máquina. Dica: salve esta página nos favoritos (Ctrl+D, ou Cmd+D no Mac).</p>
+    <p>Pra abrir este painel de novo: peça pra IA <b>abre o painel</b>, ou dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da ÁGORA. Dica: salve esta página nos favoritos (Ctrl+D, ou Cmd+D no Mac).</p>
   </div>
   <section class="quadro vidro" id="c-status">${htmlStatus()}</section>
   <section class="quadro vidro" id="c-exemplo">${htmlExemplo()}</section>
   <details class="quadro vidro tudo" id="c-importar" ${!estado.canal.configurado || secao === 'importar' || importado ? 'open' : ''}>
-    <summary>${icone('caixote')}<h2>Já tinha a Máquina? Traga tudo da versão antiga</h2><span class="mao">abrir ↓</span></summary>
+    <summary>${icone('caixote')}<h2>Já tinha a ÁGORA? Traga tudo da versão antiga</h2><span class="mao">abrir ↓</span></summary>
     <p class="sub-quadro" style="margin-top:12px">O canal, os vídeos, o logo e a chave da voz vêm da pasta antiga pra esta. A pasta antiga não muda nada (só é lida), e aqui nada é apagado: se esta pasta já tiver o canal configurado, ele fica. Prefere conversar? Peça pra IA: <b>traz o canal da minha pasta antiga</b>.</p>
     <div class="acoes" style="margin-top:0"><button class="botao" id="procurar-antiga">Procurar a pasta antiga</button></div>
     <div id="importar-lista">${importado ? htmlImportado(importado) : ''}</div>
@@ -1014,11 +1012,11 @@ function htmlExemplo(acabou) {
   if (v && v.etapas.video === 'pronto') {
     return `<h2>Vídeo de exemplo</h2>
       ${acabou ? '<p class="caixa ok" style="margin-bottom:12px">Pronto! O vídeo de exemplo foi importado.</p>' : ''}
-      <p class="sub-quadro">O vídeo da lanterna fica em <b>Vídeos</b>, no menu do lado, junto com os vídeos que você fizer. Assista pra ver até onde a Máquina chega.</p>
+      <p class="sub-quadro">O vídeo da lanterna fica em <b>Vídeos</b>, no menu do lado, junto com os vídeos que você fizer. Assista pra ver até onde a ÁGORA chega.</p>
       <div class="acoes"><a class="botao" href="#/video/exemplo">Assistir o vídeo de exemplo →</a><a class="botao claro" href="#/videos">Ir pra Vídeos</a></div>`;
   }
   return `<h2>Importe o vídeo de exemplo</h2>
-    <p class="sub-quadro">O vídeo pronto da lanterna vem no zip da Máquina, na pasta <b>videos/exemplo</b>, mas não está nesta pasta. Abra o zip de novo, pegue o <b>video.mp4</b> de dentro de videos/exemplo e arraste aqui. Ele vai pra <b>Vídeos</b>, no menu do lado.</p>
+    <p class="sub-quadro">O vídeo pronto da lanterna vem no zip da ÁGORA, na pasta <b>videos/exemplo</b>, mas não está nesta pasta. Abra o zip de novo, pegue o <b>video.mp4</b> de dentro de videos/exemplo e arraste aqui. Ele vai pra <b>Vídeos</b>, no menu do lado.</p>
     <div class="soltar" id="soltar-exemplo">
       ${icone('i-videos', 'caixote')}<b>Arraste o vídeo de exemplo aqui</b><span class="suave">o video.mp4 da pasta videos/exemplo do zip</span>
       <div class="acoes"><label class="botao">Escolher o vídeo<input type="file" accept=".mp4,video/mp4" id="up-exemplo" hidden></label></div>
@@ -1031,11 +1029,11 @@ function ligarExemplo() {
   const msg = (html, tipo) => { $('#exemplo-msg').innerHTML = html ? `<p class="caixa ${tipo}">${html}</p>` : ''; };
   async function mandar(arquivo) {
     if (!arquivo) return;
-    if (!/\.mp4$/i.test(arquivo.name)) return msg('Esse arquivo não é um vídeo .mp4. Arraste o <b>video.mp4</b> da pasta videos/exemplo, de dentro do zip da Máquina.', 'erro');
+    if (!/\.mp4$/i.test(arquivo.name)) return msg('Esse arquivo não é um vídeo .mp4. Arraste o <b>video.mp4</b> da pasta videos/exemplo, de dentro do zip da ÁGORA.', 'erro');
     sujos.add('exemplo');
     msg('Importando o vídeo de exemplo... (uns segundos)', 'espera');
     const r = await fetch(`/api/exemplo?t=${T}`, { method: 'POST', headers: { 'X-Painel': T, 'Content-Type': 'application/octet-stream' }, body: arquivo })
-      .then((x) => x.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' }));
+      .then((x) => x.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a ÁGORA. Peça pra IA: "abre o painel".' }));
     sujos.delete('exemplo');
     if (r.versao) vigiar.ultima = r.versao;
     await recarregar(false);
@@ -1065,7 +1063,7 @@ function htmlImportado(r) {
 }
 function htmlPastas(r) {
   if (!r.pastas || !r.pastas.length) {
-    return `<p class="caixa espera">Não achei nenhuma pasta antiga da Máquina neste computador (procurei na Mesa, em Documentos, em Downloads e no OneDrive). Sabe onde ela está? Cole o caminho aqui, ou peça pra IA: <b>traz o canal da minha pasta antiga</b> (dá pra arrastar a pasta pra conversa).</p>
+    return `<p class="caixa espera">Não achei nenhuma pasta antiga da ÁGORA neste computador (procurei na Mesa, em Documentos, em Downloads e no OneDrive). Sabe onde ela está? Cole o caminho aqui, ou peça pra IA: <b>traz o canal da minha pasta antiga</b> (dá pra arrastar a pasta pra conversa).</p>
       <div class="acoes"><input type="text" id="caminho-antiga" placeholder="Ex.: C:\\Users\\voce\\Desktop\\agora" style="flex:1;min-width:240px;margin:0"><button class="botao mini" id="ver-caminho">Ver o que tem</button></div>`;
   }
   return `<div class="escolhas largas" style="margin-top:16px">${r.pastas.map((x, i) => `
@@ -1116,7 +1114,7 @@ function ligarImportar() {
 function htmlSubir(comLink) {
   const p = estado.pacotes || { instalados: [] };
   return `<h2>Subir modelos 3D</h2>
-    <p class="sub-quadro">Baixou um pacote de modelos 3D na área de membros? Arraste o arquivo <b>.zip</b> aqui (ou a pasta, se o computador já abriu o zip). A Máquina põe cada coisa no lugar, tira a foto de cada modelo e a IA já usa no próximo vídeo.</p>
+    <p class="sub-quadro">Baixou um pacote de modelos 3D na origem do pacote? Arraste o arquivo <b>.zip</b> aqui (ou a pasta, se o computador já abriu o zip). A ÁGORA põe cada coisa no lugar, tira a foto de cada modelo e a IA já usa no próximo vídeo.</p>
     <div class="soltar" id="soltar">
       ${icone('caixote', 'caixote')}<b>Arraste o pacote aqui</b><span class="suave">o arquivo .zip ou a pasta dele</span>
       <div class="acoes"><label class="botao">Escolher o .zip<input type="file" accept=".zip,application/zip" id="up-pacote" hidden></label>
@@ -1134,7 +1132,7 @@ function ligarSubir() {
   const comLink = !!$('a[href="#/modelos"]', caixa);
   const msg = (html, tipo) => { $('#pacote-msg').innerHTML = html ? `<p class="caixa ${tipo}">${html}</p>` : ''; };
   const enviar = (etapa, corpo, extra = '') => fetch(`/api/pacote/${etapa}?t=${T}${extra}`, { method: 'POST', headers: { 'X-Painel': T, 'Content-Type': 'application/octet-stream' }, body: corpo })
-    .then((r) => r.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' }));
+    .then((r) => r.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a ÁGORA. Peça pra IA: "abre o painel".' }));
   async function vincular(zip, pasta) {
     sujos.add('pacote');
     msg('Vinculando o pacote... (pacote grande leva alguns segundos)', 'espera');
@@ -1171,7 +1169,7 @@ function ligarSubir() {
     }
   }
   const solto = (nome) => /\.(glb|gltf|fbx|obj|blend|stl|dae|3ds)$/i.test(nome)
-    ? 'Esse é um modelo 3D solto. Aqui entram os pacotes de modelos da Máquina, o .zip que vem da área de membros: um modelo solto ainda não entra direto.'
+    ? 'Esse é um modelo 3D solto. Aqui entram os pacotes de modelos da ÁGORA, o .zip que vem da origem do pacote: um modelo solto ainda não entra direto.'
     : 'Esse arquivo não é um .zip. Arraste o pacote que você baixou (termina em .zip) ou a pasta dele.';
   const zona = $('#soltar');
   ['dragenter', 'dragover'].forEach((ev) => zona.addEventListener(ev, (e) => { e.preventDefault(); zona.classList.add('em-cima'); }));
@@ -1191,7 +1189,7 @@ function ligarSubir() {
   $('#up-pacote').onchange = (e) => { const f = e.target.files[0]; if (f) { if (!/\.zip$/i.test(f.name)) msg(solto(f.name), 'erro'); else vincular(f); } };
   $('#up-pasta').onchange = (e) => { if (e.target.files.length) vincular(null, [...e.target.files].map((file) => ({ caminho: file.webkitRelativePath || file.name, file }))); };
   $$('[data-tirar]', caixa).forEach((b) => (b.onclick = async () => {
-    if (!confirm(`Tirar o pacote "${b.dataset.tirar}" da Máquina? Os vídeos que usam esses modelos param de funcionar até você vincular de novo.`)) return;
+    if (!confirm(`Tirar o pacote "${b.dataset.tirar}" da ÁGORA? Os vídeos que usam esses modelos param de funcionar até você vincular de novo.`)) return;
     const r = await pedir('tirar-pacote', { nome: b.dataset.tirar });
     if (!r.ok) return avisar(r.mensagem);
     await recarregar(false);
@@ -1217,7 +1215,7 @@ const PALETA = ['#FFD23F', '#F39A1E', '#FF7A59', '#E0362C', '#FF5A8A', '#8A4FD8'
 const VOZES = [
   ['elevenlabs', 'ElevenLabs', 'A voz mais natural. Plano grátis pra testar, pago pra monetizar.'],
   ['voicestudio', 'VoiceStudio', 'Grátis, roda no seu computador. Abra o programa antes de cada vídeo.'],
-  ['teste', 'Voz do computador', 'Robótica: só pra testar a Máquina.']
+  ['teste', 'Voz do computador', 'Robótica: só pra testar a ÁGORA.']
 ];
 const HORAS = [['dia', 'Dia'], ['tarde', 'Fim de tarde'], ['noite', 'Noite']];
 const doCatalogo = (cat) => estado.modelos.itens.filter((i) => i.categoria === cat);
@@ -1255,9 +1253,9 @@ function paginaCanal(secao) {
     <summary>${icone('i-chat')}<h2>Preencher tudo de uma vez</h2><span class="mao">abrir ↓</span></summary>
     <p class="sub-quadro" style="margin-top:12px">Um texto com todas as perguntas do canal: você responde num bloco de notas e cola na IA. Funciona com qualquer IA, até a mais simples, e tudo aparece aqui sozinho.</p>
     <ol class="passos-tudo">
-      <li><b>Copie o modelo</b><span class="suave">Ele também está na pasta da Máquina: <code>CONFIGURAR-MEU-CANAL.txt</code>.</span>
+      <li><b>Copie o modelo</b><span class="suave">Ele também está na pasta da ÁGORA: <code>CONFIGURAR-MEU-CANAL.txt</code>.</span>
         <div class="acoes"><button class="botao mini" id="copiar-modelo">${icone('i-copiar')}Copiar o modelo</button><button class="botao mini claro" id="baixar-modelo">${icone('i-baixar')}Baixar o .txt</button></div></li>
-      <li><b>Responda num bloco de notas</b><span class="suave">Cada resposta depois de "Resposta:". O que não souber, deixe em branco: a Máquina usa o padrão ou você completa aqui depois.</span></li>
+      <li><b>Responda num bloco de notas</b><span class="suave">Cada resposta depois de "Resposta:". O que não souber, deixe em branco: a ÁGORA usa o padrão ou você completa aqui depois.</span></li>
       <li><b>Cole o texto inteiro na conversa com a IA</b><span class="suave">Ela roda um comando e salva tudo. A sua IA só conversa e não roda comando? Cole aqui embaixo e clique em Salvar tudo.</span></li>
     </ol>
     <textarea id="respostas" rows="5" placeholder="Cole aqui o texto respondido (o que começa com ### CONFIGURAR MEU CANAL)"></textarea>
@@ -1380,7 +1378,7 @@ function htmlRelatorio(r) {
   const lista = (itens) => `<ul>${itens.map((x) => `<li><b style="display:inline">${esc(x.campo)}:</b> ${esc(x.valor || x.mensagem || '')}</li>`).join('')}</ul>`;
   return `<div class="relatorio">
     ${r.salvos.length ? `<div class="ok"><b>Salvei ${plural(r.salvos.length, 'resposta', 'respostas')}</b>${lista(r.salvos)}</div>` : ''}
-    ${r.padroes.length ? `<div class="padrao"><b>Ficaram em branco e entrou o padrão da Máquina</b>${lista(r.padroes)}</div>` : ''}
+    ${r.padroes.length ? `<div class="padrao"><b>Ficaram em branco e entrou o padrão da ÁGORA</b>${lista(r.padroes)}</div>` : ''}
     ${r.erros.length ? `<div class="erro"><b>Não entendi (o resto foi salvo): arrume aqui embaixo, no quadro de cada um</b>${lista(r.erros)}</div>` : ''}
     ${r.branco.length ? `<div class="branco"><b>Em branco (ficou como estava)</b>${esc(r.branco.join(', '))}.</div>` : ''}
   </div>`;
@@ -1635,7 +1633,7 @@ function paginaVideos() {
   const vs = estado.videos;
   app.innerHTML = `
   <header class="cabeca">
-    <p class="chamada">Tudo que a Máquina fez</p>
+    <p class="chamada">Tudo que a ÁGORA fez</p>
     <h1>Vídeos</h1>
     <p class="sub">Um card por vídeo. Clique pra ver o vídeo, as cenas, o título, a descrição e o comentário pra fixar.</p>
   </header>
@@ -1907,7 +1905,7 @@ function paginaModelos() {
   const semFoto = m.itens.filter((i) => !i.foto).length;
   app.innerHTML = `
   <header class="cabeca">
-    <p class="chamada">Tudo que a Máquina sabe desenhar</p>
+    <p class="chamada">Tudo que a ÁGORA sabe desenhar</p>
     <h1>Modelos <span class="circula">3D${rabisco('circulo', 9)}</span></h1>
     <p class="sub">Pra usar num vídeo, é só pedir no chat: <b>"faz no cenário praia"</b>, <b>"põe o gato no vídeo"</b>. Clique num modelo pra ver grande e copiar o pedido.</p>
   </header>
@@ -2043,16 +2041,15 @@ function markdown(md) {
   return h;
 }
 
-// ---------- Potencializar a máquina (os extras vendidos à parte; motor/potencializar.js) ----------
-// Cada produto: o link de compra, onde o arquivo fica na área de membros, o quadro pra trazer o arquivo (o .zip, a pasta
-// dele ou o PDF, o de hoje ou o que veio pelo Google Drive) e, depois de instalado, como usar
+// ---------- Recursos complementares da ÁGORA (motor/potencializar.js) ----------
+// Cada recurso: arquivo do pacote, procedimento de importação e instruções de uso.
 let extraMsg = null; // { rota, tipo, html }: o resultado da última importação, na tela do produto
 let idiomaGringo = 'en';
 const SOBRE_EXTRA = {
-  roteiros: 'Trinta roteiros escritos e conferidos pra você transformar em vídeo na sua Máquina, e 100 temas com gancho pra quando eles acabarem.',
+  roteiros: 'Trinta roteiros escritos e conferidos pra você transformar em vídeo na sua ÁGORA, e 100 temas com gancho pra quando eles acabarem.',
   gringo: 'Os modelos de canal em inglês e em espanhol e os pedidos prontos pra fazer os seus vídeos no outro idioma, com a narração, a legenda e o título de lá.',
   checklist: 'O que conferir em todo vídeo antes de postar (gancho, capa, título e ritmo) e uma tarefa pra cada um dos seus primeiros 30 dias de canal.',
-  atualizacoes: 'Toda versão nova da Máquina chega no seu acesso, sem pagar de novo e sem mensalidade. A versão nova traz o seu canal, os seus vídeos e os seus extras.'
+  atualizacoes: 'As atualizações mantêm a instalação em dia e preservam o canal, os vídeos e os recursos já importados.'
 };
 const temExtra = (p) => p.id !== 'atualizacoes' && p.instalado;
 const pedidoPronto = (texto, longo) => `<div class="prompt${longo ? ' longo' : ''}"><span>${esc(texto)}</span><button class="botao mini" data-pedido="${esc(texto)}">${icone('i-copiar')}Copiar</button></div>`;
@@ -2068,16 +2065,16 @@ function paginaPotencializar(id) {
   if (p) return paginaExtra(p);
   app.innerHTML = `
   <header class="cabeca">
-    <p class="chamada">Deixe a sua Máquina mais forte</p>
-    <h1>Potencializar a <span class="circula">máquina${rabisco('circulo', 7)}</span></h1>
-    <p class="sub">Quatro extras que se encaixam na sua Máquina. Já comprou algum? Traga o arquivo pra cá: cada coisa entra no lugar certo sozinha. Ainda não tem? Cada um tem o link pra comprar.</p>
+    <p class="chamada">Deixe a sua ÁGORA mais forte</p>
+    <h1>Recursos da ÁGORA</h1>
+    <p class="sub">Recursos complementares para ampliar a biblioteca e o fluxo de produção. Importe um pacote local para habilitar os recursos correspondentes.</p>
   </header>
   <div class="produtos">${P.produtos.map(cartaoExtra).join('')}</div>
-  <h2>Já comprou? Traga pra cá em 3 passos</h2>
+  <h2>Importar um pacote</h2>
   <ol class="passos">
-    <li class="vidro" style="--r:-1deg"><h3>Abra a área de membros</h3><p>Entre pelo e-mail de acesso que a Cakto mandou quando você comprou. Não achou? Procure por <b>Cakto</b> na caixa de entrada e no spam.</p></li>
-    <li class="vidro" style="--r:.8deg"><h3>Baixe o arquivo</h3><p>Abra a aula do produto e baixe o arquivo que fica embaixo do vídeo.</p></li>
-    <li class="vidro" style="--r:-.6deg"><h3>Solte aqui embaixo</h3><p>Arraste o arquivo pro quadro. A Máquina descobre qual é o produto e põe cada coisa no lugar.</p></li>
+    <li class="vidro" style="--r:-1deg"><h3>Localize o arquivo</h3><p>Escolha um pacote ZIP ou uma pasta extraída no computador.</p></li>
+    <li class="vidro" style="--r:.8deg"><h3>Confira o conteúdo</h3><p>A ÁGORA valida a estrutura e identifica os recursos disponíveis.</p></li>
+    <li class="vidro" style="--r:-.6deg"><h3>Importe o pacote</h3><p>Arraste o arquivo ou a pasta para a área abaixo.</p></li>
   </ol>
   <section class="quadro vidro" id="c-extra">${htmlZonaExtra('')}</section>`;
   ligarZonaExtra('');
@@ -2086,9 +2083,9 @@ function paginaPotencializar(id) {
 function cartaoExtra(p, i) {
   const P = estado.potencializar, tem = temExtra(p);
   const selo = p.id === 'atualizacoes' ? `<span class="selo versao">sua versão: ${esc(P.versao)}</span>`
-    : tem ? '<span class="selo tem">✓ na sua Máquina</span>' : '<span class="selo">ainda não tem</span>';
+    : tem ? '<span class="selo tem">✓ na sua ÁGORA</span>' : '<span class="selo">ainda não tem</span>';
   const botoes = tem ? `<a class="botao" href="#/potencializar/${p.id}">Como usar →</a>`
-    : `<a class="botao" href="${esc(p.checkout)}" target="_blank" rel="noopener">Quero esse</a><a class="botao claro" href="#/potencializar/${p.id}">${p.id === 'atualizacoes' ? 'Como atualizar →' : 'Já comprei →'}</a>`;
+    : `<a class="botao claro" href="#/potencializar/${p.id}">${p.id === 'atualizacoes' ? 'Como atualizar →' : 'Como importar →'}</a>`;
   return `<article class="produto vidro" style="--r:${['-.7deg', '.6deg', '-.4deg', '.8deg'][i % 4]}">
     <div class="produto-topo">${icone(`p-${p.id}`)}<div><h3>${esc(p.nome)}</h3>${selo}</div></div>
     <p>${SOBRE_EXTRA[p.id]}</p>
@@ -2098,20 +2095,18 @@ function cartaoExtra(p, i) {
 
 function paginaExtra(p) {
   const tem = temExtra(p);
-  const comprar = `<section class="quadro vidro comprar">
-      <p><b>Ainda não tem?</b> ${p.id === 'atualizacoes' ? 'Com ele, toda versão nova chega no seu acesso, sem pagar de novo.' : 'Compre pelo botão e depois volte nesta tela pra trazer o arquivo.'}</p>
-      <a class="botao" href="${esc(p.checkout)}" target="_blank" rel="noopener">Comprar o ${esc(p.nome)}</a></section>`;
+  const avisoImportacao = `<section class="quadro vidro importacao-info"><p><b>Arquivo não instalado.</b> Importe o pacote local correspondente para habilitar este recurso.</p></section>`;
   const usar = { roteiros: usarRoteiros, gringo: usarGringo, checklist: usarChecklist, atualizacoes: usarAtualizacoes }[p.id];
   const msg = extraMsg && extraMsg.rota === location.hash ? `<p class="caixa ${extraMsg.tipo} aviso-bloco">${extraMsg.html}</p>` : '';
   app.innerHTML = `
-  <a class="voltar" href="#/potencializar">← Potencializar a máquina</a>
+  <a class="voltar" href="#/potencializar">← Recursos da ÁGORA</a>
   <header class="cabeca">
-    <p class="chamada">${p.id === 'atualizacoes' ? 'Sempre na versão mais nova' : tem ? 'Já está na sua Máquina' : 'Extra da Máquina'}</p>
+    <p class="chamada">${p.id === 'atualizacoes' ? 'Sempre na versão mais nova' : tem ? 'Já está na sua ÁGORA' : 'Extra da ÁGORA'}</p>
     <h1>${esc(p.nome)}</h1>
     <p class="sub">${SOBRE_EXTRA[p.id]}</p>
   </header>
   ${msg}
-  ${p.id === 'atualizacoes' ? usar(p) + comprar + htmlPegarExtra(p, true) : tem ? usar(p) + htmlPegarExtra(p, true) : comprar + htmlPegarExtra(p, false)}`;
+  ${p.id === 'atualizacoes' ? usar(p) + avisoImportacao + htmlPegarExtra(p, true) : tem ? usar(p) + htmlPegarExtra(p, true) : avisoImportacao + htmlPegarExtra(p, false)}`;
   ligarZonaExtra(p.id);
   ligarCopiar(app);
   $$('[data-idioma]').forEach((b) => (b.onclick = () => { idiomaGringo = b.dataset.idioma; const y = window.scrollY; mostrar(); window.scrollTo(0, y); }));
@@ -2126,16 +2121,15 @@ function paginaExtra(p) {
   };
 }
 
-// Onde achar o arquivo na área de membros e o quadro pra soltar (recolhido quando o produto já está instalado)
+// Como importar o pacote e abrir a área de envio (recolhida quando o recurso já está instalado)
 function htmlPegarExtra(p, recolhido) {
-  const zip = p.arquivo.endsWith('.zip');
-  const titulo = p.id === 'atualizacoes' ? 'Guardar o guia em PDF aqui' : recolhido ? 'Trazer o arquivo de novo' : 'Já comprou? Traga pra cá';
+  const titulo = p.id === 'atualizacoes' ? 'Guardar o guia em PDF aqui' : recolhido ? 'Importar novamente' : 'Importar arquivo';
   const corpo = `<ol class="passos-tudo">
-      <li><b>Abra a área de membros da Cakto</b>Pelo e-mail de acesso que chegou quando você comprou. Não achou? Procure por <b>Cakto</b> na caixa de entrada e no spam.</li>
-      <li><b>Vá na seção "${esc(p.secao)}"</b>E abra a aula <b>${esc(p.aula)}</b>.</li>
-      <li><b>Baixe o arquivo ${esc(p.arquivo)} e solte aqui embaixo</b>${zip ? 'Ele fica embaixo do vídeo da aula. Se o computador abrir o arquivo sozinho e ele virar uma pasta, solte a pasta: funciona igual.' : 'Ele fica embaixo do vídeo da aula. Aqui, ele fica guardado pra você abrir quando quiser.'}</li>
+      <li><b>Localize o arquivo</b>Escolha o pacote correspondente no computador.</li>
+      <li><b>Confira o formato</b>Use o arquivo ZIP, a pasta extraída ou o PDF de documentação.</li>
+      <li><b>Importe o pacote</b>Arraste o arquivo ou a pasta para a área abaixo. A ÁGORA valida o conteúdo antes de gravar.</li>
     </ol>
-    <p class="suave">Comprou no começo e recebeu pelo Google Drive? Funciona igual: solte o arquivo do Drive (ou a pasta inteira dele).</p>
+    <p class="suave">Se o pacote estiver em um serviço de nuvem, baixe-o primeiro e importe o arquivo local.</p>
     ${htmlZonaExtra(p.id)}`;
   return recolhido
     ? `<details class="quadro vidro tudo" id="c-extra"><summary>${icone('caixote')}<h2>${titulo}</h2><span class="mao">abrir ↓</span></summary><div style="margin-top:16px">${corpo}</div></details>`
@@ -2155,13 +2149,13 @@ function usarRoteiros(p) {
       : '<p class="caixa ok">Os roteiros estão com o personagem, a voz, o cenário, a cor e o @ do seu canal. Mudou alguma coisa em Meu canal? <button class="botao mini claro" id="aplicar-canal">Usar o meu canal de novo</button></p>';
   return `<section class="quadro vidro">
     <h2>Como fazer o vídeo de um roteiro</h2>
-    <p class="sub-quadro">${plural(p.roteiros.length, 'roteiro está', 'roteiros estão')} na sua Máquina, na pasta <b>videos/</b> e em <a href="#/videos">Vídeos</a>${feitos ? ` (${plural(feitos, 'já virou vídeo', 'já viraram vídeo')})` : ''}.</p>
+    <p class="sub-quadro">${plural(p.roteiros.length, 'roteiro está', 'roteiros estão')} na sua ÁGORA, na pasta <b>videos/</b> e em <a href="#/videos">Vídeos</a>${feitos ? ` (${plural(feitos, 'já virou vídeo', 'já viraram vídeo')})` : ''}.</p>
     ${canal}
     ${avisoConfigurar()}
     <ol class="passos-tudo">
       <li><b>Escolha um roteiro da lista aqui embaixo</b>Um por dia é um bom ritmo pra começar.</li>
       <li><b>Copie o pedido e cole numa conversa nova da sua IA</b>
-        <span class="suave">Rápido: a Máquina monta a cena sozinha a partir do roteiro.</span>${pedidoPronto(rapido(ex))}
+        <span class="suave">Rápido: a ÁGORA monta a cena sozinha a partir do roteiro.</span>${pedidoPronto(rapido(ex))}
         <span class="suave">Caprichado: a IA cria uma cena sob medida. Leva mais tempo e fica mais bonito.</span>${pedidoPronto(`Faz o vídeo de videos/${ex} com cena própria, caprichado (comandos/extras-30-roteiros.md, passo 3).`)}</li>
       <li><b>Assista em Vídeos</b>Quando ficar pronto, o vídeo aparece em <a href="#/videos">Vídeos</a>, com a capa e o texto pra postar.</li>
     </ol>
@@ -2178,14 +2172,14 @@ function usarGringo(p) {
   const l = p.modelos[idiomaGringo] ? idiomaGringo : p.modelos.en ? 'en' : 'es';
   const nome = l === 'en' ? 'inglês' : 'espanhol', fala = l === 'en' ? 'inglês americano' : 'espanhol neutro latino-americano';
   const copia = `${P.pasta}-${l}`;
-  const configurar = `Esta é a cópia da minha Máquina em ${nome}. Me ajuda a configurar o canal em ${nome} (comandos/extras-canal-gringo.md, passo 3).`;
+  const configurar = `Esta é a cópia da minha ÁGORA em ${nome}. Me ajuda a configurar o canal em ${nome} (comandos/extras-canal-gringo.md, passo 3).`;
   const adaptar = `Me ajuda a fazer em ${nome} o vídeo [tema], que eu já fiz em português na pasta ${P.pasta} (comandos/extras-canal-gringo.md, passo 5).`;
   return `<section class="quadro vidro">
     <h2>Como fazer o seu canal em outro idioma</h2>
-    <p class="sub-quadro">Cada idioma fica numa pasta própria da Máquina, com o seu canal, a sua pauta e os seus vídeos. O canal em português continua aqui, do jeito que está.</p>
+    <p class="sub-quadro">Cada idioma fica numa pasta própria da ÁGORA, com o seu canal, a sua pauta e os seus vídeos. O canal em português continua aqui, do jeito que está.</p>
     <div class="segmentos">${['en', 'es'].filter((x) => p.modelos[x]).map((x) => `<button aria-pressed="${x === l}" data-idioma="${x}">${x === 'en' ? 'Inglês' : 'Espanhol'}</button>`).join('')}</div>
     <ol class="passos-tudo">
-      <li><b>Faça uma cópia da Máquina pro ${nome}</b>Feche a IA. Abra a pasta onde está a sua Máquina, copie a pasta <b>${esc(P.pasta)}</b> e cole ali do lado (no Mac: botão direito e "Duplicar"). Mude o nome da cópia pra <b>${esc(copia)}</b>.</li>
+      <li><b>Faça uma cópia da ÁGORA pro ${nome}</b>Feche a IA. Abra a pasta onde está a sua ÁGORA, copie a pasta <b>${esc(P.pasta)}</b> e cole ali do lado (no Mac: botão direito e "Duplicar"). Mude o nome da cópia pra <b>${esc(copia)}</b>.</li>
       <li><b>Abra a cópia na sua IA e mande este pedido</b>Ela te pergunta o nome do canal, o @ e a frase do fim, e arruma o resto.${pedidoPronto(configurar, true)}</li>
       <li><b>Faça o primeiro vídeo em ${nome}</b>Ainda na cópia, numa conversa nova:${pedidoPronto(`Faz um vídeo novo em ${nome} sobre como funciona o zíper.`)}</li>
       <li><b>Quer aproveitar um vídeo que já fez em português?</b>Troque o [tema] pelo nome do vídeo:${pedidoPronto(adaptar, true)}</li>
@@ -2204,7 +2198,7 @@ function usarChecklist(p) {
     <h2>Como usar</h2>
     <ol class="passos-tudo">
       ${p.pdf ? `<li><b>Abra o checklist</b>Ele abre numa aba do navegador. Deixe aberto do lado na hora de postar.<div class="acoes"><a class="botao" href="${p.pdf}" target="_blank" rel="noopener">Abrir o checklist</a></div></li>` : ''}
-      <li><b>Antes de postar, peça pra IA conferir o vídeo</b>Ela passa o vídeo pelo checklist e diz só o que falta arrumar.${pedidoPronto('Confere o meu último vídeo com o checklist antes de eu postar (comandos/extras-checklist.md).')}${p.texto ? '' : '<span class="suave">Se a sua IA disser que não consegue ler o PDF, traga também o arquivo checklist-viral-e-plano-de-30-dias.md, que fica na mesma aula da área de membros.</span>'}</li>
+      <li><b>Antes de postar, peça pra IA conferir o vídeo</b>Ela passa o vídeo pelo checklist e diz só o que falta arrumar.${pedidoPronto('Confere o meu último vídeo com o checklist antes de eu postar (comandos/extras-checklist.md).')}${p.texto ? '' : '<span class="suave">Se a sua IA disser que não consegue ler o PDF, importe também o arquivo checklist-viral-e-plano-de-30-dias.md que acompanha o pacote.</span>'}</li>
       <li><b>Siga o plano de 30 dias</b>Uma tarefa por dia, a partir do primeiro dia do canal.${pedidoPronto('Em que dia do plano de 30 dias eu estou? Me diz a tarefa de hoje (comandos/extras-checklist.md).')}</li>
     </ol>
   </section>`;
@@ -2214,12 +2208,12 @@ function usarAtualizacoes(p) {
   const P = estado.potencializar;
   return `<section class="quadro vidro">
     <h2>Como passar pra versão nova</h2>
-    <p class="sub-quadro">A sua Máquina está na versão <b>${esc(P.versao)}</b>. Quando sair uma versão nova, ela aparece na área de membros. Atualizar leva uns minutos e não apaga nada.</p>
+    <p class="sub-quadro">A sua ÁGORA está na versão <b>${esc(P.versao)}</b>. Para atualizar, importe o pacote da versão mais recente. O processo não apaga o canal nem os vídeos.</p>
     <ol class="passos-tudo">
-      <li><b>Baixe o .zip da versão nova</b>Na área de membros da Cakto, na seção <b>Atualizações Para Sempre</b> (ou em <b>Já tinha a Máquina? Atualize</b>).</li>
+      <li><b>Baixe o .zip da versão nova</b>Na origem oficial de distribuição, na seção <b>Atualizações Para Sempre</b> (ou em <b>Já tinha a ÁGORA? Atualize</b>).</li>
       <li><b>Extraia numa pasta nova</b>Não extraia por cima desta: a pasta nova fica do lado, e esta continua como está.</li>
       <li><b>Abra o painel da pasta nova</b>Dois cliques no <b>ABRIR-PAINEL</b> de lá (ou peça pra IA, com a pasta nova aberta: <b>abre o painel</b>).</li>
-      <li><b>Traga tudo desta pasta</b>No painel novo, em Comece aqui, abra <b>Já tinha a Máquina?</b> e clique em <b>Procurar a pasta antiga</b>. O seu canal, os seus vídeos e os extras desta tela vêm junto.</li>
+      <li><b>Traga tudo desta pasta</b>No painel novo, em Comece aqui, abra <b>Já tinha a ÁGORA?</b> e clique em <b>Procurar a pasta antiga</b>. O seu canal, os seus vídeos e os extras desta tela vêm junto.</li>
     </ol>
     ${p.guia ? `<div class="acoes"><a class="botao claro" href="${p.guia}" target="_blank" rel="noopener">Abrir o guia em PDF</a></div>` : ''}
   </section>${htmlNovidades()}`;
@@ -2251,11 +2245,11 @@ function htmlZonaExtra(produto) {
 function textoDoExtra(feitos) {
   return feitos.map((f) => {
     if (f.produto === 'roteiros') {
-      if (!f.novos) return `Os ${f.jaTinha} roteiros já estavam na sua Máquina e ficaram como estavam.`;
+      if (!f.novos) return `Os ${f.jaTinha} roteiros já estavam na sua ÁGORA e ficaram como estavam.`;
       return `Pronto! ${plural(f.novos, 'roteiro entrou', 'roteiros entraram')} em <a href="#/videos">Vídeos</a>${f.temas ? ', e os 100 temas estão aqui embaixo' : ''}.${f.jaTinha ? ` ${plural(f.jaTinha, 'já estava lá e ficou como estava', 'já estavam lá e ficaram como estavam')}.` : ''} ${f.comCanal ? 'Já com o personagem, a voz, o cenário, a cor e o @ do seu canal.' : 'Falta pôr o seu canal neles: veja o aviso amarelo aqui embaixo.'}`;
     }
-    if (f.produto === 'gringo') return `Pronto! Os modelos do Canal Gringo em ${f.modelos.map((l) => (l === 'en' ? 'inglês' : 'espanhol')).join(' e ')} estão na sua Máquina. O passo a passo está aqui embaixo.`;
-    if (f.produto === 'checklist') return 'Pronto! O Checklist Viral + Plano de 30 Dias está guardado na sua Máquina: abra pelo botão aqui embaixo.';
+    if (f.produto === 'gringo') return `Pronto! Os modelos do Canal Gringo em ${f.modelos.map((l) => (l === 'en' ? 'inglês' : 'espanhol')).join(' e ')} estão na sua ÁGORA. O passo a passo está aqui embaixo.`;
+    if (f.produto === 'checklist') return 'Pronto! O Checklist Viral + Plano de 30 Dias está guardado na sua ÁGORA: abra pelo botão aqui embaixo.';
     const p = estado.potencializar.produtos.find((x) => x.id === f.produto);
     return `O guia em PDF do ${esc(p ? p.nome : f.produto)} está guardado aqui.`;
   }).join('<br>');
@@ -2273,20 +2267,20 @@ function ligarZonaExtra(produto) {
   if (!zona) return;
   const msg = (html, tipo) => { $('#extra-msg').innerHTML = html ? `<p class="caixa ${tipo}">${html}</p>` : ''; };
   const enviar = (etapa, corpo, extra = '') => fetch(`/api/extra/${etapa}?t=${T}&produto=${encodeURIComponent(produto)}${extra}`, { method: 'POST', headers: { 'X-Painel': T, 'Content-Type': 'application/octet-stream' }, body: corpo })
-    .then((r) => r.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a Máquina. Peça pra IA: "abre o painel".' }));
+    .then((r) => r.json()).catch(() => ({ ok: false, mensagem: 'O painel perdeu a ligação com a ÁGORA. Peça pra IA: "abre o painel".' }));
   async function trazer(arquivo, pasta) {
     sujos.add('extra');
-    msg('Trazendo pra sua Máquina... (uns segundos)', 'espera');
+    msg('Trazendo pra sua ÁGORA... (uns segundos)', 'espera');
     let r = null;
     if (arquivo) r = await enviar('um', arquivo, `&nome=${encodeURIComponent(arquivo.name)}`);
     else {
       // Só o que serve (os roteiros, os modelos de canal, os PDFs e os zips): as capas de prévia ficam de fora
       const uteis = pasta.filter((x) => /(roteiro\.(json|md)|100-temas\.md|canal\.md|prompts\.md|\.pdf|\.zip)$/i.test(x.caminho));
-      if (!uteis.length) r = { ok: false, mensagem: 'Nessa pasta não achei nenhum arquivo dos extras. Confira se é a pasta que veio do zip da área de membros.' };
+      if (!uteis.length) r = { ok: false, mensagem: 'Nessa pasta não achei nenhum arquivo dos extras. Confira se é a pasta que veio do zip da origem do pacote.' };
       else {
         await enviar('comecar', '');
         for (let i = 0; i < uteis.length && !r; i++) {
-          if (uteis.length > 8) msg(`Trazendo pra sua Máquina... ${i + 1} de ${uteis.length} arquivos`, 'espera');
+          if (uteis.length > 8) msg(`Trazendo pra sua ÁGORA... ${i + 1} de ${uteis.length} arquivos`, 'espera');
           const x = await enviar('arquivo', uteis[i].file, `&caminho=${encodeURIComponent(uteis[i].caminho)}`);
           if (!x.ok) r = x;
         }
@@ -2320,28 +2314,28 @@ function ligarZonaExtra(produto) {
 }
 
 // ---------- Antes do primeiro vídeo: o canal configurado ----------
-// O canal (os textos e o visual) e a voz: sem isso, a Máquina não faz vídeo (o render para e avisa)
+// O canal (os textos e o visual) e a voz: sem isso, a ÁGORA não faz vídeo (o render para e avisa)
 const canalPronto = () => !!(estado.canal.configurado && estado.canal.bloco && estado.canal.bloco.voz && estado.canal.bloco.voz.motor);
 function avisoConfigurar() {
   if (canalPronto()) return '';
-  return `<div class="caixa espera aviso-bloco"><b>Antes do primeiro vídeo, termine de configurar o seu canal.</b> A Máquina só faz vídeo depois disso: ela precisa saber o nome do canal, o personagem e a voz. Veja o que falta em <a href="#/inicio">Comece aqui</a> e mande pra sua IA:${pedidoPronto('Me ajuda a terminar de configurar o meu canal.')}</div>`;
+  return `<div class="caixa espera aviso-bloco"><b>Antes do primeiro vídeo, termine de configurar o seu canal.</b> A ÁGORA só faz vídeo depois disso: ela precisa saber o nome do canal, o personagem e a voz. Veja o que falta em <a href="#/inicio">Comece aqui</a> e mande pra sua IA:${pedidoPronto('Me ajuda a terminar de configurar o meu canal.')}</div>`;
 }
 
 // ---------- Ajuda: as perguntas de sempre, por assunto, e as boas práticas ----------
 // [pergunta, resposta, pedido pronto pra IA (ou null), [botão, tela] (ou null)]
 const AJUDA = [
   ['comecar', 'Pra começar', [
-    ['O que é a Máquina?', 'É um programa que faz vídeos curtos animados em 3D, no seu computador. Você conversa com uma IA, ela escreve o roteiro e a Máquina faz o vídeo: a animação, a voz, a legenda e a capa.', 'Me explica, bem simples, como a Máquina funciona.'],
-    ['Por onde eu começo?', 'Abra a pasta da Máquina na sua IA e mande a palavra <b>instalar</b>. Ela faz tudo com você, uma pergunta de cada vez. Leva uns 15 minutos.', 'instalar'],
-    ['Por que ainda não consigo fazer vídeo?', 'A Máquina só faz vídeo depois que o seu canal está configurado: o nome, o personagem e a voz. Em Comece aqui, você vê o que falta.', 'Me ajuda a terminar de configurar o meu canal.', ['Ver o que falta', '#/inicio']],
-    ['Dá pra usar no celular?', 'Não. A Máquina funciona só no computador (Windows, Mac ou Linux). Depois, o vídeo pronto você passa pro celular e posta de lá.', 'Como eu passo o vídeo pronto pro meu celular?'],
+    ['O que é a ÁGORA?', 'É um programa que faz vídeos curtos animados em 3D, no seu computador. Você conversa com uma IA, ela escreve o roteiro e a ÁGORA faz o vídeo: a animação, a voz, a legenda e a capa.', 'Me explica, bem simples, como a ÁGORA funciona.'],
+    ['Por onde eu começo?', 'Abra a pasta da ÁGORA na sua IA e mande a palavra <b>instalar</b>. Ela faz tudo com você, uma pergunta de cada vez. Leva uns 15 minutos.', 'instalar'],
+    ['Por que ainda não consigo fazer vídeo?', 'A ÁGORA só faz vídeo depois que o seu canal está configurado: o nome, o personagem e a voz. Em Comece aqui, você vê o que falta.', 'Me ajuda a terminar de configurar o meu canal.', ['Ver o que falta', '#/inicio']],
+    ['Dá pra usar no celular?', 'Não. A ÁGORA funciona só no computador (Windows, Mac ou Linux). Depois, o vídeo pronto você passa pro celular e posta de lá.', 'Como eu passo o vídeo pronto pro meu celular?'],
     ['Preciso saber mexer no computador?', 'Não. Quem mexe nos arquivos é a IA. Você só conversa com ela, como no WhatsApp.', 'Me ajuda a fazer o meu primeiro vídeo.'],
-    ['Meu computador é fraco. Funciona?', 'Funciona na maioria dos computadores. Num computador mais fraco, o vídeo só demora mais pra ficar pronto.', 'Confere se o meu computador dá conta da Máquina.'],
-    ['A Máquina já vem com vídeos prontos?', 'Não. A Máquina é a ferramenta que faz os <b>seus</b> vídeos, no seu computador, com a sua IA. Vem só um vídeo de exemplo, pra você ver como fica.', 'Me ajuda a fazer o meu primeiro vídeo.', ['Ver o vídeo de exemplo', '#/video/exemplo']]
+    ['Meu computador é fraco. Funciona?', 'Funciona na maioria dos computadores. Num computador mais fraco, o vídeo só demora mais pra ficar pronto.', 'Confere se o meu computador dá conta da ÁGORA.'],
+    ['A ÁGORA já vem com vídeos prontos?', 'Não. A ÁGORA é a ferramenta que faz os <b>seus</b> vídeos, no seu computador, com a sua IA. Vem só um vídeo de exemplo, pra você ver como fica.', 'Me ajuda a fazer o meu primeiro vídeo.', ['Ver o vídeo de exemplo', '#/video/exemplo']]
   ]],
   ['ia', 'A IA', [
     ['Qual IA eu uso?', 'A melhor é o <b>Claude Code</b>. Também funciona com IA grátis, como o ChatGPT e o Gemini: o vídeo fica mais simples, mas funciona.', 'Qual IA é melhor pra mim? Eu tenho [ChatGPT / Gemini / outra].'],
-    ['Preciso pagar uma IA?', 'Não. Dá pra usar uma IA grátis. Com uma IA paga, os vídeos ficam mais caprichados.', 'Me ensina a usar a Máquina com uma IA grátis.'],
+    ['Preciso pagar uma IA?', 'Não. Dá pra usar uma IA grátis. Com uma IA paga, os vídeos ficam mais caprichados.', 'Me ensina a usar a ÁGORA com uma IA grátis.'],
     ['Como eu falo com a IA?', 'Como você fala com um amigo: com detalhe e com sinceridade. Não gostou de algo? Diga o quê e por quê. Quanto mais você conta, melhor fica.', 'Não gostei da cena 3: o personagem ficou parado. Arruma pra mim.'],
     ['Não entendi o que a IA falou.', 'Peça pra ela explicar de novo, mais simples. Ela não se cansa e não se incomoda.', 'Não entendi. Me explica de um jeito bem simples, sem palavras difíceis.'],
     ['Preciso abrir uma conversa nova pra cada vídeo?', 'Sim. Uma conversa nova pra cada vídeo: a IA lê o seu canal de novo e o vídeo sai melhor. Nada se perde, tudo fica guardado na pasta.', 'Faz um vídeo sobre como funciona a geladeira.'],
@@ -2364,12 +2358,12 @@ const AJUDA = [
     ['A câmera não mostra a coisa certa.', 'Diga o número da cena e o que tinha que aparecer. A IA põe isso no meio da tela.', 'Na cena [número], a câmera não mostra [o que tinha que aparecer]. Põe no meio da tela, inteiro e mais perto.'],
     ['Quero mudar uma coisa no vídeo pronto.', 'É só pedir pra IA, do jeito que você falaria. O que não mudou não gasta voz de novo.', 'Deixa a panela vermelha e fala mais devagar.'],
     ['Posso trocar o personagem ou a cor?', 'Pode. No painel, em Meu canal, ou pedindo pra IA.', 'Quero trocar o personagem do meu canal.', ['Abrir Meu canal', '#/canal']],
-    ['Dá pra fazer vídeo comprido, deitado?', 'Não. A Máquina faz vídeo curto, em pé, de 1 a 3 minutos: pro YouTube Shorts, Reels, TikTok e Kwai.', null],
+    ['Dá pra fazer vídeo comprido, deitado?', 'Não. A ÁGORA faz vídeo curto, em pé, de 1 a 3 minutos: pro YouTube Shorts, Reels, TikTok e Kwai.', null],
     ['Onde fica o vídeo pronto?', 'No painel, em Vídeos. Lá você assiste, baixa o vídeo e a capa e copia o texto de postar.', null, ['Abrir Vídeos', '#/videos']],
     ['Quantos vídeos eu posso fazer?', 'Quantos quiser. O limite é só o da sua IA e da sua voz, se forem as grátis.', null]
   ]],
   ['painel', 'O painel', [
-    ['Como eu abro o painel?', 'Dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da Máquina. Ou peça pra IA. Dica: salve o painel nos favoritos do navegador.', 'abre o painel'],
+    ['Como eu abro o painel?', 'Dois cliques no arquivo <b>ABRIR-PAINEL</b>, na pasta da ÁGORA. Ou peça pra IA. Dica: salve o painel nos favoritos do navegador.', 'abre o painel'],
     ['O painel parou de responder.', 'Ele desliga sozinho depois de umas horas, ou quando o computador reinicia. É só abrir de novo, do mesmo jeito.', 'abre o painel'],
     ['Pra que serve o painel?', 'É onde você vê tudo: o seu canal, os vídeos, as cenas pra aprovar e os extras. Pra mudar alguma coisa no vídeo, peça na conversa com a IA.', null],
     ['No Mac apareceu um aviso de segurança.', 'Clique com o botão direito no ABRIR-PAINEL e escolha <b>Abrir</b>. Ou peça pra IA arrumar.', 'Apareceu um aviso de segurança ao abrir o painel. Me ajuda a resolver.']
@@ -2377,28 +2371,28 @@ const AJUDA = [
   ['postar', 'Postar', [
     ['Como eu posto o vídeo?', 'Baixe o vídeo em Vídeos. No TikTok, no Instagram e no Kwai, use a capa que vem junto. No YouTube Shorts, escolha o primeiro quadro do vídeo como capa. O título e a descrição têm botão de copiar.', 'Me ajuda a postar o meu vídeo no [YouTube / TikTok / Instagram].'],
     ['Qual o tamanho bom de vídeo?', 'O primeiro, uns 60 segundos. Depois, mais de 1 minuto: é o que conta pra ganhar dinheiro em várias redes.', null],
-    ['Os vídeos são meus?', 'São. Você faz e você posta. Só não pode revender ou passar a Máquina pra outra pessoa.', null],
+    ['Os vídeos são meus?', 'São. Você faz e você posta. Só não pode revender ou passar a ÁGORA pra outra pessoa.', null],
     ['Posso fazer vídeo em inglês ou espanhol?', 'Pode, com o extra Canal Gringo.', null, ['Ver o Canal Gringo', '#/potencializar/gringo']]
   ]],
   ['extras', 'Os extras', [
-    ['O que são os extras?', 'São produtos que deixam a Máquina mais forte: 30 roteiros prontos, o canal em inglês e espanhol, o checklist antes de postar e as versões novas.', null, ['Ver os extras', '#/potencializar']],
-    ['Comprei um extra. Como eu uso?', 'Baixe o arquivo na área de membros e solte em Potencializar a máquina. Cada extra tem o passo a passo lá.', 'Comprei um extra. Me ajuda a trazer pra Máquina.', ['Abrir Potencializar', '#/potencializar']],
-    ['Comprei antes e recebi pelo Google Drive.', 'Funciona igual: solte o arquivo do Drive em Potencializar a máquina.', null, ['Abrir Potencializar', '#/potencializar']]
+    ['O que são os pacotes complementares?', 'São recursos adicionais para roteiros, idiomas, revisão e atualização da ÁGORA.', null, ['Ver os recursos', '#/potencializar']],
+    ['Tenho um pacote. Como eu uso?', 'Localize o arquivo no computador e importe em Recursos da ÁGORA. Cada pacote tem seu procedimento.', 'Tenho um pacote. Me ajuda a importar para a ÁGORA.', ['Abrir recursos', '#/potencializar']],
+    ['O pacote está no Google Drive.', 'Baixe-o primeiro e importe o arquivo ou a pasta extraída em Recursos da ÁGORA.', null, ['Abrir recursos', '#/potencializar']]
   ]],
   ['atualizar', 'Versão nova', [
-    ['Saiu uma versão nova. Como eu atualizo?', 'Baixe a versão nova na área de membros e abra numa pasta nova, do lado da antiga. Nunca por cima. Depois, peça pra IA trazer o seu canal.', 'Atualizei a Máquina. Me ajuda a trazer o meu canal.'],
+    ['Saiu uma versão nova. Como eu atualizo?', 'Baixe a versão nova na origem do pacote e abra numa pasta nova, do lado da antiga. Nunca por cima. Depois, peça pra IA trazer o seu canal.', 'Atualizei a ÁGORA. Me ajuda a trazer o meu canal.'],
     ['Vou perder o meu canal?', 'Não. A versão nova traz o seu canal, os seus vídeos e os seus extras. A pasta antiga fica do jeito que está.', null],
-    ['O que mudou em cada versão?', 'Está em Potencializar a máquina, Atualizações Para Sempre, no fim da tela. A versão mais nova fica em cima.', 'O que tem de novo na minha versão da Máquina?', ['Ver o que mudou', '#/potencializar/atualizacoes']]
+    ['O que mudou em cada versão?', 'Está em Recursos da ÁGORA, Atualizações Para Sempre, no fim da tela. A versão mais nova fica em cima.', 'O que tem de novo na minha versão da ÁGORA?', ['Ver o que mudou', '#/potencializar/atualizacoes']]
   ]],
   ['erro', 'Quando dá erro', [
-    ['Apareceu uma mensagem de erro.', 'Copie a mensagem e mande pra IA. Ela conhece a Máquina e resolve. Não precisa entender o erro.', 'Deu esse erro. Me ajuda a resolver: [cole a mensagem aqui]'],
+    ['Apareceu uma mensagem de erro.', 'Copie a mensagem e mande pra IA. Ela conhece a ÁGORA e resolve. Não precisa entender o erro.', 'Deu esse erro. Me ajuda a resolver: [cole a mensagem aqui]'],
     ['Deu erro na instalação.', 'Peça pra IA rodar a instalação de novo. Ela confere tudo e diz o que falta.', 'deu erro, roda o instalar de novo'],
     ['Apareceu "O VÍDEO NÃO FOI FEITO".', 'Falta terminar de configurar o seu canal. A IA te ajuda, uma pergunta de cada vez.', 'Me ajuda a terminar de configurar o meu canal.'],
     ['O vídeo ficou estranho.', 'Diga pra IA o que ficou estranho, com o número da cena. Ela arruma.', 'O vídeo ficou estranho na cena [número]: [o que aconteceu]. Arruma pra mim.']
   ]],
-  ['compra', 'Compra e acesso', [
-    ['Onde eu baixo a Máquina e os extras?', 'Na área de membros da Cakto. O acesso chega no e-mail que você usou pra comprar. Olhe também no lixo eletrônico (spam).', null],
-    ['Não recebi o acesso ou tenho um problema com a compra.', 'Procure no e-mail por <b>Cakto</b>, também no spam. Não achou, ou é outro problema de compra? Escreva pra <b>desconstruindouniverso@gmail.com</b>.', null]
+  ['pacotes', 'Pacotes e arquivos', [
+    ['Como encontro um pacote?', 'Localize o arquivo ZIP, a pasta extraída ou o PDF de documentação no computador e importe-o em Recursos da ÁGORA.', null],
+    ['A importação falhou.', 'Confira se o arquivo está completo e se corresponde a um pacote compatível. Se o erro continuar, reúna a mensagem e os registros do aplicativo.', null]
   ]]
 ];
 const BOAS = [
@@ -2410,7 +2404,7 @@ const BOAS = [
   ['Diga o que achou de cada cena', 'Gostei ou Mudar. A IA aprende o seu gosto e acerta mais.'],
   ['Leia as cenas antes do vídeo', 'A IA escreve cada cena em 10 linhas. Mudar ali é mais fácil do que depois.'],
   ['Uma coisa de cada vez', 'Peça uma mudança, confira, e só depois peça a próxima.'],
-  ['Não mexa nos arquivos com as mãos', 'Quem mexe na pasta da Máquina é a IA. Você só pede.'],
+  ['Não mexa nos arquivos com as mãos', 'Quem mexe na pasta da ÁGORA é a IA. Você só pede.'],
   ['Salve o painel nos favoritos', 'Assim ele fica sempre a um clique.'],
   ['Depois de postar, conte como foi', 'Diga pra IA quantas pessoas viram. Os próximos vídeos ficam melhores.']
 ];
@@ -2430,7 +2424,7 @@ function paginaAjuda() {
     <h2>${esc(nome)}</h2>
     ${itens.map(([p, r, pedido, ir]) => `<details class="pergunta" data-busca="${esc(semAcentoAjuda(`${p} ${r.replace(/<[^>]+>/g, '')} ${pedido || ''}`))}"><summary>${esc(p)}</summary>
       <div class="resposta"><p>${r}</p>${pedido ? `<p class="pede">Peça pra sua IA:</p>${pedidoPronto(pedido)}` : ''}${ir ? `<div class="acoes"><a class="botao mini claro" href="${ir[1]}">${esc(ir[0])} →</a></div>` : ''}</div></details>`).join('')}
-  </section>`).join('')}<p class="nada-achado" hidden>Não achei. Tente outra palavra, ou pergunte direto pra sua IA: ela sabe tudo da Máquina.</p></div>
+  </section>`).join('')}<p class="nada-achado" hidden>Não achei. Tente outra palavra, ou pergunte direto pra sua IA: ela sabe tudo da ÁGORA.</p></div>
   <h2>Boas práticas</h2>
   <p class="sub-quadro">O jeito de se virar sozinho, sem esperar ninguém.</p>
   <ol class="dicas-boas">${BOAS.map(([b, s], i) => `<li class="vidro" style="--r:${['-.6deg', '.5deg', '-.3deg', '.7deg'][i % 4]}"><b>${esc(b)}</b><span>${esc(s)}</span></li>`).join('')}</ol>
@@ -2438,7 +2432,7 @@ function paginaAjuda() {
     <h2>Ainda não resolveu?</h2>
     <p class="sub-quadro">Primeiro, conte pra sua IA o que aconteceu, do seu jeito. Ela resolve quase tudo.</p>
     ${pedidoPronto('Me ajuda a resolver isso. O que aconteceu foi: [conte aqui, do seu jeito]')}
-    <p class="suave" style="margin-top:16px">Problema com a compra ou com o acesso à área de membros, ou a IA tentou e não resolveu? Escreva pra <b>desconstruindouniverso@gmail.com</b>, contando o que aconteceu.</p>
+    <p class="suave" style="margin-top:16px">Se o problema persistir, consulte a documentação da ÁGORA e reúna a mensagem de erro e os registros do aplicativo.</p>
   </section>`;
   ligarCopiar(app);
   const busca = $('#busca-ajuda');
@@ -2488,7 +2482,7 @@ async function irPara(rota, agora = false) {
 
 async function vigiar() {
   if (!acabou && aposentada !== 'velha') {
-    // A cada pergunta, a aba conta pra Máquina se está na tela (assim o npm run painel não abre aba nova à toa)
+    // A cada pergunta, a aba conta pra ÁGORA se está na tela (assim o npm run painel não abre aba nova à toa)
     const r = await pedir(`versao?aba=${ABA}&visivel=${document.visibilityState === 'visible' ? 1 : 0}`);
     if (r.ir != null) await irPara(r.ir);
     if (!r.versao) falhas++;
@@ -2543,7 +2537,7 @@ document.addEventListener('visibilitychange', () => {
   faixas();
   await mostrar();
   carregarConferir();
-  vigiar(); // já conta pra Máquina que esta aba está na tela
+  vigiar(); // já conta pra ÁGORA que esta aba está na tela
 })();
 </script>
 </body>

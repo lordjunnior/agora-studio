@@ -1,6 +1,6 @@
-// O painel da Máquina: uma página no navegador da pessoa, com o menu do lado. É a parte visual: mostra o que a Máquina
+// O painel da ÁGORA: uma página no navegador da pessoa, com o menu do lado. É a parte visual: mostra o que a ÁGORA
 // fez e facilita umas configurações; o resto a pessoa pede no chat da IA.
-//   Comece aqui: como a Máquina funciona, o que já está instalado e configurado (o npm run conferir), com a barra de
+//   Comece aqui: como a ÁGORA funciona, o que já está instalado e configurado (o npm run conferir), com a barra de
 //      progresso, o quadro do vídeo de exemplo (que vem no zip; se sumiu, importa de novo ali) e o pra vincular um
 //      pacote extra de modelos 3D
 //   Meu canal: a capa (o banner do YouTube), o logo, o nome e o @, do que o canal fala, quem assiste, o jeito de falar,
@@ -10,13 +10,13 @@
 //   Vídeos: um card por pasta de videos/. Em cada vídeo: o vídeo pronto, o texto de postar (título, descrição e
 //      comentário fixado, com botão de copiar), as cenas (uma imagem por frase, do --revisar) e o roteiro. Nas cenas, a
 //      pessoa marca "gostei" ou "mudar" em cada uma; a opinião fica em videos/<tema>/opiniao.json pra IA ler
-//   Modelos 3D: tudo que a Máquina sabe desenhar, por tipo, com a foto de cada um (referencias/modelos/, do npm run
+//   Modelos 3D: tudo que a ÁGORA sabe desenhar, por tipo, com a foto de cada um (referencias/modelos/, do npm run
 //      modelos), e os pacotes extras vinculados
-//   Potencializar a máquina: os extras vendidos à parte (30 Roteiros, Canal Gringo, Checklist e Atualizações), com o
-//      link de compra, onde achar o arquivo na área de membros e o quadro pra trazer o arquivo pra cá
+//   Recursos da ÁGORA: pacotes complementares e seus procedimentos de importação, com o
+//      local do pacote e o quadro para importar o arquivo
 //      (motor/potencializar.js); depois de instalado, como usar cada um
 //   Ajuda: as perguntas mais comuns por assunto, com um campo pra procurar e o pedido pronto pra mandar pra IA em cada
-//      resposta, as boas práticas e, no fim, o suporte (só pra compra e acesso, ou depois de a IA tentar)
+//      respostas, boas práticas e orientações de diagnóstico.
 // Uso (quem roda é a IA):
 //   npm run painel                       abre o painel e volta na hora (ele fica aberto por 12 horas; rodar de novo reabre).
 //                                        Uma aba só: com o painel já na tela da pessoa, ele só troca de tela, sem aba
@@ -24,7 +24,7 @@
 //   npm run painel -- <tema>             abre direto no vídeo videos/<tema>, nas cenas
 //   npm run painel -- <tema> --opiniao   mostra aqui a opinião que a pessoa deu nas cenas e no vídeo pronto
 //   npm run painel -- --canal            abre em "Meu canal" (o npm run canal abre assim, depois de salvar as respostas)
-//   npm run painel -- --potencializar    abre em "Potencializar a máquina" (os extras: trazer o arquivo baixado e como usar)
+//   npm run painel -- --potencializar    abre em "Recursos da ÁGORA" (os extras: trazer o arquivo baixado e como usar)
 //   npm run painel -- <tema> --pronto    abre no vídeo pronto (o render abre assim no fim; sem --pronto, abre nas cenas)
 //   npm run painel -- --link             liga o painel sem abrir aba nova e mostra o link (pra IA pôr no fim da resposta;
 //                                        o Claude Code roda isto sozinho no começo de toda conversa)
@@ -69,7 +69,7 @@ const existe = (...p) => quando(...p) > 0;
 const iso = (ms) => (ms ? new Date(ms).toISOString() : null);
 const dataHora = (d) => new Date(d).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 
-// A porta do painel desta pasta, guardada na pasta temporária: com duas Máquinas no computador, a segunda fica noutra
+// A porta do painel desta pasta, guardada na pasta temporária: com duas instâncias da ÁGORA no computador, a segunda fica noutra
 // porta, e rodar de novo reaproveita o painel dela em vez de ligar outro
 const PORTA_SALVA = path.join(os.tmpdir(), `agora-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.porta`);
 // O código da página fica guardado na pasta temporária do computador: o endereço continua valendo quando o painel é
@@ -309,7 +309,7 @@ function versao() {
   return h.digest('hex').slice(0, 12);
 }
 
-// O npm run conferir, pro quadro "Como está a Máquina" (guardado por 20 s: ele fala com a ElevenLabs)
+// O npm run conferir, pro quadro "Como está a ÁGORA" (guardado por 20 s: ele fala com a ElevenLabs)
 let conferido = null;
 function conferir() {
   if (conferido && Date.now() - conferido.em < 20000) return Promise.resolve(conferido.r);
@@ -335,8 +335,8 @@ function importar(args) {
 }
 
 // ---------- Pacotes extras (modelos 3D e cenários baixados à parte) ----------
-// Um pacote é um .zip (ou a pasta dele) com a mesma estrutura da Máquina: motor/modelos/*.js (o render carrega todos)
-// e referencias/cenarios/ (fotos e catálogo), com um pacote.json na raiz: {"nome", "versao", "maquina"}. Só entra o que
+// Um pacote é um .zip (ou a pasta dele) com a mesma estrutura da ÁGORA: motor/modelos/*.js (o render carrega todos)
+// e referencias/cenarios/ (fotos e catálogo), com um pacote.json na raiz: {"nome", "versao", "agoraVersion"}. Só entra o que
 // é dessas pastas. O que cada pacote instalou fica anotado em motor/modelos/pacotes.json (pra trocar de versão e tirar)
 const DO_PACOTE = [
   { pasta: 'motor/modelos/', tipos: /\.js$/i, raso: true },
@@ -344,7 +344,7 @@ const DO_PACOTE = [
 ];
 const REGISTRO = ['motor', 'modelos', 'pacotes.json'];
 const PREPARO = path.join(os.tmpdir(), `agora-pacote-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}`);
-const versaoDaMaquina = () => (lerJson('package.json') || {}).version || '';
+const versaoDaAgora = () => (lerJson('package.json') || {}).version || '';
 const maisNova = (a, b) => { const x = String(a).split('.').map(Number), y = String(b).split('.').map(Number); for (let i = 0; i < 3; i++) if ((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); return false; };
 
 function instalarPacote(itens) {
@@ -361,7 +361,7 @@ function instalarPacote(itens) {
     certos.push({ rel: m[1], pegar: it.pegar });
   }
   if (!certos.length) {
-    return { ok: false, mensagem: 'Isso não parece um pacote da Máquina: não achei modelos 3D (motor/modelos) nem cenários (referencias/cenarios) dentro. Confira se é o arquivo certo da área de membros.' };
+    return { ok: false, mensagem: 'Isso não parece um pacote da ÁGORA: não achei modelos 3D (motor/modelos) nem cenários (referencias/cenarios) dentro. Confira se selecionou o arquivo de pacote correto.' };
   }
   const nome = String(info.nome || 'Pacote extra').slice(0, 80), versao = String(info.versao || '').slice(0, 20);
   const registro = lerJson(...REGISTRO) || [];
@@ -369,12 +369,12 @@ function instalarPacote(itens) {
   for (const x of certos) { const f = arq(...x.rel.split('/')); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, x.pegar()); }
   // Versão nova do mesmo pacote: o que a antiga tinha e a nova não tem sai
   if (antigo) for (const rel of antigo.arquivos || []) if (!certos.some((x) => x.rel === rel)) fs.rmSync(arq(...rel.split('/')), { force: true });
-  const novo = { nome, versao, maquina: String(info.maquina || ''), instalado: new Date().toISOString(), arquivos: certos.map((x) => x.rel) };
+  const novo = { nome, versao, agoraVersion: String(info.agoraVersion || ''), instalado: new Date().toISOString(), arquivos: certos.map((x) => x.rel) };
   fs.mkdirSync(path.dirname(arq(...REGISTRO)), { recursive: true });
   fs.writeFileSync(arq(...REGISTRO), JSON.stringify([...registro.filter((p) => p.nome !== nome), novo], null, 2) + '\n');
   const modelos = certos.filter((x) => x.rel.startsWith('motor/')).length;
-  const aviso = novo.maquina && versaoDaMaquina() && maisNova(novo.maquina, versaoDaMaquina())
-    ? `Esse pacote é pra Máquina ${novo.maquina} ou mais nova, e a sua é a ${versaoDaMaquina()}: baixe a versão nova da Máquina na área de membros, senão algum modelo pode não funcionar.` : '';
+  const aviso = novo.agoraVersion && versaoDaAgora() && maisNova(novo.agoraVersion, versaoDaAgora())
+    ? `Esse pacote é pra ÁGORA ${novo.agoraVersion} ou mais nova, e a sua é a ${versaoDaAgora()}: obtenha a versão mais recente da ÁGORA antes de importar o pacote, senão algum modelo pode não funcionar.` : '';
   return { ok: true, nome, versaoDoPacote: versao, modelos, outros: certos.length - modelos, aviso };
 }
 function tirarPacote(nome) {
@@ -396,7 +396,7 @@ function listarPacotes() {
     modelos: modelos.map((m) => ({ nome: m, extra: dePacote.has(`motor/modelos/${m}.js`) }))
   };
 }
-// ---------- Modelos 3D: tudo que a Máquina sabe desenhar ----------
+// ---------- Modelos 3D: tudo que a ÁGORA sabe desenhar ----------
 // As fotos e o catálogo vêm do npm run modelos (motor/ver-modelos.js), em referencias/modelos/. Os cenários e as peças
 // dos pacotes (motor/modelos/*.js) são lidos do motor na hora: um pacote recém-vinculado aparece antes mesmo da foto
 const CATEGORIAS = [['cenarios', 'Cenários'], ['personagens', 'Personagens'], ['bichos', 'Bichos'], ['objetos', 'Objetos'], ['modelos', 'Modelos prontos']];
@@ -462,7 +462,7 @@ async function rotaPacote(req, url) {
   if (etapa === 'zip') {
     const z = path.join(PREPARO, 'pacote.zip');
     if (!(await receber(req, z, 4 * 1024 ** 3))) return { ok: false, mensagem: 'O arquivo não chegou inteiro. Tente de novo.' };
-    try { return comFotos(instalarPacote(lerZip(z))); } catch { return { ok: false, mensagem: 'Não consegui abrir esse .zip. Baixe de novo da área de membros e tente outra vez.' }; } finally { fs.rmSync(PREPARO, { recursive: true, force: true }); }
+    try { return comFotos(instalarPacote(lerZip(z))); } catch { return { ok: false, mensagem: 'Não consegui abrir esse .zip. Baixe de novo da origem do pacote e tente outra vez.' }; } finally { fs.rmSync(PREPARO, { recursive: true, force: true }); }
   }
   if (etapa === 'comecar') { fs.rmSync(PREPARO, { recursive: true, force: true }); req.resume(); return { ok: true }; }
   if (etapa === 'arquivo') {
@@ -492,7 +492,7 @@ async function rotaExtra(req, url) {
       if (!(await receber(req, f, 2 * 1024 ** 3))) return { ok: false, mensagem: 'O arquivo não chegou inteiro. Tente de novo.' };
       const b = fs.readFileSync(f), nome = String(url.searchParams.get('nome') || 'arquivo').split(/[\\/]/).pop();
       if (b.length >= 4 && b.readUInt32LE(0) === 0x04034b50) {
-        try { return instalar(lerZip(b)); } catch { return { ok: false, mensagem: 'Não consegui abrir esse .zip. Baixe de novo da área de membros e tente outra vez.' }; }
+        try { return instalar(lerZip(b)); } catch { return { ok: false, mensagem: 'Não consegui abrir esse .zip. Baixe de novo da origem do pacote e tente outra vez.' }; }
       }
       return instalar([{ caminho: nome, pegar: () => b }]);
     }
@@ -522,7 +522,7 @@ async function receberExemplo(req) {
   const b = Buffer.alloc(8), fd = fs.openSync(chegando, 'r');
   fs.readSync(fd, b, 0, 8, 0);
   fs.closeSync(fd);
-  if (b.toString('latin1', 4, 8) !== 'ftyp') return falhou('Esse arquivo não é um vídeo .mp4. Arraste o video.mp4 da pasta videos/exemplo, de dentro do zip da Máquina.');
+  if (b.toString('latin1', 4, 8) !== 'ftyp') return falhou('Esse arquivo não é um vídeo .mp4. Arraste o video.mp4 da pasta videos/exemplo, de dentro do zip da ÁGORA.');
   try { fs.renameSync(chegando, destino); } catch { return falhou('Não consegui salvar o vídeo. Se ele estiver aberto em outro programa, feche e tente de novo.'); }
   return { ok: true };
 }
@@ -630,7 +630,7 @@ function servir(porta, token, { esperando = false, aoAcabar = () => {} } = {}) {
         const r = await rotaPacote(req, url);
         return json(r.ok ? 200 : 400, { ...r, versao: versao() });
       }
-      // Os extras do Potencializar (o .zip, a pasta ou o PDF baixado na área de membros) também vêm crus
+      // Os extras do Potencializar (o .zip, a pasta ou o PDF baixado na origem do pacote) também vêm crus
       if (req.method === 'POST' && url.pathname.startsWith('/api/extra/')) {
         if (req.headers['x-painel'] !== token) return json(403, { ok: false, mensagem: 'Abra o painel de novo pelo endereço que a IA mostrou.' });
         const r = await rotaExtra(req, url);
@@ -727,7 +727,7 @@ const fechar = (porta, token) => new Promise((ok) => {
 
 function instrucoes(url, tema, temCenas, esperando, naAba) {
   if (naAba) console.log(`\nO painel já estava aberto na tela da pessoa: mudei ele pra ${tema ? `o vídeo videos/${tema}` : 'a tela pedida'}, sem abrir aba nova.`);
-  else console.log(`\nAbri o painel da Máquina no navegador${tema ? `, no vídeo videos/${tema}` : ''} (se já tinha uma aba dele, ela se fecha sozinha).`);
+  else console.log(`\nAbri o painel da ÁGORA no navegador${tema ? `, no vídeo videos/${tema}` : ''} (se já tinha uma aba dele, ela se fecha sozinha).`);
   console.log(`Se ele não apareceu, o endereço é: ${url}`);
   if (tema && temCenas) {
     console.log('\nPRA IA: diga pra pessoa, com as suas palavras: "Abri o painel nas cenas do vídeo, uma imagem por frase. Em cada');
@@ -738,12 +738,12 @@ function instrucoes(url, tema, temCenas, esperando, naAba) {
     console.log('\nPRA IA: diga pra pessoa, com as suas palavras: "Abri o painel no seu vídeo: lá ficam o roteiro, as cenas, o vídeo');
     console.log('pronto e o texto de postar, com botão de copiar."');
   } else {
-    console.log('\nPRA IA: diga pra pessoa, com as suas palavras: "Abri o painel da Máquina no seu navegador. Em Comece aqui você vê');
+    console.log('\nPRA IA: diga pra pessoa, com as suas palavras: "Abri o painel da ÁGORA no seu navegador. Em Comece aqui você vê');
     console.log('o que já está pronto; em Meu canal, o logo, a capa, o personagem, a voz e o resto do canal; em Vídeos, todos os');
-    console.log('seus vídeos, com o vídeo pronto, as cenas e o texto de postar; e em Modelos 3D, tudo que a Máquina sabe desenhar."');
+    console.log('seus vídeos, com o vídeo pronto, as cenas e o texto de postar; e em Modelos 3D, tudo que a ÁGORA sabe desenhar."');
   }
   console.log('Se a página não abriu, mande o endereço acima pra pessoa clicar (link clicável) e diga que também dá pra abrir');
-  console.log('com dois cliques no ABRIR-PAINEL, na pasta da Máquina (Mac: ABRIR-PAINEL.command; Windows: ABRIR-PAINEL.bat).');
+  console.log('com dois cliques no ABRIR-PAINEL, na pasta da ÁGORA (Mac: ABRIR-PAINEL.command; Windows: ABRIR-PAINEL.bat).');
   console.log('Nunca peça pra ela abrir o terminal.');
   if (!esperando) {
     console.log('O painel fica aberto por 12 horas e atualiza sozinho quando você muda alguma coisa; npm run painel abre de novo.');
@@ -815,14 +815,14 @@ function textoDoCanal() {
   const mostrar = (url, naAba = false) => {
     if (args.includes('--atalho')) {
       if (!naAba) abrirNoNavegador(url);
-      console.log(`\n${naAba ? 'O painel da Máquina já estava aberto no seu navegador.' : 'Abri o painel da Máquina no seu navegador.'}\nSe ele não apareceu, copie este endereço e cole no navegador:\n\n   ${url}\n\nPode fechar esta janela: o painel continua aberto.`);
+      console.log(`\n${naAba ? 'O painel da ÁGORA já estava aberto no seu navegador.' : 'Abri o painel da ÁGORA no seu navegador.'}\nSe ele não apareceu, copie este endereço e cole no navegador:\n\n   ${url}\n\nPode fechar esta janela: o painel continua aberto.`);
       return;
     }
     if (!link) { if (!naAba) abrirNoNavegador(url); return instrucoes(url, id, temCenas && !args.includes('--pronto'), false, naAba); }
-    console.log(`O painel da Máquina está ligado. O endereço é: ${url}`);
+    console.log(`O painel da ÁGORA está ligado. O endereço é: ${url}`);
     console.log('PRA IA: termine a sua resposta com este link, clicável, e uma frase do que a pessoa vê lá (os vídeos, o canal,');
     console.log('o que falta configurar). Quer abrir na tela dela? npm run painel. Ela disse que não abriu: mande o link de novo e');
-    console.log('diga que também dá pra abrir com dois cliques no ABRIR-PAINEL, na pasta da Máquina.');
+    console.log('diga que também dá pra abrir com dois cliques no ABRIR-PAINEL, na pasta da ÁGORA.');
   };
 
   if (!esperar) {

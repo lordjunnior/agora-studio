@@ -1,4 +1,4 @@
-// Traz o canal e os vídeos de uma pasta antiga da Máquina (de qualquer versão) pra esta. Feito pra IA mais fraca: ela só
+// Traz o canal e os vídeos de uma pasta antiga da ÁGORA (de qualquer versão) pra esta. Feito pra IA mais fraca: ela só
 // roda o comando, mostra a prévia e, com o sim da pessoa, roda de novo com --confirmar.
 //
 //   npm run importar                     procura a pasta antiga sozinho e mostra o que vai trazer (não muda nada)
@@ -86,7 +86,7 @@ function videosDe(d) {
     return { nome: x.name, arquivos: arqs, bytes: arqs.reduce((s, a) => s + a.bytes, 0), mp4: arqs.filter((a) => /\.mp4$/i.test(a.rel)).reduce((s, a) => s + a.bytes, 0) };
   });
 }
-// O motor antigo, arquivo por arquivo, contra as versões oficiais da Máquina (motor/versoes-oficiais.json, que vem no
+// O motor antigo, arquivo por arquivo, contra as versões oficiais da ÁGORA (motor/versoes-oficiais.json, que vem no
 // zip): o que não bate com nenhuma versão oficial foi escrito ou mudado pela IA da pessoa
 const hashDe = (f) => {
   const b = fs.readFileSync(f);
@@ -213,7 +213,7 @@ function trazer(antiga) {
   C.garantirCanal();
   const outro = outroCanal(C.campo(ler(path.join(antiga, 'canal', 'canal.md')) || '', 'Nome do canal'));
   if (outro) {
-    return { ok: false, mensagem: `Essa pasta antiga é de outro canal, e esta já é do canal "${outro}": pra não misturar os dois, não trouxe nada. Cada canal fica numa pasta da Máquina: pra atualizar o outro, extraia a versão nova em mais uma pasta e traga pra lá.` };
+    return { ok: false, mensagem: `Essa pasta antiga é de outro canal, e esta já é do canal "${outro}": pra não misturar os dois, não trouxe nada. Cada canal fica numa pasta da ÁGORA: pra atualizar o outro, extraia a versão nova em mais uma pasta e traga pra lá.` };
   }
   const d = new Date(), z = (n) => String(n).padStart(2, '0');
   const carimbo = `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}-${z(d.getHours())}h${z(d.getMinutes())}`;
@@ -346,7 +346,7 @@ function escolher(args) {
   const alvo = args.find((a) => !a.startsWith('--') && !/^\d+$/.test(a));
   if (alvo) {
     const p = path.resolve(alvo.replace(/^~(?=$|[\\/])/, os.homedir()));
-    return { lista: [p], escolhida: ehMaquina(p) && p !== RAIZ ? p : null, erro: ehMaquina(p) ? (p === RAIZ ? 'essa é a própria pasta nova' : null) : 'não é uma pasta da Máquina (falta o motor ou o canal)' };
+    return { lista: [p], escolhida: ehInstalacaoAgora(p) && p !== RAIZ ? p : null, erro: ehInstalacaoAgora(p) ? (p === RAIZ ? 'essa é a própria pasta nova' : null) : 'não é uma pasta da ÁGORA (falta o motor ou o canal)' };
   }
   const lista = procurar().map(resumo).sort((a, b) => b.configurado - a.configurado || b.quando - a.quando).map((x) => x.pasta);
   const n = Number(args.find((a) => /^\d+$/.test(a)));
@@ -356,21 +356,21 @@ function escolher(args) {
 function principal() {
   const args = process.argv.slice(2), json = args.includes('--json'), confirmar = args.includes('--confirmar');
   const { lista, escolhida, erro } = escolher(args);
-  const resumos = lista.filter(ehMaquina).map(resumo);
+  const resumos = lista.filter(ehInstalacaoAgora).map(resumo);
   if (json && !confirmar) { console.log(JSON.stringify({ pastas: resumos, livre: (() => { try { const s = fs.statfsSync(RAIZ); return s.bavail * s.bsize; } catch { return null; } })() })); return; }
   if (json && confirmar) {
     if (!escolhida) { console.log(JSON.stringify({ ok: false, mensagem: erro || 'Escolha a pasta antiga.' })); return; }
     console.log(JSON.stringify(trazer(escolhida)));
     return;
   }
-  if (erro) { console.log(`IMPORTAR: "${lista[0]}" ${erro}.\nPRA IA: pergunte pra pessoa onde está a pasta antiga da Máquina e rode npm run importar -- "<a pasta>".`); process.exit(1); }
+  if (erro) { console.log(`IMPORTAR: "${lista[0]}" ${erro}.\nPRA IA: pergunte pra pessoa onde está a pasta antiga da ÁGORA e rode npm run importar -- "<a pasta>".`); process.exit(1); }
   if (!resumos.length) {
-    console.log('IMPORTAR: não achei nenhuma pasta antiga da Máquina neste computador (procurei na pasta da pessoa: Mesa, Documentos, Downloads, OneDrive).');
+    console.log('IMPORTAR: não achei nenhuma pasta antiga da ÁGORA neste computador (procurei na pasta da pessoa: Mesa, Documentos, Downloads, OneDrive).');
     console.log('PRA IA: pergunte pra pessoa onde está a pasta antiga (ela pode arrastar a pasta pra conversa) e rode npm run importar -- "<a pasta>".');
     process.exit(1);
   }
   if (!confirmar || !escolhida) {
-    console.log(`IMPORTAR: achei ${resumos.length === 1 ? '1 pasta antiga' : `${resumos.length} pastas`} da Máquina. Nada foi mudado ainda.\n`);
+    console.log(`IMPORTAR: achei ${resumos.length === 1 ? '1 pasta antiga' : `${resumos.length} pastas`} da ÁGORA. Nada foi mudado ainda.\n`);
     resumos.forEach((x, i) => {
       console.log(`${i + 1}. ${x.pasta}`);
       console.log(`   versão ${x.versao}, mexida em ${x.quando ? dataBr(x.quando) : '?'}`);

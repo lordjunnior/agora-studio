@@ -83,7 +83,7 @@ if (!previa && !trecho && !capa && !revisar && path.basename(pasta) !== 'exemplo
   if (!lerCanal('identidade.md') || MODELO_CANAL.test(lerCanal('identidade.md'))) falta.push('o visual do canal (o personagem, o cenário e a cor)');
   if (!V.vozDoCanal(RAIZ)) falta.push('a voz do canal');
   if (falta.length) {
-    console.error(`\nO VÍDEO NÃO FOI FEITO: falta terminar de configurar ${falta.join(', ')}.\nAntes do primeiro vídeo, a Máquina precisa conhecer o seu canal.`);
+    console.error(`\nO VÍDEO NÃO FOI FEITO: falta terminar de configurar ${falta.join(', ')}.\nAntes do primeiro vídeo, a ÁGORA precisa conhecer o seu canal.`);
     console.error('PRA IA: rode npm run conferir e siga comandos/instalar.md só no que falta, uma pergunta de cada vez. Diga pra pessoa, em palavras simples, o que falta e dê uma resposta pronta pra ela copiar ("Me ajuda a terminar de configurar"). Com tudo PRONTO, faça o vídeo de novo.');
     process.exit(6);
   }
@@ -455,7 +455,7 @@ function motorExtra() {
   const modelos = path.join(__dirname, 'modelos');
   const prontos = fs.existsSync(modelos) ? fs.readdirSync(modelos).filter((f) => f.endsWith('.js')).sort().map((f) => path.join(modelos, f)) : [];
   // Por último, as peças próprias do canal (canal/pecas/*.js): o que a IA fez só pro canal fica fora do motor, e a
-  // versão nova da Máquina não apaga
+  // versão nova da ÁGORA não apaga
   const pecas = path.join(RAIZ, 'canal', 'pecas');
   const proprias = fs.existsSync(pecas) ? fs.readdirSync(pecas).filter((f) => f.endsWith('.js')).sort().map((f) => path.join(pecas, f)) : [];
   return [...prontos, ...['bichos.js', 'cenarios.js'].map((f) => path.join(__dirname, f)).filter((f) => fs.existsSync(f)), ...proprias];
@@ -695,7 +695,7 @@ function avisoDaOpiniao() {
   console.log(`duração: ${tl.total.toFixed(1)}s, ${nPal} palavras, ${(nPal / (tl.total / 60)).toFixed(0)} palavras/min`);
   if (tl.total > 180) console.warn('ATENÇÃO: passou de 3:00, o limite do YouTube Shorts. Encurte o roteiro.');
 
-  // O Chromium da Máquina, o Edge ou o Chrome: o primeiro que abrir e desenhar 3D (motor/navegador.js)
+  // O Chromium da ÁGORA, o Edge ou o Chrome: o primeiro que abrir e desenhar 3D (motor/navegador.js)
   const { browser, canal: navegador, nome: nomeNavegador } = await N.abrir();
   if (navegador !== 'chromium') console.log(`navegador: ${nomeNavegador}`);
   const page = await browser.newPage({ viewport: { width: 1080, height: 1920 } });

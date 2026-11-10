@@ -1,4 +1,4 @@
-// Cenários prontos da Máquina ÁGORA: o lugar inteiro com um nome só. No montar do cena.js:
+// Cenários prontos da plataforma ÁGORA: o lugar inteiro com um nome só. No montar do cena.js:
 //
 //   const C = K.cenario('construcao');            // ou 'natureza', 'cidade', 'casa', 'cozinha'... (lista em K.CENARIOS)
 //   grupo.position.set(...C.centro);              // o objeto do vídeo fica no centro

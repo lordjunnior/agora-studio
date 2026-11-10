@@ -1,4 +1,4 @@
-// Confere, item por item, se a Máquina está instalada e o canal configurado, antes de qualquer pedido de vídeo.
+// Confere, item por item, se a ÁGORA está instalada e o canal configurado, antes de qualquer pedido de vídeo.
 // A IA roda isto no começo da conversa e conta o resultado pra pessoa em palavras simples (comandos/boas-vindas.md).
 // Uso: npm run conferir   (sai com código 0 se não faltar nada, 1 se faltar algo)
 // Cada linha: [ok] pronto · [falta] resolver antes do vídeo · [aviso] funciona, com um porém · [opcional] não precisa
@@ -31,7 +31,7 @@ const motorOk = playwright && fs.existsSync(path.join(RAIZ, 'node_modules/three'
 if (motorOk) item('ok', 'motor de animação (bibliotecas e ffmpeg)');
 else item('falta', 'motor de animação: rode npm run instalar');
 
-// O Chromium da Máquina, o Edge ou o Chrome (motor/navegador.js): basta um. Quem testa se ele abre é o npm run instalar
+// O Chromium da ÁGORA, o Edge ou o Chrome (motor/navegador.js): basta um. Quem testa se ele abre é o npm run instalar
 const navegador = playwright ? N.qual() : null;
 if (navegador) item('ok', `navegador que desenha o vídeo (${navegador.nome})`);
 else item('falta', 'navegador que desenha o vídeo: rode npm run instalar');
@@ -152,9 +152,9 @@ async function conferirVoz() {
   else item('opcional', `descrições do canal: falta ${semDescricao.join(', ')} (canal/perfil.md; a IA escreve e o painel mostra com botão de copiar)`);
 
   const falta = itens.some((i) => i.status === 'falta');
-  console.log(falta ? 'FALTA CONFIGURAR:' : 'PRONTO: Máquina instalada e canal configurado.');
+  console.log(falta ? 'FALTA CONFIGURAR:' : 'PRONTO: ÁGORA instalada e canal configurado.');
   itens.forEach((i) => console.log(`[${i.status}] ${i.texto}`));
-  // O painel (a parte visual da Máquina): toda resposta da IA termina com o link dele
+  // O painel (a parte visual da ÁGORA): toda resposta da IA termina com o link dele
   const painel = await require('./abrir-painel').ligado();
   if (painel) console.log(`PAINEL: ligado: ${painel.url}\nPRA IA: termine a sua resposta com este link do painel, clicável, e uma frase do que a pessoa vê lá.`);
   else console.log('PAINEL: desligado.\nPRA IA: rode npm run painel (abre o painel no navegador da pessoa) e termine a sua resposta com o link que ele mostrar, clicável.');

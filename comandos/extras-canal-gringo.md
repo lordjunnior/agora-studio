@@ -4,23 +4,23 @@
 > `comandos/extras.md`.
 
 O que é: os modelos de canal em inglês (`canal/extras/gringo/canal-en.md`) e em espanhol (`canal-es.md`). **Cada
-idioma é um canal separado, numa CÓPIA da pasta da Máquina.** O canal em português nunca é trocado.
+idioma é um canal separado, numa CÓPIA da pasta da ÁGORA.** O canal em português nunca é trocado.
 
 ## Passo 1. Os modelos estão aqui?
 
 Rode `npm run extras` e leia a linha do Canal Gringo.
 
 - **"os modelos estão em canal/extras/gringo/":** vá pro passo 2.
-- **"não está nesta pasta":** traga o `canal-gringo.zip` (seção "Trazer o arquivo pra Máquina" de
+- **"não está nesta pasta":** traga o `canal-gringo.zip` (seção "Trazer o arquivo pra ÁGORA" de
   `comandos/extras.md`). Traga **antes** de copiar a pasta, assim os modelos vão junto pra cópia.
 
-## Passo 2. A cópia da Máquina (quem faz é a pessoa)
+## Passo 2. A cópia da ÁGORA (quem faz é a pessoa)
 
 Diga pra pessoa, com estas palavras (troque o nome da pasta pelo nome desta pasta):
 
-> Agora você vai fazer uma cópia da Máquina pro outro idioma. É assim:
+> Agora você vai fazer uma cópia da ÁGORA pro outro idioma. É assim:
 > 1. Feche esta conversa.
-> 2. Abra a pasta onde está a sua Máquina. Você vai ver a pasta **agora**.
+> 2. Abra a pasta onde está a sua ÁGORA. Você vai ver a pasta **agora**.
 > 3. Copie essa pasta e cole ali do lado (no Mac: clique com o botão direito e escolha "Duplicar").
 > 4. Mude o nome da cópia pra **agora-en** (inglês) ou **agora-es** (espanhol).
 > 5. Abra a cópia aqui na IA e me mande: "Esta é a cópia em inglês. Me ajuda a configurar."
@@ -61,7 +61,7 @@ a tradução de cada frase do lado.
 
 O cartão de seguir do fim do vídeo já sai no idioma do canal ("+ Follow" no inglês).
 
-**Aproveitar um vídeo em português:** copie o `roteiro.json` e o `cena.js` da pasta do vídeo na Máquina em português
+**Aproveitar um vídeo em português:** copie o `roteiro.json` e o `cena.js` da pasta do vídeo na ÁGORA em português
 (`../agora/videos/<tema>`) pra `videos/<tema>-en` aqui e:
 1. reescreva cada frase no outro idioma, de um jeito natural, sem traduzir palavra por palavra, com o mesmo número de
    frases e os mesmos planos;

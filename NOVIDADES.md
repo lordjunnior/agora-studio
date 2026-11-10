@@ -1,7 +1,7 @@
 # O que mudou em cada versão
 
-A mais nova fica em cima. A versão da sua Máquina aparece no painel, em **Potencializar a máquina**. Pra passar pra
-uma versão nova sem perder nada, peça pra sua IA: "Atualizei a Máquina. Me ajuda a trazer o meu canal."
+A mais nova fica em cima. A versão da sua ÁGORA aparece no painel, em **Recursos da ÁGORA**. Pra passar pra
+uma versão nova sem perder nada, peça pra sua IA: "Atualizei a ÁGORA. Me ajuda a trazer o meu canal."
 
 ## Versão 2.3 · 1º de novembro de 2026
 
@@ -10,10 +10,10 @@ uma versão nova sem perder nada, peça pra sua IA: "Atualizei a Máquina. Me aj
   pede o que quiser mudar, e só depois sai o vídeo.
 - **Com IA grátis, o roteiro vem em duas partes.** Primeiro o roteiro e as cenas, pra você aprovar. Depois, o arquivo
   do vídeo.
-- **Menu Potencializar a máquina.** Os extras (30 Roteiros, Canal Gringo, Checklist e Atualizações), cada um com o
-  passo a passo. Comprou? Solte o arquivo ali e pronto. Vale também o arquivo antigo, do Google Drive.
+- **Menu Recursos da ÁGORA.** Os extras (30 Roteiros, Canal Gringo, Checklist e Atualizações), cada um com o
+  passo a passo. Se já tem o pacote, importe o arquivo pelo painel. Também aceita pastas extraídas.
 - **Os 30 roteiros já entram com o seu canal:** o seu personagem, as suas cores e a sua voz.
-- **Canal em inglês ou espanhol** (Canal Gringo), numa cópia da Máquina, com o "Seguir" do fim do vídeo no idioma
+- **Canal em inglês ou espanhol** (Canal Gringo), numa cópia da ÁGORA, com o "Seguir" do fim do vídeo no idioma
   certo.
 - **Menu Ajuda.** As perguntas mais comuns, separadas por assunto e com busca. Cada resposta traz o pedido pronto pra
   mandar pra IA. E as boas práticas, pra você se virar sozinho.
@@ -32,14 +32,14 @@ uma versão nova sem perder nada, peça pra sua IA: "Atualizei a Máquina. Me aj
 - **O canal num arquivo só:** você responde o CONFIGURAR-MEU-CANAL.txt e a IA arruma o resto.
 - **Quanto gastou cada vídeo:** os créditos da voz e, no Claude Code e no Codex, o uso da IA.
 - **Atualizar sem perder nada:** a versão nova traz o seu canal, os seus vídeos e a chave da voz da pasta antiga.
-- **Cenas que não esquecem nada:** a IA anota o que cada frase tem que mostrar, a Máquina confere antes do vídeo, e o
+- **Cenas que não esquecem nada:** a IA anota o que cada frase tem que mostrar, a ÁGORA confere antes do vídeo, e o
   personagem não fica parado.
 - **O vídeo de exemplo** (a lanterna) vem junto.
 
 ## Versão 2.1 · 29 de outubro de 2026
 
 - **Instalação num comando só.** A IA instala e testa tudo de uma vez.
-- **Se o navegador que desenha o vídeo não abre, a Máquina tenta outro sozinha** (o Edge do Windows ou o Chrome).
+- **Se o navegador que desenha o vídeo não abre, a ÁGORA tenta outro sozinha** (o Edge do Windows ou o Chrome).
 - **Uma janelinha pra colar a chave da voz** (ElevenLabs), sem mexer em arquivo.
 - **Passo a passo da voz grátis** no seu computador (VoiceStudio).
 - **Regras pra qualquer IA não travar**, até a grátis.

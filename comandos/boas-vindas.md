@@ -16,7 +16,7 @@ Uma frase, sozinha, antes do primeiro comando, pra pessoa não ficar olhando a t
   exemplo). Na dúvida, fica: é uma frase só
 - **Quando a pessoa perguntar de uma permissão** ("ele pediu acesso ao Chromium, tá certo?", "pediu pra usar a
   internet"): sim, pode aceitar. Explicar o que é em uma frase: o navegador que desenha o vídeo (ele trabalha escondido
-  e tira a "foto" de cada quadro), a internet pra baixar as peças da Máquina ou falar com a ElevenLabs, a janelinha da
+  e tira a "foto" de cada quadro), a internet pra baixar as peças da ÁGORA ou falar com a ElevenLabs, a janelinha da
   chave. Sem essas permissões o vídeo não sai. No Codex, se ele pedir permissão toda hora, dá pra escolher "Acesso
   completo" no seletor de acesso, embaixo da caixa de mensagem
 - Se a mensagem já era um pedido, juntar os dois: "Oi! Já vou ver o vídeo do guarda-chuva. Antes, deixa eu conferir
@@ -70,7 +70,7 @@ Modelo (primeira vez):
 
 ### Node.js não instalado (a pessoa instala)
 
-> Falta uma coisa que eu não consigo instalar sozinho: o Node.js, o programa que faz a Máquina funcionar. É grátis e
+> Falta uma coisa que eu não consigo instalar sozinho: o Node.js, o programa que faz a ÁGORA funcionar. É grátis e
 > leva uns 5 minutos:
 > 1. Entre em **nodejs.org** e baixe a versão **LTS** (o botão de download da página)
 > 2. Abra o arquivo que baixou e vá clicando em **Next** até **Finish** (no Mac: **Continuar** e **Instalar**). Se o
@@ -86,8 +86,8 @@ Modelo (primeira vez):
 
 **No fim do relatório, o painel** (regra número 4 do `AGENTS.md`): o `npm run conferir` termina com a linha `PAINEL:`.
 `ligado`: mande o link dela, clicável. `desligado`: rode `npm run painel` (abre na tela da pessoa) e mande o link que
-ele mostrar. Uma frase basta: "Seu painel, com tudo da Máquina: <link>". Se ela disser que não abriu, o link de novo e
-o atalho: dois cliques no arquivo `ABRIR-PAINEL`, na pasta da Máquina.
+ele mostrar. Uma frase basta: "Seu painel, com tudo da ÁGORA: <link>". Se ela disser que não abriu, o link de novo e
+o atalho: dois cliques no arquivo `ABRIR-PAINEL`, na pasta da ÁGORA.
 
 ## 4. Boas-vindas (depois do relatório)
 
@@ -102,12 +102,12 @@ Uma vez só por conversa. Se a pessoa já fez um pedido, numa conversa de volta,
 
 ### Apresentação (primeira vez)
 
-> **O que é isto:** a Máquina ÁGORA transforma um tema (tipo "como funciona um guarda-chuva") num vídeo curto
+> **O que é isto:** a plataforma ÁGORA transforma um tema (tipo "como funciona um guarda-chuva") num vídeo curto
 > animado em 3D, pronto pra postar: roteiro, animação, narração, legenda, som e capa.
 >
 > **Como a gente vai trabalhar:**
 > 1. **Uma vez só, nesta conversa:** eu instalo o que falta e te faço umas perguntas sobre o canal: nome, assunto,
->    personagem e voz. No fim, abro o painel da Máquina no seu navegador pra você pôr o logo, o banner e as descrições
+>    personagem e voz. No fim, abro o painel da ÁGORA no seu navegador pra você pôr o logo, o banner e as descrições
 > 2. **A cada vídeo, numa conversa nova comigo:** você me dá um tema, eu escrevo o roteiro e te mostro. Você aprova ou
 >    pede mudança
 > 3. Eu monto as cenas e você dá a opinião de cada uma no painel. Depois faço o vídeo, já com a capa e o texto de postar
@@ -135,7 +135,7 @@ fim é o passo a passo dele.
 >   certo no seu canal
 > - Cada vídeo novo, numa conversa nova comigo: eu leio tudo do seu canal de novo e o vídeo sai melhor
 > - "Abre o painel" mostra todos os seus vídeos no navegador: as cenas, o roteiro, o vídeo pronto e o texto de postar,
->   com botão de copiar. Sem mim, dá pra abrir com dois cliques no arquivo ABRIR-PAINEL, na pasta da Máquina
+>   com botão de copiar. Sem mim, dá pra abrir com dois cliques no arquivo ABRIR-PAINEL, na pasta da ÁGORA
 > - `/ajuda` (ou "me ajuda") mostra estas dicas de novo, e "o que você já aprendeu?" mostra o que eu sei de você
 
 Fora do Claude Code, os atalhos com `/` não existem: nessa dica, dizer só "me ajuda".

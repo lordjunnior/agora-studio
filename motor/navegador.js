@@ -1,14 +1,14 @@
 // O navegador que desenha os quadros do vídeo (invisível: ninguém vê a janela). Tenta, nesta ordem: o que funcionou da
-// última vez, o Chromium que a Máquina baixa (npm run instalar), o Microsoft Edge (já vem em todo Windows) e o Google
+// última vez, o Chromium que a ÁGORA baixa (npm run instalar), o Microsoft Edge (já vem em todo Windows) e o Google
 // Chrome. Se um não abrir ou não desenhar 3D, passa pro próximo sozinho e guarda o que funcionou pra começar por ele.
-// Usado pelo render, pelo conferir e pelo instalar. Pra forçar um: PREGUICA_NAVEGADOR=chromium (ou msedge, chrome).
+// Usado pelo render, pelo conferir e pelo instalar. Pra forçar um: AGORA_BROWSER=chromium (ou msedge, chrome).
 const fs = require('fs');
 const path = require('path');
 
 const RAIZ = path.resolve(__dirname, '..');
 const GUARDADO = path.join(RAIZ, 'node_modules', '.cache', 'agora', 'navegador.json');
 const CANAIS = ['chromium', 'msedge', 'chrome'];
-const NOMES = { chromium: 'o Chromium da Máquina', msedge: 'o Microsoft Edge', chrome: 'o Google Chrome' };
+const NOMES = { chromium: 'o Chromium da ÁGORA', msedge: 'o Microsoft Edge', chrome: 'o Google Chrome' };
 // GPU de cada sistema (no Mac, Metal; no resto, o padrão do navegador)
 const ARGS = process.platform === 'darwin' ? ['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'] : ['--enable-gpu', '--ignore-gpu-blocklist'];
 
@@ -46,7 +46,7 @@ function guardar(canal) {
 
 // Os navegadores que existem neste computador, na ordem de tentar
 function instalados() {
-  const forcado = process.env.PREGUICA_NAVEGADOR;
+  const forcado = process.env.AGORA_BROWSER;
   const g = guardado();
   const ordem = CANAIS.includes(forcado) ? [forcado] : g ? [g, ...CANAIS.filter((c) => c !== g)] : CANAIS;
   return ordem.filter((c) => caminho(c));
@@ -111,9 +111,9 @@ function explicar(falhas) {
     '  1. Rodar npm run instalar: ele baixa o navegador de novo e testa sozinho.',
     '  2. Se o programa da IA pedir permissão pra abrir um programa ou usar a internet, aceitar. Rodando "na caixa de',
     '     areia" (sandbox), o navegador não abre: no Codex, dá pra escolher "Acesso completo".',
-    '  3. Antivírus: se ele bloqueou o navegador baixado, liberar a pasta da Máquina, ou instalar o Google Chrome',
-    '     (google.com/chrome) e rodar de novo. A Máquina usa o Chrome ou o Edge sozinha quando acha.',
-    'Não resolveu? Escreva pra desconstruindouniverso@gmail.com com o print desta mensagem.'
+    '  3. Antivírus: se ele bloqueou o navegador baixado, liberar a pasta da ÁGORA, ou instalar o Google Chrome',
+    '     (google.com/chrome) e rodar de novo. A ÁGORA usa o Chrome ou o Edge sozinha quando acha.',
+    'Não resolveu? consulte a documentação da ÁGORA e reúna os registros do erro com o print desta mensagem.'
   ].join('\n');
 }
 

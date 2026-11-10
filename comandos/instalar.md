@@ -12,14 +12,14 @@ primeiro vídeo é feito (regra número 3 do `AGENTS.md`). Não fazer vídeo nes
 
 ## 1. A parte técnica (um comando só)
 
-1. **Avisar** em uma frase, antes: "Agora vou instalar as peças da Máquina. Leva de 2 a 10 minutos, e se aparecer um
+1. **Avisar** em uma frase, antes: "Agora vou instalar as peças da ÁGORA. Leva de 2 a 10 minutos, e se aparecer um
    pedido de permissão, pode aceitar: sou eu instalando."
 2. **Rodar `npm run instalar`**, com tempo limite longo (15 minutos). No Windows, se o `npm` der erro de "execução de
    scripts", `npm.cmd run instalar`; se nem isso, `node motor/instalar.js`. Ele faz sozinho, na ordem:
    - confere o Node.js (precisa ser o 20 ou mais novo)
    - baixa as peças do motor (o motor 3D e o ffmpeg)
    - acha um navegador que desenhe o vídeo: no Windows, o Edge que já vem instalado (nem baixa nada); no Mac e no
-     Linux, baixa o Chromium da Máquina. Se um não abrir, tenta o próximo sozinho (Chromium, Edge ou Chrome)
+     Linux, baixa o Chromium da ÁGORA. Se um não abrir, tenta o próximo sozinho (Chromium, Edge ou Chrome)
    - testa desenhando 2 imagens do vídeo de exemplo (a lanterna), em `videos/exemplo/testes/`
 3. **Ler o fim:** `RESULTADO: INSTALADO` ou `RESULTADO: FALTA`, e a linha `PRA IA:` com o que fazer em seguida. Seguir
    essa linha. Pra pessoa, só o resultado numa linha (sem despejar log). Se quiser, mostrar a imagem do teste (é a
@@ -31,7 +31,7 @@ Sem Node (o `npm` nem existe): o passo a passo de `comandos/boas-vindas.md` ("No
 
 ## 2. O canal (entrevista)
 
-**Já tinha a Máquina (versão antiga)?** O `npm run instalar` avisa no fim se achou uma pasta antiga no computador. Antes
+**Já tinha a ÁGORA (versão antiga)?** O `npm run instalar` avisa no fim se achou uma pasta antiga no computador. Antes
 das perguntas, rode `npm run importar`: ele mostra o que vem de lá (o canal, os vídeos, o logo, a chave da voz), sem
 mudar nada. Com o sim da pessoa, rode o comando que ele indicar (`npm run importar -- --confirmar`) e pergunte só o que
 o `npm run conferir` ainda marcar. Nunca copie as pastas à mão.
@@ -44,7 +44,7 @@ respondeu). Ele salva as respostas e diz o que ficou em branco: pergunte só iss
 Perguntar **uma coisa por vez**, com um exemplo em cada, e aceitar "escolhe você" (aí sugerir e confirmar):
 
 1. **Nome do canal e @ nas redes.** O mesmo @ em todas as redes
-2. **Nicho: do que o canal fala.** Qualquer nicho serve. A fórmula da Máquina é montar uma coisa peça por peça, então
+2. **Nicho: do que o canal fala.** Qualquer nicho serve. A fórmula da ÁGORA é montar uma coisa peça por peça, então
    ela brilha quando o tema tem "como funciona" ou "como foi feito". Se o nicho for outro (história, esportes, games),
    propor o ângulo que encaixa: em história, "como construíram as pirâmides", "como funcionava uma catapulta"; em
    games, "como o controle vibra", "por que o console esquenta". Não prometer o que o motor não faz (filtro de imagem,
@@ -108,7 +108,7 @@ A escolha vai no bloco "No roteiro.json" de `canal/identidade.md`, na linha `"vo
    plano. O comando volta na hora e a janela espera até 30 minutos
 2. **Dizer pra pessoa**, com as suas palavras: "Abri uma janelinha no seu navegador. Ela mostra onde pegar a chave na
    ElevenLabs: é só criar a conta, criar a chave, colar lá e clicar em Salvar. A própria janela diz se funcionou. Depois
-   me diga 'salvei'." Se ela não sabe o que é a chave: "é uma senha da sua conta na ElevenLabs, que deixa a Máquina usar
+   me diga 'salvei'." Se ela não sabe o que é a chave: "é uma senha da sua conta na ElevenLabs, que deixa a ÁGORA usar
    a voz de lá; ela fica só no seu computador"
    - **A janela não abriu:** mandar pra pessoa o endereço que o comando mostrou (`http://127.0.0.1:...`), pra ela clicar
    - **A janela mostrou erro ou disse que não salvou** (alguns programas de IA fecham a janela quando o comando
@@ -165,7 +165,7 @@ O que vai na página do canal em cada rede. É opcional (o conferir não trava s
    - **TikTok** (até 80): uma frase curta que diz o que a pessoa ganha seguindo
    - **Instagram** (até 150): uma ou duas frases, com o mesmo convite
    - Sem promessa que o canal não cumpre, sem copiar bio de outro canal, no máximo 1 ou 2 emojis
-2. **Abrir o painel:** `npm run painel`. Dizer pra pessoa, com as suas palavras: "Abri o painel da Máquina no seu
+2. **Abrir o painel:** `npm run painel`. Dizer pra pessoa, com as suas palavras: "Abri o painel da ÁGORA no seu
    navegador. Em Comece aqui você vê o que já está pronto; em Meu canal você confere o nome do canal, coloca o logo e a
    capa do YouTube e vê as descrições que eu escrevi, com botão de copiar. Pode mudar o que quiser lá mesmo. Quando
    acabar, me diga 'pronto'."
@@ -201,7 +201,7 @@ memória da IA com a instalação e a entrevista.
 3. Mandar a mensagem de passagem, adaptada (o jeito de abrir a conversa nova é o do programa que a pessoa usa: tabela
    na regra número 3 do `AGENTS.md`):
 
-> Pronto: a Máquina está instalada e o seu canal configurado! 🎉
+> Pronto: a ÁGORA está instalada e o seu canal configurado! 🎉
 >
 > Agora vem a parte boa: os vídeos. **Cada vídeo é feito numa conversa nova comigo.** A instalação ocupou boa parte
 > da minha memória nesta conversa; numa conversa nova eu leio tudo do seu canal do zero e o vídeo sai bem melhor.
@@ -225,15 +225,15 @@ mais comuns, com o que fazer:
 |---|---|
 | "npm não é reconhecido", "node não é reconhecido", "command not found" | Falta o Node.js: o passo a passo de `comandos/boas-vindas.md` ("Node.js não instalado") |
 | "a execução de scripts foi desabilitada neste sistema", "npm.ps1 não pode ser carregado" (Windows) | Usar `npm.cmd` no lugar de `npm` (`npm.cmd run instalar`) ou `node motor/instalar.js`. Não mexer na política do Windows |
-| O seu programa pede permissão pra rodar um comando, usar a internet ou abrir um programa | Dizer pra pessoa que é a Máquina instalando ou desenhando o vídeo e que pode aceitar. No Codex, se travar sempre, ela pode escolher "Acesso completo" |
+| O seu programa pede permissão pra rodar um comando, usar a internet ou abrir um programa | Dizer pra pessoa que é a ÁGORA instalando ou desenhando o vídeo e que pode aceitar. No Codex, se travar sempre, ela pode escolher "Acesso completo" |
 | Sem internet: ENOTFOUND, ETIMEDOUT, EAI_AGAIN, "network" | Se a sua ferramenta bloqueia a internet (sandbox), pedir a permissão. Sem bloqueio, pedir pra pessoa conferir o Wi-Fi e rodar de novo |
 | "o Chromium falhou ao iniciar", "erro de configuração do Windows", "side-by-side", "spawn EPERM" | Não consertar na mão: `npm run instalar` testa o Edge e o Chrome sozinho e baixa o Chromium de novo se precisar. Se nenhum abrir, ele explica (permissão, antivírus) |
-| Antivírus avisou ou apagou um arquivo | Pedir pra pessoa liberar a pasta da Máquina no antivírus (ou mover a pasta pra Documentos) e rodar de novo |
-| EPERM, EBUSY, "acesso negado" ao baixar as peças | Algum programa segurando os arquivos (antivírus, OneDrive). Fechar e rodar de novo; se repetir, mover a pasta da Máquina pra Documentos, fora do OneDrive |
+| Antivírus avisou ou apagou um arquivo | Pedir pra pessoa liberar a pasta da ÁGORA no antivírus (ou mover a pasta pra Documentos) e rodar de novo |
+| EPERM, EBUSY, "acesso negado" ao baixar as peças | Algum programa segurando os arquivos (antivírus, OneDrive). Fechar e rodar de novo; se repetir, mover a pasta da ÁGORA pra Documentos, fora do OneDrive |
 | O comando demorou e parou no meio | Rodar de novo com tempo limite maior (15 minutos): ele continua de onde parou |
 | A janelinha da chave não abriu ou não salvou | Passo 3a: o endereço pra pessoa clicar, ou `npm run chave -- --esperar` |
 | Linux: falta o `espeak-ng` | `sudo apt install -y espeak-ng` (pede a senha do computador: a pessoa digita) |
 
-Nada disso resolveu: suporte em desconstruindouniverso@gmail.com, com o print do erro, o sistema do computador e o que
+Nada disso resolveu: consulte a documentação da ÁGORA e reúna os registros do erro, com o print do erro, o sistema do computador e o que
 a pessoa estava fazendo. **Não instalar outra coisa** pra contornar (Remotion, HyperFrames, Python, outro navegador): a
-Máquina não usa e só complica.
+ÁGORA não usa e só complica.

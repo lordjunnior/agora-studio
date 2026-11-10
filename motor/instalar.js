@@ -1,4 +1,4 @@
-// Instala tudo o que a Máquina precisa, num comando só, e testa desenhando o vídeo de exemplo.
+// Instala tudo o que a ÁGORA precisa, num comando só, e testa desenhando o vídeo de exemplo.
 // Uso: npm run instalar        (no Windows, se o PowerShell bloquear o npm: npm.cmd run instalar  ou  node motor/instalar.js)
 // Pode rodar quantas vezes quiser: o que já está pronto ele só confere, e se parar no meio, continua de onde parou.
 // Na primeira vez leva de 2 a 10 minutos (depende da internet). Fala em palavras simples e termina com o
@@ -80,8 +80,8 @@ const POR_QUE = {
   internet: 'não consegui baixar: a internet caiu ou está bloqueada. Se o programa da IA pediu permissão pra usar a ' +
     'internet, é só aceitar (no Codex, "Acesso completo" resolve). Confira o Wi-Fi e tente de novo',
   permissao: 'o computador não deixou gravar os arquivos (antivírus, OneDrive ou a pasta num lugar protegido). Feche ' +
-    'outros programas e tente de novo; se continuar, mova a pasta da Máquina pra Documentos',
-  disco: 'falta espaço no computador: a Máquina precisa de uns 2 GB livres',
+    'outros programas e tente de novo; se continuar, mova a pasta da ÁGORA pra Documentos',
+  disco: 'falta espaço no computador: a ÁGORA precisa de uns 2 GB livres',
   outro: 'deu um erro (as últimas linhas estão logo acima)'
 };
 const ultimas = (saida, n = 12) => saida.replace(/\x1b\[[0-9;]*m/g, '').split(/\r?\n/).map((l) => l.trimEnd()).filter(Boolean).slice(-n).map((l) => `   | ${l}`).join('\n');
@@ -101,7 +101,7 @@ function pecasProntas() {
   // 1. Node.js (o Playwright, que abre o navegador, pede o 20 ou mais novo)
   const [maior] = process.versions.node.split('.').map(Number);
   if (maior < 20) {
-    log(`[falta] Programa base (Node.js): a versão ${process.versions.node} é antiga. A Máquina precisa da 20 ou mais nova.`);
+    log(`[falta] Programa base (Node.js): a versão ${process.versions.node} é antiga. A ÁGORA precisa da 20 ou mais nova.`);
     terminar(false, 'falta atualizar o Node.js, o programa base: entre em nodejs.org, baixe a versão LTS, instale e depois feche e abra de novo o programa da IA.',
       'passe pra pessoa o passo a passo "Node.js não instalado" de comandos/boas-vindas.md (é o mesmo pra atualizar). Quando ela disser que instalou, rode npm run instalar de novo.');
   }
@@ -124,16 +124,16 @@ function pecasProntas() {
       const p = porque(r.saida);
       log(`[falta] Peças do motor: ${POR_QUE[p]}.`);
       if (r.saida.trim()) log(ultimas(r.saida));
-      terminar(false, `não consegui baixar as peças da Máquina: ${POR_QUE[p]}.`,
+      terminar(false, `não consegui baixar as peças da ÁGORA: ${POR_QUE[p]}.`,
         p === 'internet' ? 'se a sua ferramenta bloqueia a internet (sandbox), peça a permissão pra usar a internet ou rodar fora dela e rode npm run instalar de novo. Sem bloqueio: peça pra pessoa conferir o Wi-Fi.'
-          : p === 'outro' ? 'leia as últimas linhas acima, resolva se souber, e rode npm run instalar de novo. Não resolveu: suporte desconstruindouniverso@gmail.com com o print.'
+          : p === 'outro' ? 'leia as últimas linhas acima, resolva se souber, e rode npm run instalar de novo. Não resolveu: consulte a documentação da ÁGORA e reúna os registros do erro com o print.'
             : 'explique o motivo pra pessoa com as suas palavras e rode npm run instalar de novo depois que ela resolver.');
     }
     log('[ok] Peças do motor');
   }
 
   // 3. O navegador que desenha o vídeo. No Windows o Edge já vem instalado: se ele abrir, nem precisa baixar nada.
-  // No Mac e no Linux, o Chromium da Máquina (baixado uma vez); o Chrome ou o Edge ficam de reserva
+  // No Mac e no Linux, o Chromium da ÁGORA (baixado uma vez); o Chrome ou o Edge ficam de reserva
   const N = require('./navegador');
   log('... Procurando um navegador que desenhe o vídeo');
   let nav = { ok: false, erro: '' };
@@ -178,7 +178,7 @@ function pecasProntas() {
     log(ultimas(t.saida, 15));
     terminar(false, 'a instalação terminou, mas o teste do vídeo de exemplo deu erro.',
       t.status === 4 ? 'o que falhou foi o navegador (explicação acima): explique pra pessoa e rode npm run instalar de novo.'
-        : 'leia o erro acima e resolva (se for a voz de teste, veja "Voz de teste do computador" em comandos/boas-vindas.md); depois rode npm run instalar de novo. Não resolveu: suporte desconstruindouniverso@gmail.com com o print.');
+        : 'leia o erro acima e resolva (se for a voz de teste, veja "Voz de teste do computador" em comandos/boas-vindas.md); depois rode npm run instalar de novo. Não resolveu: consulte a documentação da ÁGORA e reúna os registros do erro com o print.');
   }
   log('[ok] Teste: o vídeo de exemplo desenhou certinho');
 
@@ -189,18 +189,18 @@ function pecasProntas() {
   // O painel aberto em "Comece aqui": a pessoa vê o que já está pronto e o que falta (sem depender da IA lembrar)
   prepararAtalhos();
   const url = require('./abrir-painel').abrir();
-  const painel = url ? ` O painel da Máquina abriu no navegador da pessoa: mande o link ${url} (clicável) e diga que lá ela acompanha o que já está pronto e o que falta. Se não abriu, também dá pra abrir com dois cliques no ABRIR-PAINEL, na pasta da Máquina.`
+  const painel = url ? ` O painel da ÁGORA abriu no navegador da pessoa: mande o link ${url} (clicável) e diga que lá ela acompanha o que já está pronto e o que falta. Se não abriu, também dá pra abrir com dois cliques no ABRIR-PAINEL, na pasta da ÁGORA.`
     : ' Depois, rode npm run painel e mande pra pessoa o link que ele mostrar, clicável.';
   const mostrar = `Se quiser, mostre pra pessoa a imagem ${imagem} (é a lanterna do vídeo de exemplo) e depois apague a pasta videos/exemplo/testes/.${painel}`;
   if (!faltas.length) terminar(true, 'tudo instalado e configurado.', `conte pra pessoa, em uma linha, que está tudo pronto. ${mostrar} Depois volte ao que ela tinha pedido.`);
   const falta = faltas.join(' ');
-  // Canal em branco e uma Máquina antiga no computador: quem já comprou traz tudo de lá, sem refazer as perguntas
+  // Canal em branco e uma ÁGORA antiga no computador: quem já tem uma instalação anterior importa os dados sem refazer as perguntas
   let antiga = '';
   if (/canal\//.test(falta)) {
     try {
       const r = JSON.parse(String(require('child_process').spawnSync(process.execPath, [path.join(__dirname, 'importar.js'), '--json'], { cwd: RAIZ, encoding: 'utf8', timeout: 30000 }).stdout).trim());
       const ps = (r.pastas || []).filter((x) => !x.outroCanal && x.configurado);
-      if (ps.length) antiga = ` ANTES das perguntas do canal: achei ${ps.length === 1 ? 'uma versão antiga' : `${ps.length} versões antigas`} da Máquina neste computador (${ps.map((x) => `canal "${x.nome}", ${x.videos.length} vídeos, em ${x.pasta}`).join('; ')}). Pergunte se ela quer trazer o canal e os vídeos de lá: rode npm run importar (mostra o que vem, sem mudar nada) e, com o sim dela, o comando que ele indicar. Depois, siga o que o npm run conferir ainda marcar.`;
+      if (ps.length) antiga = ` ANTES das perguntas do canal: achei ${ps.length === 1 ? 'uma versão antiga' : `${ps.length} versões antigas`} da ÁGORA neste computador (${ps.map((x) => `canal "${x.nome}", ${x.videos.length} vídeos, em ${x.pasta}`).join('; ')}). Pergunte se ela quer trazer o canal e os vídeos de lá: rode npm run importar (mostra o que vem, sem mudar nada) e, com o sim dela, o comando que ele indicar. Depois, siga o que o npm run conferir ainda marcar.`;
     } catch { /* sem conseguir procurar: segue as perguntas */ }
   }
   terminar(true, 'a parte técnica está pronta.',

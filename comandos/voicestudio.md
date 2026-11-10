@@ -77,8 +77,8 @@ O que pode aparecer, na ordem, e o que responder:
 4. **"Configurar meu estúdio" / "Instalar ambiente local"**: clicar. Ele baixa o Python e as bibliotecas dele (vários
    GB). É só esperar
 5. **"Pacotes de modelos"** (ele mostra níveis, quantos GB cada um baixa e "Ajustado para" o seu computador): pra
-   Máquina, só importa a **voz**. Escolher o nível recomendado pro computador, ou o mais leve se o espaço estiver curto.
-   Os níveis maiores baixam também transcrição e tradução, que a Máquina não usa (no Mac em que testamos, o nível de
+   ÁGORA, só importa a **voz**. Escolher o nível recomendado pro computador, ou o mais leve se o espaço estiver curto.
+   Os níveis maiores baixam também transcrição e tradução, que a ÁGORA não usa (no Mac em que testamos, o nível de
    qualidade baixou tudo isso e levou uns 20 minutos)
 6. **Windows: falta o "Microsoft Visual C++ 2015-2022 Redistributable (x64)"**: baixar em
    **aka.ms/vs/17/release/vc_redist.x64.exe**, instalar e abrir o VoiceStudio de novo
@@ -89,7 +89,7 @@ Conferir: `npm run voicestudio` tem que mostrar `[ok] VoiceStudio aberto e respo
 
 **Do menu, a pessoa só vai usar duas coisas: Clonar (ou a Galeria) e, se precisar, Configurações.** Dublagem,
 Transcrever, Ditado, Projetos, Histórias, Audiolivro, Ferramentas, chamadas, MCP e Provedores LLM: ignorar. Se ela
-perguntar de alguma dessas, dizer que é de outros usos do programa e que a Máquina não precisa.
+perguntar de alguma dessas, dizer que é de outros usos do programa e que a ÁGORA não precisa.
 
 ## Passo 4. O motor de voz certo
 
@@ -106,9 +106,9 @@ O "motor" é a inteligência que fala. O VoiceStudio tem vários; pra português
   **Modelos** (Catálogo de modelos), achar o **OmniVoice** e clicar em **Instalar**
 - Em PC sem placa de vídeo, o VoiceStudio sugere motores leves (KittenTTS, Supertonic, PocketTTS): são feitos pra
   inglês. Pra português, use o OmniVoice (mais lento) ou o MOSS-TTS-Nano
-- **O motor escolhido na tela do VoiceStudio tem que ser o mesmo da Máquina.** Se a pessoa trocar o motor no
-  programa (o seletor de motor fica no topo; atalho Cmd/Ctrl+E), anotar o mesmo na Máquina: `"modelo": "voxcpm2"` ou
-  `"modelo": "moss-tts-nano"` dentro do `"voz"` (passo 6). Sem `"modelo"`, a Máquina usa o OmniVoice
+- **O motor escolhido na tela do VoiceStudio tem que ser o mesmo da ÁGORA.** Se a pessoa trocar o motor no
+  programa (o seletor de motor fica no topo; atalho Cmd/Ctrl+E), anotar o mesmo na ÁGORA: `"modelo": "voxcpm2"` ou
+  `"modelo": "moss-tts-nano"` dentro do `"voz"` (passo 6). Sem `"modelo"`, a ÁGORA usa o OmniVoice
 
 ## Passo 5. Criar a voz do canal (o mais importante)
 
@@ -149,7 +149,7 @@ Três jeitos. Recomendar o 1 se a pessoa tem uma voz boa pra gravar; senão, o 2
 
 Conferir: `npm run voicestudio` tem que listar a voz em `[ok] Vozes salvas no VoiceStudio`.
 
-## Passo 6. Ligar a voz na Máquina (a IA faz)
+## Passo 6. Ligar a voz na ÁGORA (a IA faz)
 
 1. Fazer a amostra: `npm run testar-voz -- --voicestudio Narrador` (troque `Narrador` pelo nome exato que o
    `npm run voicestudio` mostrou; com outro motor, junte `--modelo voxcpm2`). A amostra fica em
@@ -192,7 +192,7 @@ Primeiro, sempre: `npm run voicestudio`. Ele diz o que está faltando e o próxi
 | Windows: "O Windows protegeu o computador" | **Mais informações** > **Executar assim mesmo** |
 | Windows: falta o Visual C++ | passo 3, item 6 |
 | O download parou ou ficou lento | conferir a internet; fechar e abrir o VoiceStudio (ele continua de onde parou) |
-| "Este modelo exige acesso no Hugging Face" | só pra modelos especiais: em **Configurações > Credenciais**, **Adicionar token do Hugging Face** (conta grátis em huggingface.co). Pra voz da Máquina, normalmente não precisa |
+| "Este modelo exige acesso no Hugging Face" | só pra modelos especiais: em **Configurações > Credenciais**, **Adicionar token do Hugging Face** (conta grátis em huggingface.co). Pra voz da ÁGORA, normalmente não precisa |
 | "não achei a voz" | o nome anotado não bate: `npm run voicestudio` mostra os nomes exatos |
 | "Tem mais de uma voz chamada..." | renomear ou apagar a repetida no VoiceStudio |
 | O motor que o roteiro pede não está instalado | passo 4 (instalar o OmniVoice em **Modelos**) |
@@ -203,6 +203,5 @@ Primeiro, sempre: `npm run voicestudio`. Ele diz o que está faltando e o próxi
 | Mac com chip Intel | não faz a voz: ElevenLabs |
 | O VoiceStudio usa outro endereço (não o padrão) | anotar no arquivo `.env` a linha `VOICESTUDIO_URL=http://127.0.0.1:<porta>` |
 
-Nada resolveu: o VoiceStudio tem uma comunidade no Discord (link no site **voicestudio.sh**) e o suporte da Máquina é
-desconstruindouniverso@gmail.com. Enquanto isso, dá pra fazer o vídeo com a voz do computador (passo 3c de
+Nada resolveu: consulte a comunidade do VoiceStudio no Discord (link no site **voicestudio.sh**) ou reúna os registros do erro para análise. Enquanto isso, dá pra fazer o vídeo com a voz do computador (passo 3c de
 `comandos/instalar.md`) ou com a ElevenLabs.

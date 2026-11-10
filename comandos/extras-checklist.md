@@ -14,8 +14,8 @@ Rode `npm run extras` e leia a linha do Checklist.
 
 - **"o texto pra IA":** tudo certo.
 - **Só "o PDF":** no Claude Code, leia o PDF. Em outra IA, peça pra pessoa trazer também o
-  `checklist-viral-e-plano-de-30-dias.md`, que fica na mesma aula da área de membros (seção "Trazer o arquivo pra
-  Máquina" de `comandos/extras.md`).
+  `checklist-viral-e-plano-de-30-dias.md`, que fica na mesma aula da origem do pacote (seção "Trazer o arquivo pra
+  ÁGORA" de `comandos/extras.md`).
 - **"não está nesta pasta":** traga o arquivo, do mesmo jeito.
 
 ## Passo 2. Conferir um vídeo antes de postar

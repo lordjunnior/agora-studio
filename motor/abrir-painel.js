@@ -11,7 +11,7 @@ const crypto = require('crypto');
 const { spawnSync } = require('child_process');
 
 const RAIZ = path.resolve(__dirname, '..');
-const PORTA = 47392; // a do painel (motor/painel.js); com duas Máquinas no computador, a outra fica na porta guardada
+const PORTA = 47392; // a do painel (motor/painel.js); com duas instâncias da ÁGORA no computador, a outra fica na porta guardada
 const PORTA_SALVA = path.join(os.tmpdir(), `agora-painel-${crypto.createHash('sha1').update(RAIZ).digest('hex').slice(0, 10)}.porta`);
 
 function abrir(args = []) {
@@ -39,7 +39,7 @@ async function ligado() {
   return (await ping(PORTA)) || (salva && salva !== PORTA ? await ping(salva) : null);
 }
 
-const ATALHO = 'dois cliques no arquivo ABRIR-PAINEL, na pasta da Máquina (no Mac é o ABRIR-PAINEL.command; no Windows, o ABRIR-PAINEL.bat)';
+const ATALHO = 'dois cliques no arquivo ABRIR-PAINEL, na pasta da ÁGORA (no Mac é o ABRIR-PAINEL.command; no Windows, o ABRIR-PAINEL.bat)';
 function avisar(url, oQue) {
   if (!url) {
     return ['PAINEL: não consegui abrir agora.',

@@ -1,23 +1,14 @@
-// Potencializar a Máquina: os extras vendidos à parte (os order bumps da Cakto). O menu "Potencializar a máquina" do
-// painel mostra cada um com o link de compra e o passo a passo, e recebe o arquivo que a pessoa baixou na área de
-// membros: o .zip, a pasta dele (se o computador já abriu o zip) ou o PDF. Vale o arquivo de hoje e o que foi entregue
-// antes pelo Google Drive (outubro de 2026), e até a pasta inteira do Drive: a Máquina reconhece pelo que tem dentro.
-//   30 Roteiros + 100 Temas: cada roteiro vira videos/<NN-tema>/ (roteiro.json e roteiro.md), já com o personagem, a voz,
-//      o cenário, a cor e o @ do canal (o bloco "No roteiro.json" de canal/identidade.md) e a assinatura do canal.md;
-//      roteiro que já está em videos/ não é trocado. Os 100 temas ficam em canal/extras/roteiros/100-temas.md
-//   Canal Gringo: os modelos de canal em inglês e em espanhol e os pedidos prontos, em canal/extras/gringo/
-//   Checklist Viral + Plano de 30 Dias: o PDF, em canal/extras/checklist/checklist.pdf, e o texto pra IA ler
-//      (checklist-*.md), em canal/extras/checklist/checklist.md
-//   O guia em PDF de cada produto: canal/extras/<produto>/guia.pdf
-// Tudo fica dentro de canal/ (o npm run importar leva o canal inteiro pra versão nova). O que foi instalado fica anotado
-// em canal/extras/instalados.json. Os guias pra IA ficam em comandos/extras*.md.
+// Recursos complementares da ÁGORA.
+// Importa pacotes locais de conteúdo, modelos e documentação.
+// Os arquivos podem ser ZIPs, pastas extraídas ou PDFs; a estrutura é validada antes da gravação.
+// O registro de instalação permite atualizar ou remover os arquivos adicionados.
 //
 // Sem o painel (quem roda é a IA):
 //   npm run extras                          o que está instalado e os arquivos dos extras achados no computador
 //                                           (Downloads, Mesa e Documentos), com o comando pronto pra cada um
 //   npm run extras -- "<arquivo ou pasta>"  traz o .zip, o PDF ou a pasta dele (o de hoje ou o do Google Drive)
 //   npm run extras -- --canal               põe o canal de agora nos 30 roteiros que ainda não viraram vídeo
-//   npm run extras -- --gringo en           numa CÓPIA da Máquina: o modelo do Canal Gringo (en ou es) no lugar do
+//   npm run extras -- --gringo en           numa CÓPIA da ÁGORA: o modelo do Canal Gringo (en ou es) no lugar do
 //      [--nome "..." --arroba @... --assinatura "..."] [--confirmar]   canal/canal.md, o idioma no bloco do canal
 //                                           (o cartão de seguir e a voz do VoiceStudio) e o nome, o @ e a assinatura
 const fs = require('fs');
@@ -30,17 +21,12 @@ const RAIZ = V.RAIZ;
 const arq = (...p) => path.join(RAIZ, ...p);
 const REGISTRO = ['canal', 'extras', 'instalados.json'];
 
-// Os produtos, na ordem do menu. checkout: o link de compra avulsa na Cakto (pay.cakto.com.br/<código da oferta>);
-// secao e aula: onde o arquivo fica na área de membros
+// Recursos disponíveis na ordem do menu. Os pacotes são adicionados por importação local.
 const PRODUTOS = [
-  { id: 'roteiros', nome: '30 Roteiros + 100 Temas', checkout: 'https://pay.cakto.com.br/3a97cpz',
-    secao: '30 Roteiros + 100 Temas', aula: 'Um roteiro por comando', arquivo: '30-roteiros.zip' },
-  { id: 'gringo', nome: 'Canal Gringo', checkout: 'https://pay.cakto.com.br/8fewd4a',
-    secao: 'Canal Gringo', aula: 'O mesmo canal em inglês e espanhol', arquivo: 'canal-gringo.zip' },
-  { id: 'checklist', nome: 'Checklist Viral + Plano de 30 Dias', checkout: 'https://pay.cakto.com.br/z96x989',
-    secao: 'Checklist Viral + 30 Dias', aula: 'O que conferir antes de postar', arquivo: 'checklist-viral-e-plano-de-30-dias.pdf' },
-  { id: 'atualizacoes', nome: 'Atualizações Para Sempre', checkout: 'https://pay.cakto.com.br/3bxxh3s',
-    secao: 'Atualizações Para Sempre', aula: 'Como receber cada versão nova', arquivo: 'atualizacoes-como-funciona.pdf' }
+  { id: 'roteiros', nome: '30 Roteiros + 100 Temas', secao: '30 Roteiros + 100 Temas', aula: 'Um roteiro por comando', arquivo: '30-roteiros.zip' },
+  { id: 'gringo', nome: 'Canal Gringo', secao: 'Canal Gringo', aula: 'O mesmo canal em inglês e espanhol', arquivo: 'canal-gringo.zip' },
+  { id: 'checklist', nome: 'Checklist Viral + Plano de 30 Dias', secao: 'Checklist Viral + 30 Dias', aula: 'O que conferir antes de postar', arquivo: 'checklist-viral-e-plano-de-30-dias.pdf' },
+  { id: 'atualizacoes', nome: 'Atualizações Para Sempre', secao: 'Atualizações Para Sempre', aula: 'Como receber cada versão nova', arquivo: 'atualizacoes-como-funciona.pdf' }
 ];
 // Os 30 roteiros do produto: quem copiou à mão pra videos/, do jeito do guia antigo, também aparece como instalado
 const TRINTA = ['01-guarda-chuva', '02-descarga', '03-chuveiro-eletrico', '04-caneta', '05-ferro-de-passar', '06-pneu', '07-extintor',
@@ -158,7 +144,7 @@ function guardarPdf(id, it, reg) {
 }
 
 // itens: [{ caminho, pegar() }] (o .zip aberto, a pasta ou um arquivo só); lerZip: a função do painel que abre um .zip;
-// produto: o quadro onde a pessoa soltou (vale pro PDF com nome que a Máquina não reconhece)
+// produto: o quadro onde a pessoa soltou (vale pro PDF com nome que a ÁGORA não reconhece)
 function instalar(itens, { lerZip, produto } = {}) {
   const s = separar(abrir(itens, lerZip));
   const reg = lerRegistro();
@@ -176,7 +162,7 @@ function instalar(itens, { lerZip, produto } = {}) {
     if (r && !feitos.some((x) => x.produto === id)) feitos.push(r);
   }
   if (!feitos.length) {
-    return { ok: false, mensagem: 'Não reconheci esse arquivo. Aqui entram os arquivos dos extras que você baixou na área de membros da Cakto: o 30-roteiros.zip, o canal-gringo.zip ou o PDF do produto (a pasta do zip aberta também serve).' };
+    return { ok: false, mensagem: 'Não reconheci esse arquivo. Selecione um pacote compatível com a ÁGORA: 30-roteiros.zip, canal-gringo.zip ou o PDF de documentação. A pasta extraída também serve.' };
   }
   salvarRegistro(reg);
   return { ok: true, feitos };
@@ -219,7 +205,7 @@ function estado(arquivo) {
   try { versao = (JSON.parse(fs.readFileSync(arq('package.json'), 'utf8')).version || '').replace(/\.0$/, ''); } catch { /* sem versão */ }
   return {
     canalPronto: !!canalPronto(),
-    pasta: path.basename(RAIZ), // o nome da pasta da Máquina (o passo a passo do Canal Gringo fala dela)
+    pasta: path.basename(RAIZ), // o nome da pasta da ÁGORA (o passo a passo do Canal Gringo fala dela)
     versao,
     produtos: PRODUTOS.map((p) => {
       const r = reg[p.id] || {};
@@ -240,11 +226,11 @@ function estado(arquivo) {
     })
   };
 }
-// ---------- Canal Gringo: preparar a cópia da Máquina pro outro idioma ----------
+// ---------- Canal Gringo: preparar a cópia da ÁGORA pro outro idioma ----------
 const IDIOMAS = { en: { nome: 'inglês', voz: 'en-US' }, es: { nome: 'espanhol', voz: 'es-MX' } };
 // Põe o modelo do idioma no lugar do canal/canal.md (o de antes fica guardado em canal/extras/gringo/), o idioma no bloco
 // do canal (o cartão de seguir do fim e a voz do VoiceStudio) e o nome, o @ e a assinatura que vieram. Numa pasta com o
-// canal em português já configurado, só com confirmar: o Canal Gringo vai numa cópia da Máquina
+// canal em português já configurado, só com confirmar: o Canal Gringo vai numa cópia da ÁGORA
 function prepararGringo(l, d = {}) {
   const I = IDIOMAS[l];
   if (!I) return { ok: false, mensagem: 'O idioma é en (inglês) ou es (espanhol): npm run extras -- --gringo en' };
@@ -256,7 +242,7 @@ function prepararGringo(l, d = {}) {
   // A cópia pro outro idioma termina em -en ou -es (o nome que o guia manda dar): fora disso, só com a pessoa confirmando
   const copia = new RegExp(`-${l}$`, 'i').test(path.basename(RAIZ));
   if (nomeAtual && !jaEsta && !copia && !d.confirmar) {
-    return { ok: false, copia: true, mensagem: `Esta pasta (${path.basename(RAIZ)}) já é o canal "${nomeAtual}", em português, e o nome dela não termina em -${l}. O Canal Gringo vai numa CÓPIA da Máquina com o nome terminando em -${l} (passo 2 de comandos/extras-canal-gringo.md); aqui, o canal em português seria trocado.` };
+    return { ok: false, copia: true, mensagem: `Esta pasta (${path.basename(RAIZ)}) já é o canal "${nomeAtual}", em português, e o nome dela não termina em -${l}. O Canal Gringo vai numa CÓPIA da ÁGORA com o nome terminando em -${l} (passo 2 de comandos/extras-canal-gringo.md); aqui, o canal em português seria trocado.` };
   }
   if (!jaEsta) {
     if (atual) gravar(`canal/extras/gringo/canal-antes-${agora().slice(0, 10)}.md`, atual);
@@ -282,14 +268,14 @@ function textoDoResultado(feitos) {
       return `30 Roteiros: ${f.novos} roteiros entraram em videos/${f.jaTinha ? ` (${f.jaTinha} já estavam lá e ficaram)` : ''}${f.temas ? ', e os 100 temas em canal/extras/roteiros/100-temas.md' : ''}. ${f.comCanal ? 'Já com o personagem, a voz, o cenário, a cor, o @ e a assinatura do canal.' : 'AINDA SEM O CANAL: configure o canal (nome, personagem e voz) e rode npm run extras -- --canal.'}`;
     }
     if (f.produto === 'gringo') return `Canal Gringo: os modelos em ${f.modelos.map((l) => IDIOMAS[l].nome).join(' e ')} estão em canal/extras/gringo/.`;
-    if (f.produto === 'checklist') return f.texto ? 'Checklist: o texto pra IA ler está em canal/extras/checklist/checklist.md.' : 'Checklist: o PDF está em canal/extras/checklist/checklist.pdf (no painel: Potencializar a máquina → Checklist).';
+    if (f.produto === 'checklist') return f.texto ? 'Checklist: o texto pra IA ler está em canal/extras/checklist/checklist.md.' : 'Checklist: o PDF está em canal/extras/checklist/checklist.pdf (no painel: Recursos da ÁGORA → Checklist).';
     const p = PRODUTOS.find((x) => x.id === f.produto);
     return `${p ? p.nome : f.produto}: o guia em PDF está em canal/extras/${f.produto}/guia.pdf.`;
   }).join('\n');
 }
 const PROXIMO = {
   roteiros: 'siga comandos/extras-30-roteiros.md (passo 2): fazer o vídeo de um roteiro',
-  gringo: 'siga comandos/extras-canal-gringo.md (passo 2): a cópia da Máquina pro outro idioma',
+  gringo: 'siga comandos/extras-canal-gringo.md (passo 2): a cópia da ÁGORA pro outro idioma',
   checklist: 'siga comandos/extras-checklist.md',
   atualizacoes: 'siga comandos/extras-atualizacoes.md'
 };
@@ -356,7 +342,7 @@ if (require.main === module) {
       let st;
       try { st = fs.statSync(f); } catch { falhou(`Não achei "${c}".`, `rode ${npm} run extras (sem nada) pra procurar os arquivos no computador, ou pergunte pra pessoa onde ela salvou.`); continue; }
       let itens;
-      try { itens = st.isDirectory() ? lerPasta(f) : /\.zip$/i.test(f) ? lerZip(f) : [{ caminho: path.basename(f), pegar: () => fs.readFileSync(f) }]; } catch { falhou(`Não consegui abrir "${c}": o zip pode ter vindo pela metade.`, 'peça pra pessoa baixar de novo na área de membros da Cakto.'); continue; }
+      try { itens = st.isDirectory() ? lerPasta(f) : /\.zip$/i.test(f) ? lerZip(f) : [{ caminho: path.basename(f), pegar: () => fs.readFileSync(f) }]; } catch { falhou(`Não consegui abrir "${c}": o zip pode ter vindo pela metade.`, 'peça para localizar novamente o arquivo original e tentar importá-lo.'); continue; }
       const r = instalar(itens, { lerZip });
       if (!r.ok) { falhou(r.mensagem, `confira o arquivo com a pessoa (comandos/extras.md, "Qual arquivo é de qual extra").`); continue; }
       todos.push(...r.feitos);
@@ -364,17 +350,17 @@ if (require.main === module) {
     if (todos.length) {
       console.log(textoDoResultado(todos));
       const ids = [...new Set(todos.map((f) => f.produto))];
-      fim(`${ids.map((id) => PROXIMO[id]).join('; ')}. O painel (Potencializar a máquina) mostra o mesmo: ${npm} run painel -- --potencializar.`);
+      fim(`${ids.map((id) => PROXIMO[id]).join('; ')}. O painel (Recursos da ÁGORA) mostra o mesmo: ${npm} run painel -- --potencializar.`);
     }
   } else {
     const e = estado((rel) => rel);
-    console.log('Extras desta Máquina (no painel: Potencializar a máquina)');
+    console.log('Extras desta ÁGORA (no painel: Recursos da ÁGORA)');
     for (const p of e.produtos) {
       let linha;
       if (p.id === 'roteiros') linha = p.instalado ? `${p.roteiros.length} roteiros em videos/ (${p.roteiros.filter((r) => r.video).length} já viraram vídeo)${e.canalPronto && p.canalAplicado ? ', com o canal' : ', AINDA SEM O CANAL (npm run extras -- --canal)'}` : 'não está nesta pasta';
       else if (p.id === 'gringo') linha = p.instalado ? 'os modelos estão em canal/extras/gringo/' : 'não está nesta pasta';
       else if (p.id === 'checklist') linha = p.instalado ? [p.pdf && 'o PDF', p.texto && 'o texto pra IA (canal/extras/checklist/checklist.md)'].filter(Boolean).join(' e ') : 'não está nesta pasta';
-      else linha = `esta Máquina é a versão ${e.versao}${p.guia ? '; o guia está guardado' : ''}`;
+      else linha = `esta ÁGORA é a versão ${e.versao}${p.guia ? '; o guia está guardado' : ''}`;
       console.log(`  [${p.instalado || p.id === 'atualizacoes' ? 'ok' : '  '}] ${p.nome}: ${linha}`);
     }
     const achados = procurar();
@@ -382,6 +368,6 @@ if (require.main === module) {
       console.log('\nArquivos dos extras achados no computador:');
       for (const a of achados) console.log(`  ${PRODUTOS.find((p) => p.id === a.produto).nome}: ${npm} run extras -- "${a.caminho}"`);
       fim('mostre pra pessoa o que achou e, com o sim dela, rode o comando de cada arquivo (o mesmo extra duas vezes não estraga nada).');
-    } else fim('não achei arquivo dos extras no computador. Se a pessoa comprou algum, peça pra ela baixar na área de membros da Cakto (comandos/extras.md) e dizer onde salvou, ou soltar no painel, em Potencializar a máquina.');
+    } else fim('não achei pacote complementar no computador. Peça para localizar o arquivo e informar o caminho, ou importá-lo pelo painel em Recursos da ÁGORA.');
   }
 }

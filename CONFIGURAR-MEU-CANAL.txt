@@ -1,9 +1,9 @@
 ################################################################
-  CONFIGURAR MEU CANAL · Máquina ÁGORA
+  CONFIGURAR MEU CANAL · plataforma ÁGORA
 ################################################################
 
 PRA IA (faça só isto, nesta ordem):
-1. Rode este comando no terminal, dentro da pasta da Máquina:
+1. Rode este comando no terminal, dentro da pasta da ÁGORA:
       npm run canal
    No Windows, se o npm der erro, use: npm.cmd run canal
    Ele lê estas respostas sozinho e salva tudo no canal.
@@ -18,7 +18,7 @@ PRA VOCÊ (antes de colar na IA):
   de uma linha.
 - Nas perguntas com números, responda só o número.
 - Não sabe? Deixe em branco. Onde tem "Em branco:", vale o
-  padrão da Máquina; o resto dá pra completar depois, no painel.
+  padrão da ÁGORA; o resto dá pra completar depois, no painel.
 - A CHAVE da ElevenLabs não vai aqui (nunca cole ela na IA).
 - Terminou? Salve, selecione tudo (Ctrl+A ou Cmd+A), copie e
   cole na conversa com a IA.
@@ -38,7 +38,7 @@ Em branco: o nome do canal, sem espaço
 Resposta:
 
 [3] DO QUE O CANAL FALA
-A Máquina brilha com "como funciona" e "como foi feito".
+A ÁGORA brilha com "como funciona" e "como foi feito".
 Exemplo: como funcionam os carros por dentro: motor, freio,
    pneu, câmbio
 Resposta:
@@ -92,7 +92,7 @@ Resposta:
 A frase que fecha a explicação, antes da chamada.
 Exemplo: Por fora, é só um pneu. Por dentro, é borracha, aço e
    ar.
-Em branco: o "Por fora... Por dentro..." da Máquina
+Em branco: o "Por fora... Por dentro..." da ÁGORA
 Resposta:
 
 [12] CHAMADA DO FIM
@@ -144,7 +144,7 @@ Resposta:
 [19] COMO É O PERSONAGEM
 O jeito dele, com as suas palavras.
 Exemplo: curioso e meio atrapalhado; leva susto com tudo
-Em branco: a Máquina descreve pelas escolhas acima
+Em branco: a ÁGORA descreve pelas escolhas acima
 Resposta:
 
 [20] CENÁRIO

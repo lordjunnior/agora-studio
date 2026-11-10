@@ -1,7 +1,7 @@
 # Peças próprias do canal
 
 Aqui fica o que a IA fez só pro seu canal: um personagem próprio, um cenário, um objeto que se repete nos vídeos. O
-render carrega todo arquivo `.js` desta pasta depois do motor, e a versão nova da Máquina não apaga esta pasta.
+render carrega todo arquivo `.js` desta pasta depois do motor, e a versão nova da ÁGORA não apaga esta pasta.
 
 **Pra IA:** peça própria vai aqui, nunca dentro de `motor/` (o `motor/` é trocado inteiro a cada versão nova). Um arquivo
 por peça, com o nome dela (`canal/pecas/jorjao.js`), neste formato:

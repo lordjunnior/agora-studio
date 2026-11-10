@@ -111,7 +111,7 @@ input:focus{outline:none;border-color:var(--destaque)}label.ver{color:var(--suav
 code{background:#f1ede4;border-radius:6px;padding:1px 6px}
 </style></head><body><main><div class="cartao">
 <h1>🔑 Chave da voz</h1>
-<p class="sub">Pra narrar os seus vídeos com a voz da ElevenLabs, a Máquina precisa da "chave" da sua conta. Ela é como uma
+<p class="sub">Pra narrar os seus vídeos com a voz da ElevenLabs, a ÁGORA precisa da "chave" da sua conta. Ela é como uma
 senha: fica guardada só aqui no seu computador e não passa pela conversa com a IA.</p>
 ${jaTem ? '<p class="ja">Já tem uma chave salva aqui. Se você colar outra, ela troca a antiga.</p>' : ''}
 <ol>
@@ -152,7 +152,7 @@ $('form').onsubmit = async (e) => {
     aviso(j.mensagem, j.ok ? 'ok' : 'erro');
     if (j.ok) { $('form').style.display = 'none'; }
   } catch {
-    aviso('A janela perdeu a ligação com a Máquina e a chave não foi salva. Volte pra conversa e diga pra IA: <b>a janela da chave não salvou</b>.', 'erro');
+    aviso('A janela perdeu a ligação com a ÁGORA e a chave não foi salva. Volte pra conversa e diga pra IA: <b>a janela da chave não salvou</b>.', 'erro');
   }
   $('salvar').disabled = false;
 };

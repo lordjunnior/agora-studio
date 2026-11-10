@@ -1,4 +1,4 @@
-// Fotos de tudo que a Máquina sabe desenhar (cenários, personagens, bichos, objetos e modelos 3D prontos), pro painel
+// Fotos de tudo que a ÁGORA sabe desenhar (cenários, personagens, bichos, objetos e modelos 3D prontos), pro painel
 // (npm run painel, em "Modelos 3D") e pra IA mostrar pra pessoa o que dá pra usar:
 //
 //   npm run modelos                  tira as fotos que faltam e atualiza o catálogo
@@ -247,7 +247,7 @@ async function fotografar(browser, it) {
   await browser.close();
 
   const catalogo = {
-    comoLer: 'Tudo que a Máquina sabe desenhar, com a foto (referencias/modelos/<foto>), como pedir pra IA e o código do cena.js. Gerado por npm run modelos: não editar à mão.',
+    comoLer: 'Tudo que a ÁGORA sabe desenhar, com a foto (referencias/modelos/<foto>), como pedir pra IA e o código do cena.js. Gerado por npm run modelos: não editar à mão.',
     feito: new Date().toISOString(),
     itens: lista.map((it) => ({ ...it, foto: fs.existsSync(path.join(SAIDA, arquivoDaFoto(it))) ? arquivoDaFoto(it) : null }))
   };

@@ -15,7 +15,7 @@ const tema = (process.argv[2] || '').toLowerCase().normalize('NFD').replace(/[̀
 if (!tema || tema.startsWith('-')) sair('Diga o nome do vídeo. Ex: npm run colar -- guarda-chuva');
 const extras = process.argv.slice(3);
 
-// Sem a Máquina instalada e o canal configurado, o vídeo sai genérico: confere antes de qualquer coisa
+// Sem a ÁGORA instalada e o canal configurado, o vídeo sai genérico: confere antes de qualquer coisa
 const conf = spawnSync(process.execPath, [path.join(__dirname, 'conferir.js')], { encoding: 'utf8' });
 if (conf.status !== 0) sair(`${conf.stdout.trim()}\nNo jeito por chat: passos 1, 2 e 3 de comandos/modo-chat.md (instalar, configurar o canal e escolher a voz).`);
 
@@ -87,7 +87,7 @@ const res = spawnSync(process.execPath, [path.join(__dirname, 'render.js'), past
 if (res.status === 3) sair('O roteiro está certo: o que parou foi a voz (veja a explicação logo acima). Resolva e rode o mesmo comando de novo.');
 // Código 4: o navegador que desenha o vídeo não abriu (o render já explicou o que fazer)
 if (res.status === 4) sair('O roteiro está certo: o que parou foi o navegador que desenha o vídeo (veja a explicação logo acima). Rode npm run instalar e depois o mesmo comando de novo.');
-if (res.status !== 0) sair(`Deu erro no render. Copie a mensagem acima e cole pra IA junto com: "Deu esse erro ao renderizar o roteiro. Corrija e mande o roteiro.json completo de novo."\nNão resolveu? Escreva pra desconstruindouniverso@gmail.com com o print.`);
+if (res.status !== 0) sair(`Deu erro no render. Copie a mensagem acima e cole pra IA junto com: "Deu esse erro ao renderizar o roteiro. Corrija e mande o roteiro.json completo de novo."\nNão resolveu? consulte a documentação da ÁGORA e reúna os registros do erro com o print.`);
 console.log(extras.length ? `\nPronto: veja videos/${tema}/.` : `\nPronto: videos/${tema}/ (video.mp4 e capa.png).`);
 console.log(`Quer ver as cenas antes do vídeo completo? npm run colar -- ${tema} --voz-teste --revisar faz a folha (uma imagem por frase) em videos/${tema}/testes/folha.jpg.`);
 console.log('Ficou estranho? Mande a folha ou a capa.png pra IA e peça: "ajusta as cenas com problema" ou "ajusta as peças pra ficar mais parecido com o objeto de verdade".\n');

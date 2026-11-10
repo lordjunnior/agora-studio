@@ -43,7 +43,7 @@ const PERGUNTAS = [
   { id: 'nome', titulo: 'NOME DO CANAL', exemplo: 'Motor Curioso' },
   { id: 'arroba', titulo: '@ NAS REDES', dica: 'O mesmo no YouTube, no TikTok e no Instagram.', exemplo: '@motorcurioso',
     padrao: (v) => (v.nome ? sugestaoArroba(v.nome) : null), dicaPadrao: 'o nome do canal, sem espaço' },
-  { id: 'tema', titulo: 'DO QUE O CANAL FALA', dica: 'A Máquina brilha com "como funciona" e "como foi feito".', exemplo: 'como funcionam os carros por dentro: motor, freio, pneu, câmbio' },
+  { id: 'tema', titulo: 'DO QUE O CANAL FALA', dica: 'A ÁGORA brilha com "como funciona" e "como foi feito".', exemplo: 'como funcionam os carros por dentro: motor, freio, pneu, câmbio' },
   { id: 'quemAssiste', titulo: 'QUEM ASSISTE', exemplo: 'gente curiosa que gosta de carro, de 15 a 40 anos' },
   { parte: 'O JEITO DOS VÍDEOS' },
   { id: 'jeito', titulo: 'JEITO DE FALAR', exemplo: 'conversado e engraçado, como quem explica pra um amigo',
@@ -57,7 +57,7 @@ const PERGUNTAS = [
   { id: 'assinatura', titulo: 'ASSINATURA DO FIM', dica: 'A frase que a voz fala no fim de todo vídeo.', exemplo: 'E segue o Motor Curioso.',
     padrao: (v) => (v.nome ? `E segue o ${v.nome}.` : null), dicaPadrao: '"E segue o [nome do canal]."' },
   { id: 'fechamento', titulo: 'FECHAMENTO', dica: 'A frase que fecha a explicação, antes da chamada.', exemplo: 'Por fora, é só um pneu. Por dentro, é borracha, aço e ar.',
-    padrao: '"Por fora, é só [o que todo mundo vê]. Por dentro, é [peça], [peça] e [peça]."', dicaPadrao: 'o "Por fora... Por dentro..." da Máquina' },
+    padrao: '"Por fora, é só [o que todo mundo vê]. Por dentro, é [peça], [peça] e [peça]."', dicaPadrao: 'o "Por fora... Por dentro..." da ÁGORA' },
   { id: 'chamada', titulo: 'CHAMADA DO FIM', dica: 'O pedido curto do fim (comentar, seguir).', exemplo: 'Qual peça a gente desmonta no próximo? Comenta aí.',
     padrao: '"Qual coisa a gente desmonta no próximo? Comenta aí." Curta e rápida, logo depois do fechamento', dicaPadrao: '"Qual coisa a gente desmonta no próximo? Comenta aí."' },
   { id: 'hashtags', titulo: 'HASHTAGS', dica: 'Até 5, as que vão em todo vídeo (a do tema de cada vídeo entra sozinha).', exemplo: '#carros #comofunciona #curiosidades',
@@ -69,7 +69,7 @@ const PERGUNTAS = [
   { id: 'corCabelo', titulo: 'COR DO CABELO', dica: 'preto, castanho, castanho claro, loiro, ruivo, grisalho ou branco.' },
   { id: 'corPele', titulo: 'COR DA PELE', dica: 'clara, média, parda, morena ou negra.' },
   { id: 'personagemTexto', titulo: 'COMO É O PERSONAGEM', dica: 'O jeito dele, com as suas palavras.', exemplo: 'curioso e meio atrapalhado; leva susto com tudo',
-    dicaPadrao: 'a Máquina descreve pelas escolhas acima' },
+    dicaPadrao: 'a ÁGORA descreve pelas escolhas acima' },
   { id: 'cenario', titulo: 'CENÁRIO', dica: 'O lugar de todo vídeo quando o tema não pede outro. As fotos estão no painel, em Modelos 3D.', opcoes: CENARIOS },
   { id: 'hora', titulo: 'HORA', opcoes: HORAS, padrao: 1 },
   { parte: 'A VOZ E A COR' },
@@ -109,7 +109,7 @@ function modelo() {
   const L = [
     '#'.repeat(LARGURA), `  ${CABECA} · ÁGORA`, '#'.repeat(LARGURA), '',
     'PRA IA (faça só isto, nesta ordem):',
-    '1. Rode este comando no terminal, dentro da pasta da Máquina:',
+    '1. Rode este comando no terminal, dentro da pasta da ÁGORA:',
     '      npm run canal',
     '   No Windows, se o npm der erro, use: npm.cmd run canal',
     '   Ele lê estas respostas sozinho e salva tudo no canal.',
@@ -123,7 +123,7 @@ function modelo() {
     '  de uma linha.',
     '- Nas perguntas com números, responda só o número.',
     '- Não sabe? Deixe em branco. Onde tem "Em branco:", vale o',
-    '  padrão da Máquina; o resto dá pra completar depois, no painel.',
+    '  padrão da ÁGORA; o resto dá pra completar depois, no painel.',
     '- A CHAVE da ElevenLabs não vai aqui (nunca cole ela na IA).',
     '- Terminou? Salve, selecione tudo (Ctrl+A ou Cmd+A), copie e',
     '  cole na conversa com a IA.',
@@ -238,7 +238,7 @@ function cor(resp, tabela = {}) {
 function catalogo() { try { return JSON.parse(fs.readFileSync(path.join(RAIZ, 'referencias', 'modelos', 'catalogo.json'), 'utf8')); } catch { return {}; } }
 
 // Salva as respostas nos arquivos do canal. Devolve o relatório: salvos (com o que ficou), padroes (o padrão da
-// Máquina, porque a pessoa deixou em branco), branco (ficou como estava) e erros (a resposta que não deu pra entender)
+// ÁGORA, porque a pessoa deixou em branco), branco (ficou como estava) e erros (a resposta que não deu pra entender)
 function aplicarRespostas(txt) {
   C.garantirCanal();
   const { valores: v, achadas } = lerRespostas(txt);
@@ -409,7 +409,7 @@ function principal() {
     console.log('CANAL: NADA SALVO. Não achei as respostas.');
     console.log('PRA IA: crie o arquivo canal/respostas.txt com o texto que a pessoa colou na conversa (o que começa com');
     console.log(`"${CABECA}"), inteiro e sem mudar nada, e rode npm run canal de novo. Se ela ainda não preencheu,`);
-    console.log(`mande o arquivo ${ARQUIVO_MODELO} (está na pasta da Máquina) pra ela responder.`);
+    console.log(`mande o arquivo ${ARQUIVO_MODELO} (está na pasta da ÁGORA) pra ela responder.`);
     process.exit(1);
   }
   const r = aplicarRespostas(txt);
@@ -418,7 +418,7 @@ function principal() {
 
   console.log(`CANAL: SALVO (as respostas vieram ${de}).`);
   if (r.salvos.length) { console.log(`\nSalvei ${r.salvos.length} respostas:`); r.salvos.forEach((x) => console.log(`- ${x.campo}: ${x.valor}`)); }
-  if (r.padroes.length) { console.log('\nFicaram em branco e usei o padrão da Máquina:'); r.padroes.forEach((x) => console.log(`- ${x.campo}: ${x.valor}`)); }
+  if (r.padroes.length) { console.log('\nFicaram em branco e usei o padrão da ÁGORA:'); r.padroes.forEach((x) => console.log(`- ${x.campo}: ${x.valor}`)); }
   if (r.erros.length) { console.log('\nNão consegui salvar (o resto foi salvo):'); r.erros.forEach((x) => console.log(`- ${x.campo}: ${x.mensagem}`)); }
   if (r.branco.length) console.log(`\nEm branco (ficou como estava): ${r.branco.join(', ')}.`);
 
@@ -436,7 +436,7 @@ function principal() {
     : /"id"/.test(vozFalta) ? 'Falta o id da voz da ElevenLabs: eu acho pra você.' : 'Falta escolher a voz: dá pra escolher no painel, em Meu canal.');
   if (faltas.some((l) => /^canal\//.test(l))) resumo.push('Algumas perguntas ficaram em branco: dá pra completar no painel, em Meu canal.');
   console.log('\nPRA IA: mande pra pessoa exatamente esta mensagem, sem mudar nada:');
-  console.log(`"Pronto! Salvei as respostas do seu canal e abri o painel em Meu canal${url ? `: ${url}` : ' (se não abriu, me peça: abre o painel)'}. Confira lá e mude o que quiser.${resumo.length ? ' ' + resumo.join(' ') : ''} Se o painel não aparecer, dá pra abrir com dois cliques no ABRIR-PAINEL, na pasta da Máquina."`);
+  console.log(`"Pronto! Salvei as respostas do seu canal e abri o painel em Meu canal${url ? `: ${url}` : ' (se não abriu, me peça: abre o painel)'}. Confira lá e mude o que quiser.${resumo.length ? ' ' + resumo.join(' ') : ''} Se o painel não aparecer, dá pra abrir com dois cliques no ABRIR-PAINEL, na pasta da ÁGORA."`);
   if (vozFalta && /"id"/.test(vozFalta)) console.log('Depois, rode npm run vozes, mostre as vozes pra pessoa escolher e ponha o id dela no painel ou em "voz" no bloco "No roteiro.json" de canal/identidade.md.');
 }
 

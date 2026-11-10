@@ -5,8 +5,7 @@
 > vídeo. Os vídeos saem na cena-modelo (o objeto montado peça por peça, com a câmera, o personagem e a entrada de cada
 > peça mudando a cada frase), mais simples que os feitos por uma IA de código, que escreve uma cena própria pra cada vídeo.
 > Dúvidas: pergunte pra própria IA ("Me ajuda a fazer isso") ou veja o menu Ajuda do painel. Só se não resolver:
-> desconstruindouniverso@gmail.com
-
+> Para suporte, reúna a mensagem de erro e os registros do aplicativo.
 ## 1. Instalar (uma vez só, uns 10 minutos)
 
 1. Instale o **Node.js** (versão LTS, em nodejs.org)
@@ -27,7 +26,7 @@ Rode de novo: ele continua de onde parou.
 ## 2. Configurar o canal (uma vez só)
 
 Abra o arquivo **`CONFIGURAR-MEU-CANAL.txt`**, nesta pasta, no Bloco de Notas (Windows) ou no TextEdit (Mac), responda
-cada pergunta depois de "Resposta:" e salve. O que não souber, deixe em branco: a Máquina usa o padrão. Depois, salve
+cada pergunta depois de "Resposta:" e salve. O que não souber, deixe em branco: a ÁGORA usa o padrão. Depois, salve
 de um destes jeitos:
 - **No painel:** rode `npm run painel`, vá em **Meu canal** e cole o texto inteiro no quadro **Preencher tudo de uma
   vez**. Ele mostra o que salvou e o que ficou faltando
@@ -98,7 +97,7 @@ câmera não mostra uma peça, troque a camera daquela frase". Copie o roteiro n
 npm run colar -- guarda-chuva
 ```
 
-Antes de tudo, ele confere se a Máquina está instalada, o canal configurado e a voz escolhida (se faltar algo, ele diz
+Antes de tudo, ele confere se a ÁGORA está instalada, o canal configurado e a voz escolhida (se faltar algo, ele diz
 o quê, sem gastar nada). Depois pega o roteiro da área de transferência, aplica a identidade do seu canal e faz o vídeo
 em `videos/guarda-chuva/`: `video.mp4` e `capa.png`. Se der erro, ele te diz o que colar pra IA.
 
@@ -117,7 +116,7 @@ fixar.
 
 ## Os extras (30 Roteiros, Canal Gringo, Checklist)
 
-Comprou algum? Solte o arquivo que você baixou no painel, em **Potencializar a máquina**. Ou rode no terminal, que ele
+Tem o arquivo de algum pacote? Solte-o no painel, em **Recursos da ÁGORA**. Ou rode no terminal, que ele
 procura o arquivo nos Downloads e mostra o comando pra trazer:
 
 ```
@@ -132,7 +131,7 @@ npm run extras
   ```
 
   Mudou o personagem, a voz ou a cor do canal? Rode `npm run extras -- --canal` antes.
-- **Canal Gringo:** faça uma cópia da pasta da Máquina pro outro idioma (o painel mostra como) e, dentro da cópia, rode
+- **Canal Gringo:** faça uma cópia da pasta da ÁGORA pro outro idioma (o painel mostra como) e, dentro da cópia, rode
   (com o nome, o @ e a frase do fim do seu canal no outro idioma):
 
   ```

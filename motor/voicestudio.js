@@ -180,13 +180,13 @@ function abrirPrograma(app) {
   // 5. A voz anotada no canal
   const voz = V.vozDoCanal();
   if (!voz || voz.motor !== 'voicestudio') {
-    item('falta', `Voz do canal na Máquina: ${voz ? `hoje é "${voz.motor}", não o VoiceStudio` : 'ainda não escolhida'}`);
+    item('falta', `Voz do canal na ÁGORA: ${voz ? `hoje é "${voz.motor}", não o VoiceStudio` : 'ainda não escolhida'}`);
     terminar(false, `siga o passo 6 de ${guia}: faça a amostra (npm run testar-voz -- --voicestudio "${nome(doCanal[0])}"), mostre pra pessoa e, se ela aprovar, anote a voz no bloco "No roteiro.json" de canal/identidade.md.`);
   }
   if (voz.id && voz.id !== 'default' && !vozes.some((v) => V.mesmaVoz(v, voz.id))) {
-    item('falta', `Voz do canal na Máquina: a anotada é "${voz.id}", mas o VoiceStudio não tem uma voz com esse nome`);
+    item('falta', `Voz do canal na ÁGORA: a anotada é "${voz.id}", mas o VoiceStudio não tem uma voz com esse nome`);
     terminar(false, `troque o "id" da voz em canal/identidade.md por um destes nomes, exatamente igual: ${doCanal.map((v) => `"${nome(v)}"`).join(', ')} (ou crie a voz com esse nome no VoiceStudio).`);
   }
-  item('ok', `Voz do canal na Máquina: "${voz.id || 'default'}", pelo VoiceStudio`);
+  item('ok', `Voz do canal na ÁGORA: "${voz.id || 'default'}", pelo VoiceStudio`);
   terminar(true, 'está tudo pronto pra narrar com o VoiceStudio. Lembre a pessoa de deixar o VoiceStudio aberto enquanto o vídeo é feito.');
 })();

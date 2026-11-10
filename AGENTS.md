@@ -5,7 +5,7 @@ Este repositório contém a plataforma ÁGORA, destinada à criação audiovisua
 ## Regras de desenvolvimento
 
 - O nome, a identidade e a linguagem do produto são exclusivamente ÁGORA.
-- Não introduzir nomes, mascotes, paletas, interfaces ou referências de identidade de produtos anteriores.
+- A identidade, a linguagem e os elementos visuais devem pertencer exclusivamente à ÁGORA e seguir a direção aprovada.
 - Remotion coordena a composição temporal e a renderização.
 - Three.js e React Three Fiber fornecem recursos 3D integrados às composições.
 - FFmpeg pode executar muxing, mixagem, normalização e pós-processamento.

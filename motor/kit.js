@@ -1,25 +1,23 @@
 // ÁGORA: kit visual dos vídeos (mundo low-poly, personagem, rótulos, legenda, efeitos e som).
 // Roda dentro da página do render (THREE global). Cada vídeo usa uma cena-modelo (motor/cenas-modelo/) ou um cena.js próprio.
 //
-// v2: linguagem de videogame (falha em P&B, ⏪ ⏸ ▶ ⏩), etiquetas com ponto colorido, destaque
-// amarelo, termo-chave na legenda, indicadores, efeitos de cena, boneco que anda/corre/pula,
-// céu com hora do dia e clima, tela dividida, sons por evento, CTA e cartão final.
+// v2: controles de ritmo, etiquetas, termos-chave na legenda, indicadores, efeitos de cena,
+// personagens animados, clima, tela dividida, sons por evento, CTA e cartão final.
 //
 // v7: estilo redondo (roteiro.estilo = 'redondo', padrão dos vídeos novos): sombreamento liso, mais faces,
 // quinas arredondadas, mundo vivo (K.vivo), sombra macia e de contato, vinheta, câmera que respira e
-// mascote com olho de verdade. Sem o campo, tudo sai como antes (os vídeos antigos não mudam).
+// Personagens com expressões e olhos articulados; o comportamento anterior é preservado sem essa opção.
 //
-// v1.1 da Máquina: capa com a pergunta numa caixa branca e a palavra na cor do canal (roteiro.cor), e o fim com o
-// cartão de seguir (K.cartaoSeguir), no lugar da plaquinha de madeira, do logo dourado e do círculo vermelho.
+// v1.1 da ÁGORA: capa com pergunta e termo-chave configurável; cartão de seguir padronizado no encerramento.
 //
-// v1.2 da Máquina: direção de cada frase sem coordenada na mão (K.filmar, K.enquadrar, K.entraNo, K.entrar, K.falhar,
+// v1.2 da ÁGORA: direção de cada frase sem coordenada na mão (K.filmar, K.enquadrar, K.entraNo, K.entrar, K.falhar,
 // K.brilhar, K.pecas, menino.colocar / irPara / reagir) e a revisão das cenas (K.medir, render --revisar).
 //
-// v2.2 da Máquina: cenários prontos (K.cenario, em motor/cenarios.js), bichos prontos (motor/bichos.js), modelos 3D
+// v2.2 da ÁGORA: cenários prontos (K.cenario, em motor/cenarios.js), bichos prontos (motor/bichos.js), modelos 3D
 // prontos (K.modelo, em motor/modelos/), o doutor e o operário (K.boneco tipo), céu 'azul', chão com grão de grama
 // (K.texGrao), caixa de sombra maior (K.caixaSombra) e a câmera que não atravessa o cenário (K.obstaculos).
 //
-// v2.3 da Máquina: nome nas peças (K.nomear), pro "mostra" de cada frase que a revisão confere, o personagem que se
+// v2.3 da ÁGORA: nome nas peças (K.nomear), pro "mostra" de cada frase que a revisão confere, o personagem que se
 // mexe segurando a pose e o cartão de seguir no idioma do canal (roteiro.idioma: 'en' ou 'es').
 //
 // Cena v2 (cena.js): window.CENA = { montar(tl), cena(tc, t) }. O kit chama cena() a cada quadro
@@ -2153,10 +2151,10 @@
   // As cores do doutor e do operário (op.cores troca qualquer uma)
   const CORES_DOUTOR = { jaleco: 0xf4f7f6, camisa: 0x12355b, gravata: 0x2ec4b6, calca: 0x6b7280, sapato: 0x6b3f22, cabelo: 0xececec };
   const CORES_OPERARIO = { camiseta: 0xf27c22, calca: 0x31577e, bota: 0x2a221c, colete: 0xf5d20a, faixa: 0xdfe6e8, capacete: 0xf5c518, pele: 0xc98f62, cabelo: 0x2b1b16, barba: 0x2b1b16 };
-  // op.tipo: 'menino' (padrão, mascote) | 'menina' (vestido vermelho) | 'doutor' (médico velhinho: jaleco, óculos, bigode
+  // op.tipo: 'menino' (personagem padrão) | 'menina' (vestido vermelho) | 'doutor' (médico velhinho: jaleco, óculos, bigode
   // branco e estetoscópio) | 'operario' (adulto de obra: camiseta laranja, colete refletivo, calça jeans, bota, barba e o
   // capacete sempre na cabeça; op.barba: false tira a barba). Cores próprias em op.cores, como nos outros
-  // op.roupa: 'moletom' = roupa do logo (moletom amarelo com capuz, mochila, calça azul-noite, tênis branco)
+  // op.roupa: 'moletom' aplica o conjunto correspondente, com cores personalizáveis em op.cores
   K.boneco = function (op = {}) {
     const menina = op.tipo === 'menina';
     const doutor = op.tipo === 'doutor', operario = op.tipo === 'operario';

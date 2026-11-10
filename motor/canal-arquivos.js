@@ -16,7 +16,7 @@ const arq = (...p) => path.join(RAIZ, ...p);
 const ler = (...p) => { try { return fs.readFileSync(arq(...p), 'utf8').replace(/^\uFEFF/, ''); } catch { return null; } };
 const escRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // Os arquivos do canal nascem dos modelos em branco de motor/canal-em-branco/, só quando faltam. Os modelos não ficam
-// em canal/: assim, extrair uma versão nova da Máquina por cima da antiga nunca apaga o canal de ninguém
+// em canal/: assim, extrair uma versão nova da ÁGORA por cima da antiga nunca apaga o canal de ninguém
 const EM_BRANCO = path.join(__dirname, 'canal-em-branco');
 function garantirCanal() {
   try {
