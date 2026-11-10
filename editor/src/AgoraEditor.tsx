@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Player } from "@remotion/player";
-import { MediaThumbnail } from "./MediaThumbnail";
+import { AudioWaveform, MediaThumbnail } from "./MediaThumbnail";
 import type { AgoraAsset, AgoraProject, AgoraTrack, AgoraTrackItem } from "../../projeto/src/project/types";
 import { projectDurationInFrames, validateAgoraProject } from "../../projeto/src/project/types";
 import { ProjetoComposition } from "../../projeto/src/project/ProjectComposition";
@@ -468,12 +468,17 @@ export const AgoraEditor: React.FC = () => {
           {project.tracks.map((track) => <div className={`track-row ${selected.trackId === track.id ? "active" : ""}`} key={track.id}>
             <button className="track-label" onClick={() => setSelected({ trackId: track.id })}><i style={{ background: trackColors[track.type] }} />{track.name ?? trackNames[track.type]}</button>
             <div className="track-content" onDragOver={(event) => event.preventDefault()} onDrop={(event) => handleDrop(event, track)} onClick={(event) => { const rect = event.currentTarget.getBoundingClientRect(); seek(((event.clientX - rect.left) / rect.width) * duration); }}>
-              {track.items?.map((item) => <div key={item.id} draggable className={`clip ${selected.itemId === item.id ? "selected" : ""}`} style={{ left: `${(item.fromInFrames / duration) * 100}%`, width: `${(item.durationInFrames / duration) * 100}%`, background: trackColors[track.type] }}
-                onClick={(event) => { event.stopPropagation(); setSelected({ trackId: track.id, itemId: item.id }); }}
-                onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)}
-                title={`${itemLabel(track, item)} · ${item.fromInFrames}–${item.fromInFrames + item.durationInFrames} frames`}>
-                <span>{itemLabel(track, item)}</span>
-              </div>)}
+              {track.items?.map((item) => {
+                const asset = project.assets.find((entry) => entry.id === item.assetId);
+                const audioClip = ["voice", "music", "sfx"].includes(track.type) && asset?.type === "audio";
+                return <div key={item.id} draggable className={`clip ${audioClip ? "clip-audio" : ""} ${selected.itemId === item.id ? "selected" : ""}`} style={{ left: `${(item.fromInFrames / duration) * 100}%`, width: `${(item.durationInFrames / duration) * 100}%`, background: trackColors[track.type] }}
+                  onClick={(event) => { event.stopPropagation(); setSelected({ trackId: track.id, itemId: item.id }); }}
+                  onDragStart={(event) => event.dataTransfer.setData("text/plain", item.id)}
+                  title={`${itemLabel(track, item)} · ${item.fromInFrames}–${item.fromInFrames + item.durationInFrames} frames`}>
+                  {audioClip && asset ? <AudioWaveform asset={asset} /> : null}
+                  <span>{itemLabel(track, item)}</span>
+                </div>;
+              })}
             </div>
           </div>)}
           <div className="playhead" style={{ left: `${150 + (currentFrame / duration) * (timelineWidth - 150)}px` }}><i /></div>

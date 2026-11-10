@@ -27,3 +27,11 @@
 .library-list .asset-row{gap:8px}
 .library-list .asset-row>span:last-child{flex:1;min-width:0}
 .library-list .asset-row strong,.library-list .asset-row small{max-width:100%}
+
+.clip-audio{top:4px;height:34px;display:block;padding:2px 6px;overflow:hidden}
+.clip-audio>span:last-child{position:relative;z-index:2;display:inline-block;max-width:100%;padding:1px 3px;border-radius:2px;background:#171714b8;color:#f3eee3;font-size:8px;line-height:11px;text-shadow:0 1px 2px #000}
+.timeline-waveform{position:absolute;inset:2px 5px;display:grid;grid-template-columns:repeat(48,minmax(1px,1fr));align-items:center;gap:1px;overflow:hidden;pointer-events:none}
+.timeline-waveform i{display:block;min-height:2px;border-radius:1px;background:#211f1a;opacity:.68;transition:height .18s ease}
+.timeline-waveform.loaded i{opacity:.82}
+.timeline-waveform.loading i{opacity:.28}
+.clip.selected .timeline-waveform i{background:#14130f;opacity:.92}

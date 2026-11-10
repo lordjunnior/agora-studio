@@ -34,6 +34,21 @@ async function loadWaveform(src: string): Promise<number[]> {
   }
 }
 
+export const AudioWaveform: React.FC<{ asset: AgoraAsset }> = ({ asset }) => {
+  const [waveform, setWaveform] = useState<number[] | null>(() => waveformCache.get(asset.src) ?? null);
+  useEffect(() => {
+    let active = true;
+    if (!waveform) void loadWaveform(asset.src).then((peaks) => {
+      if (active) setWaveform(peaks);
+    }).catch(() => undefined);
+    return () => { active = false; };
+  }, [asset.src, waveform]);
+  return <span className={`waveform-bars timeline-waveform${waveform ? " loaded" : " loading"}`} aria-label="Forma de onda do áudio">
+    {(waveform ?? Array.from({ length: WAVEFORM_BARS }, (_, index) => 0.12 + ((index * 13 + 7) % 24) / 100))
+      .map((peak, index) => <i key={index} style={{ height: `${Math.round(peak * 100)}%` }} />)}
+  </span>;
+};
+
 export const MediaThumbnail: React.FC<{ asset: AgoraAsset }> = ({ asset }) => {
   const [waveform, setWaveform] = useState<number[] | null>(() => waveformCache.get(asset.src) ?? null);
   const [waveformUnavailable, setWaveformUnavailable] = useState(false);
